@@ -11,20 +11,53 @@
 
 html,
 body {
-  @apply tw:h-full tw:w-full tw:bg-white tw:dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  @apply tw:h-full tw:w-full tw:text-gray-500;
 }
 
 h1 {
-  @apply tw:text-[42px] tw:font-semibold;
+  @apply tw:text-[42px] tw:text-gray-700 tw:font-semibold;
+}
+
+h2 {
+  @apply tw:text-[32px] tw:font-semibold tw:text-rtoc-purple-500;
+}
+
+label {
+  @apply tw:text-sm;
+}
+
+input[type="text"], input[type="password"] {
+  @apply tw:px-4 tw:py-3 tw:text-base tw:rounded-lg tw:bg-gray-100;
+}
+
+input[type="checkbox"] {
+  @apply tw:h-0 tw:w-0 tw:opacity-0 tw:cursor-pointer tw:absolute;
+}
+
+.input__checkbox-container {
+  @apply tw:pl-6 tw:relative tw:cursor-pointer tw:select-none;
+}
+
+.input__checkbox-container .input__checkmark {
+  @apply tw:h-6 tw:w-6 tw:border-2 tw:border-rtoc-purple-500 tw:rounded-md tw:absolute tw:top-0 tw:left-0;
+}
+
+input[type="checkbox"]:checked + .input__checkmark {
+  @apply tw:bg-rtoc-purple-500;
+}
+
+input[type="checkbox"] + .input__checkmark:after {
+  @apply tw:hidden tw:h-3 tw:w-[7px] tw:border-white tw:border-r-[3px] tw:border-b-[3px] tw:rotate-45 tw:absolute tw:top-0.5 tw:left-1.5;
+
+  content: "";
+}
+
+input[type="checkbox"]:checked + .input__checkmark:after {
+  @apply tw:block;
 }
 
 button.btn {
   @apply tw:h-12
-  tw:w-24
   tw:text-white
   tw:font-semibold
   tw:rounded-2xl

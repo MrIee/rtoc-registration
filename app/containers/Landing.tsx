@@ -1,7 +1,8 @@
 import logoLight from "../assets/images/logo-light.svg";
 import logo from "../assets/images/logo.svg";
+import { NavLink } from "react-router";
 
-export function Landing() {
+export default () => {
   return (
     <main className="tw:h-full tw:w-full tw:flex tw:lg:flex-row tw:flex-col">
       <div className="tw:lg:h-full tw:h-1/2 tw:lg:w-1/2 tw:w-full tw:flex tw:flex-col tw:lg:items-baseline tw:items-center tw:lg:pl-32 tw:bg-rtoc-purple-200 tw:relative">
@@ -17,8 +18,10 @@ export function Landing() {
         <div className="tw:my-auto">
           <h1 className="tw:mb-4 tw:text-center">Get Started</h1>
           <div className="">
-            <button className="btn tw:w-[183px]! tw:mr-4">Register</button>
-            <button className="btn tw:w-[183px]!">Login</button>
+            <button className="btn tw:w-[183px] tw:mr-4">Register</button>
+            <NavLink to="/login">
+              <button className="btn tw:w-[183px]">Login</button>
+            </NavLink>
           </div>
         </div>
         <div className="tw:flex tw:flex-col tw:items-center tw:text-[13px] tw:absolute tw:bottom-4">
@@ -32,4 +35,4 @@ export function Landing() {
       </div>
     </main>
   );
-}
+};
