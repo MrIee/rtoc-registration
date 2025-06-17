@@ -1,4 +1,6 @@
 import logo from "../assets/images/logo.svg";
+import { NavLink } from "react-router";
+import TextInput from '../components/TextInput';
 
 export default () => {
   return (
@@ -8,14 +10,8 @@ export default () => {
       <p className="tw:text-center">lorem ipsum dolor sit amet</p>
 
       <div className="tw:mt-10">
-        <label>
-          Email Address <span className="tw:text-red-500">*</span>
-          <input className="tw:w-full tw:mb-4" type="text" />
-        </label>
-        <label>
-          Password <span className="tw:text-red-500">*</span>
-          <input className="tw:w-full" type="password" />
-        </label>
+        <TextInput label="Email Address" placeholder="Enter your email" />
+        <TextInput label="Password" placeholder="Enter password" isPassword />
 
         <div className="tw:flex tw:justify-between tw:mt-2 tw:mb-8">
           <label className="input__checkbox-container">
@@ -28,7 +24,7 @@ export default () => {
 
         <div className="tw:flex tw:flex-col tw:items-center">
           <button className="btn tw:w-full tw:mb-10">Sign In</button>
-          <span className="">Don't have an account? <a className="tw:text-rtoc-purple-500 tw:underline" href="">Sign Up</a></span>
+          <span className="">Don't have an account? <NavLink className="tw:text-rtoc-purple-500 tw:underline" to="/create-profile">Sign Up</NavLink></span>
         </div>
       </div>
     </div>
