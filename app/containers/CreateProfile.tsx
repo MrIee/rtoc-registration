@@ -1,4 +1,4 @@
-import logo from "../assets/images/logo.svg";
+import logo from "../assets/images/rtoc-logo.png";
 import { useState } from "react";
 import Steps from '../components/Steps';
 import PersonalDetails from '../components/PersonalDetails';
@@ -29,11 +29,11 @@ const CreateProfile = () => {
 
   return (
     <div className="tw:h-full tw:w-[640px] tw:mx-auto tw:py-9 tw:flex tw:flex-col">
-      <img className="tw:h-20 tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
+      <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
       <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
       <Steps classes={'tw:mb-8'} steps={profileSteps}  />
-      <PersonalDetails classes={'tw:mb-4'} />
+      <PersonalDetails />
 
       <div className="tw:flex tw:justify-between tw:mt-auto">
         <button className="btn btn--hollow">Back</button>

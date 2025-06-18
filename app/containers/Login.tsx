@@ -1,11 +1,11 @@
-import logo from "../assets/images/logo.svg";
+import logo from "../assets/images/rtoc-logo.png";
 import { NavLink } from "react-router";
 import TextInput from '../components/TextInput';
 
-export default () => {
+const Login = () => {
   return (
     <div className="tw:lg:w-[400px] tw:w-full tw:flex tw:flex-col tw:items-center tw:lg:p-0 tw:p-3 tw:mx-auto tw:absolute tw:top-1/2 tw:-translate-y-1/2 tw:left-0 tw:right-0">
-      <img className="tw:mb-1 tw:h-20 tw:w-20" src={logo} alt="logo" />
+      <img className="tw:w-20 tw:mb-1" src={logo} alt="logo" />
       <h2 className="tw:text-center">Login to RTO Complete</h2>
       <p className="tw:text-center">lorem ipsum dolor sit amet</p>
 
@@ -30,3 +30,5 @@ export default () => {
     </div>
   );
 };
+
+export default Login;
