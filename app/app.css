@@ -57,7 +57,8 @@ input[type="checkbox"]:checked + .input__checkmark:after {
 }
 
 button.btn {
-  @apply tw:h-12
+  @apply tw:px-7
+  tw:py-3
   tw:text-white
   tw:font-semibold
   tw:rounded-2xl
@@ -67,6 +68,36 @@ button.btn {
   tw:active:brightness-75;
 }
 
-button.btn.btn--lg {
+button.btn.btn--hollow {
+  @apply tw:text-rtoc-purple-500 tw:border-2 tw:border-rtoc-purple-500 tw:bg-transparent;
+}
 
+button.btn.btn--clear {
+  @apply tw:p-0 tw:bg-transparent tw:text-rtoc-purple-500;
+}
+
+.btn-radio-group input[type="radio"] {
+  @apply tw:h-0 tw:w-0 tw:opacity-0 tw:cursor-pointer tw:absolute;
+}
+
+.btn-radio-group input[type="radio"] + button {
+  @apply tw:text-gray-500 tw:bg-gray-100;
+}
+
+.btn-radio-group input[type="radio"]:checked + button {
+  @apply tw:text-white tw:bg-rtoc-purple-500;
+}
+
+.step {
+  @apply tw:text-sm tw:relative;
+}
+
+.step:before {
+  @apply tw:hidden tw:h-1.5 tw:w-full tw:rounded-4xl tw:bg-rtoc-purple-500;
+
+  content: "";
+}
+
+.step--active:before {
+  @apply tw:block;
 }
