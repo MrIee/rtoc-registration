@@ -15,10 +15,10 @@ interface RadioButtonsProps {
 const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
   const onClickButton = (value: number) => onClick ? onClick(value) : false;
 
-  const buttonsDOM: ReactNode = buttons.map((button: RadioButton) =>
-    <label className="tw:cursor-pointer">
-      <input type="radio" name="btn" checked={button.selected} onClick={() => onClickButton(button.value)} />
-      <button className="btn tw:!py-2.5 tw:!px-4 tw:!font-normal tw:!rounded-xl tw:!pointer-events-none">
+  const buttonsDOM: ReactNode = buttons.map((button: RadioButton, index: number) =>
+    <label key={index} className="tw:cursor-pointer">
+      <input type="radio" name="btn" checked={button.selected} onClick={() => onClickButton(button.value)} readOnly />
+      <button className="btn tw:!py-2.5 tw:!px-4 tw:!text-base tw:!font-normal tw:!rounded-xl tw:!pointer-events-none">
         {button.label}
       </button>
     </label>

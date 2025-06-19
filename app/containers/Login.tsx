@@ -1,4 +1,4 @@
-import logo from "../assets/images/rtoc-logo.png";
+import logo from "../assets/images/logo-rtoc.png";
 import { NavLink } from "react-router";
 import TextInput from '../components/TextInput';
 

@@ -1,5 +1,5 @@
-import logo from "../assets/images/rtoc-logo.png";
-import logoLandscape from "../assets/images/rtoc-logo-landscape.png";
+import logo from "../assets/images/logo-rtoc.png";
+import logoLandscape from "../assets/images/logo-rtoc-landscape.png";
 import { NavLink } from "react-router";
 
 const Landing = () => {

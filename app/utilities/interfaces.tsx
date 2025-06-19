@@ -1,5 +1,7 @@
+import type { ReactElement } from "react";
+
 export interface Step {
   label: string;
-  id: number;
   active: boolean;
+  component: ReactElement;
 };

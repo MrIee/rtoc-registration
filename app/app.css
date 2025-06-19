@@ -59,17 +59,21 @@ input[type="checkbox"]:checked + .input__checkmark:after {
 button.btn {
   @apply tw:px-7
   tw:py-3
+  tw:text-lg
   tw:text-white
   tw:font-semibold
   tw:rounded-2xl
   tw:bg-rtoc-purple-500
   tw:cursor-pointer
-  tw:hover:brightness-150
-  tw:active:brightness-75;
+  tw:hover:brightness-75;
+}
+
+button.btn.btn--secondary {
+  @apply tw:text-rtoc-purple-500 tw:font-normal tw:bg-gray-100
 }
 
 button.btn.btn--hollow {
-  @apply tw:text-rtoc-purple-500 tw:border-2 tw:border-rtoc-purple-500 tw:bg-transparent;
+  @apply tw:px-6 tw:py-2 tw:text-rtoc-purple-500 tw:border-2 tw:border-rtoc-purple-500 tw:bg-transparent tw:hover:bg-gray-100;
 }
 
 button.btn.btn--clear {
