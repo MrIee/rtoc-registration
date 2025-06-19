@@ -1,10 +1,11 @@
 import logo from "../assets/images/rtoc-logo.png";
+import { type Step } from "~/utilities/interfaces";
 import { useState } from "react";
 import Steps from '../components/Steps';
 import PersonalDetails from '../components/PersonalDetails';
 
 const CreateProfile = () => {
-  const [profileSteps, setProfileSteps] = useState([
+  const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
       id: 1,
