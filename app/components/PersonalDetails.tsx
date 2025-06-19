@@ -18,13 +18,13 @@ const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
   const buttonsDOM: ReactNode = buttons.map((button: RadioButton, index: number) =>
     <label key={index} className="tw:cursor-pointer">
       <input type="radio" name="btn" checked={button.selected} onClick={() => onClickButton(button.value)} readOnly />
-      <button className="btn tw:!py-2.5 tw:!px-4 tw:!text-base tw:!font-normal tw:!rounded-xl tw:!pointer-events-none">
+      <button className="btn tw:!py-2.5 tw:!px-4 tw:lg:!text-base tw:!text-sm tw:!font-normal tw:!rounded-xl tw:!pointer-events-none">
         {button.label}
       </button>
     </label>
   );
   return (
-    <div className="btn-radio-group tw:flex tw:gap-6">
+    <div className="btn-radio-group tw:flex tw:lg:gap-6 tw:gap-4">
       {buttonsDOM}
     </div>
   );
@@ -53,8 +53,8 @@ const PersonalDetails = () => {
 
   return (
     <>
-      <div className="tw:flex tw:items-center tw:mb-4">
-        <span className="tw:mr-3 tw:text-sm">I'm a:</span>
+      <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
+        <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
         <RadioButtons buttons={radioButtons} onClick={onClickPosition} />
       </div>
       <div className="tw:flex tw:gap-4">

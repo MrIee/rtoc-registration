@@ -97,11 +97,11 @@ button.btn.btn--clear {
 }
 
 .step:before {
-  @apply tw:hidden tw:h-1.5 tw:w-full tw:rounded-4xl tw:bg-rtoc-purple-500;
+  @apply tw:block tw:h-1.5 tw:w-full tw:rounded-4xl tw:bg-rtoc-purple-200;
 
   content: "";
 }
 
 .step--active:before {
-  @apply tw:block;
+  @apply tw:bg-rtoc-purple-500;
 }
