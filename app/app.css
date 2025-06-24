@@ -22,8 +22,18 @@ h2 {
   @apply tw:text-[32px] tw:font-semibold tw:text-rtoc-purple-500;
 }
 
-label {
-  @apply tw:text-sm;
+.label {
+  @apply tw:cursor-default;
+}
+
+label > span,
+.label > span {
+  @apply tw:inline-block tw:mb-1.5 tw:text-sm;
+}
+
+label > span > span,
+.label > span > span {
+  @apply tw:ml-1 tw:text-red-500;
 }
 
 input[type="text"], input[type="password"] {

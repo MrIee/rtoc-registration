@@ -11,8 +11,11 @@
   "dependencies": {
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
+    "@types/lodash.debounce": "^4.0.9",
+    "axios": "^1.10.0",
     "classnames": "^2.5.1",
     "isbot": "^5.1.27",
+    "lodash.debounce": "^4.0.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.5.3",

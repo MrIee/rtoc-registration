@@ -16,7 +16,7 @@ const Steps = ({ classes, steps, onClick }: StepsProps) => {
     </div>
   );
 
-  return <div className={classNames('tw:w-full tw:flex tw:items-end tw:gap-1.5', classes)}>{stepList}</div>;
+  return <div className={classNames('tw:w-full tw:flex tw:gap-1.5', classes)}>{stepList}</div>;
 };
 
 export default Steps;

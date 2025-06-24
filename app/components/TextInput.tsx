@@ -8,7 +8,7 @@ interface TextInputProps {
 export const TextInput = ({ label, placeholder, isPassword, required = true }: TextInputProps) => {
   return (
     <label>
-      {label} <span className="tw:text-red-500">*</span>
+      <span>{label}{ required && (<span>*</span>)}</span>
       <input
         className="tw:w-full tw:mb-4"
         type={isPassword ? 'password' : 'text'}

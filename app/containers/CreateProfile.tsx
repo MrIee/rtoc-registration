@@ -31,6 +31,16 @@ const CreateProfile = () => {
     },
   ]);
 
+  useEffect(() => {
+    updateProfileSteps(currentStep);
+
+    if (currentStep === profileSteps.length - 1) {
+      setIsSaveBtnVisible(true);
+    } else {
+      setIsSaveBtnVisible(false);
+    }
+  }, [currentStep]);
+
   const updateProfileSteps = (index: number) => {
     const updatedProfileSteps = profileSteps.map((step: Step, i: number) => {
       step.active = false;
@@ -44,16 +54,6 @@ const CreateProfile = () => {
 
     setProfileSteps(updatedProfileSteps);
   }
-
-  useEffect(() => {
-    updateProfileSteps(currentStep);
-
-    if (currentStep === profileSteps.length - 1) {
-      setIsSaveBtnVisible(true);
-    } else {
-      setIsSaveBtnVisible(false);
-    }
-  }, [currentStep]);
 
   const updateStep = (index: number) => {
     setCurrentStep(index);

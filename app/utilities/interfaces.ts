@@ -5,3 +5,8 @@ export interface Step {
   active: boolean;
   component: ReactElement;
 };
+
+export interface ReactSelectOption {
+  value: string | number;
+  label: string;
+}
