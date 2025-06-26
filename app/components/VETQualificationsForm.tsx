@@ -6,7 +6,7 @@ import { useState } from 'react';
 import DatePicker from './DatePicker';
 
 const VETQualificationsForm = () => {
-  const initialCertificationPlaceholder: string = 'Select an RTO to see Cerficatation';
+  const initialCertificationPlaceholder: string = 'Select an RTO to see Cerficatations';
   const [certificationOptions, setCertificationOptions] = useState<Array<ReactSelectOption>>([]);
   const [isCertificationsLoading, setIsCertificationsLoading] = useState<boolean>(true);
   const [certificationPlaceholder, setCertificationPlaceholder] = useState<string>(initialCertificationPlaceholder);
@@ -55,7 +55,6 @@ const VETQualificationsForm = () => {
     <div className="tw:flex tw:flex-col tw:gap-4 tw:mb-6">
       <Dropdown
         isAsync
-        inputId="organisation"
         loadOptions={loadOrganisations}
         label="My Certificate IV in training and assessment was completed at"
         placeholder="Search for RTO"
@@ -63,7 +62,6 @@ const VETQualificationsForm = () => {
         onChange={loadCertifications}
       />
       <Dropdown
-        inputId="certification"
         options={certificationOptions}
         label="My Certificate IV in training and assessment"
         placeholder={certificationPlaceholder}

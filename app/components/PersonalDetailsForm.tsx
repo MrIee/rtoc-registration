@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import TextInput from "../components/TextInput";
+import TextInput from "./TextInput";
 
 interface RadioButton {
   value: number;
@@ -23,6 +23,7 @@ const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
       </button>
     </label>
   );
+
   return (
     <div className="btn-radio-group tw:flex tw:lg:gap-6 tw:gap-4">
       {buttonsDOM}

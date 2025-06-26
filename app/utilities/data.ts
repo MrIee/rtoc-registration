@@ -40,7 +40,6 @@ const getCertification = async (id: number): Promise<Array<Certification>> => {
 
 export const getCertificationsAsOptions = async (id: number): Promise<Array<ReactSelectOption>> => {
   const certifications: Array<Certification> = await getCertification(id);
-  console.log('certifications:', certifications);
   return certifications.map((cert: Certification) => ({ value: cert.pkgCode, label: cert.title }));
 };
 

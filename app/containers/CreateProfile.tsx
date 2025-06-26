@@ -2,7 +2,7 @@ import logo from "../assets/images/logo-rtoc.png";
 import { type Step } from "~/utilities/interfaces";
 import { useEffect, useState } from "react";
 import Steps from '../components/Steps';
-import PersonalDetails from '../components/PersonalDetails';
+import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualifications from '../components/VETQualifications';
 
 const CreateProfile = () => {
@@ -12,22 +12,22 @@ const CreateProfile = () => {
     {
       label: '1. Personal details',
       active: true,
-      component: (<PersonalDetails />),
+      component: <PersonalDetailsForm />,
     },
     {
       label: '2. VET Qualifications',
       active: false,
-      component: (<VETQualifications />),
+      component: <VETQualifications />,
     },
     {
       label: '3. Higher Education',
       active: false,
-      component: (<PersonalDetails />),
+      component: <PersonalDetailsForm />,
     },
     {
       label: '4. Experience',
       active: false,
-      component: (<PersonalDetails />),
+      component: <PersonalDetailsForm />,
     },
   ]);
 
