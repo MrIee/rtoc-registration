@@ -1,9 +1,13 @@
-import type { ReactElement } from "react";
+import type { FC, PropsWithChildren } from "react";
+
+export interface RegistrationFormComponentProps extends PropsWithChildren {
+  onValidate?: (isValid: boolean) => void;
+};
 
 export interface Step {
   label: string;
   active: boolean;
-  component: ReactElement;
+  component: FC;
 };
 
 export interface ReactSelectOption {

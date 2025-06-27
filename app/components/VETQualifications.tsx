@@ -1,9 +1,9 @@
 import plusIcon from "../assets/images/icon-plus.svg";
-import { useState } from "react";
+import { useState, type FC, type JSX, type PropsWithChildren } from "react";
 import UpdateDetailsModal from "./UpdateDetailsModal";
 import VETQualificationsForm from "./VETQualificationsForm";
 
-const VETQualifications = () => {
+const VETQualifications: FC<PropsWithChildren> = ({ children }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   return (
@@ -15,6 +15,7 @@ const VETQualifications = () => {
       <UpdateDetailsModal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
         <VETQualificationsForm />
       </UpdateDetailsModal>
+      {children}
     </>
   );
 };

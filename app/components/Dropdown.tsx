@@ -80,8 +80,8 @@ const Dropdown = ({
       },
       padding: 5,
       borderRadius: 8,
-      borderColor: state.isFocused ? 'black' : undefined,
-      boxShadow: state.isFocused ? '0 0 0 1px #000' : 'none',
+      borderColor: state.isFocused ? 'rgba(93, 55, 113, 1)' : undefined,
+      boxShadow: state.isFocused ? '0 0 0 1px rgba(93, 55, 113, 1)' : 'none',
       backgroundColor: 'rgba(0,0,0,0)',
       cursor: isSearchable ? 'text' : 'pointer',
     }),
@@ -98,7 +98,7 @@ const Dropdown = ({
       ...base,
       cursor: 'pointer',
     }),
-  }
+  };
 
   const selectTheme = (theme: Theme) => ({
     ...theme,
@@ -110,7 +110,7 @@ const Dropdown = ({
 
   const handleOnChange = (option: unknown) => {
     setValue(option);
-    onChange && onChange(option);
+    onChange?.(option);
   };
 
   const handleRemoveOption = (optionToRemove: ReactSelectOption) => {
@@ -185,7 +185,7 @@ const Dropdown = ({
     }
 
     return null;
-  }
+  };
 
   return (
     <div>

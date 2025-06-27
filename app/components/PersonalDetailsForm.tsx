@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from "react";
+import { useState, type FormEvent, type FC, type JSX, type ReactNode, type PropsWithChildren, type ChangeEvent, useRef, useEffect } from 'react';
+import { isPossiblePhoneNumber } from 'libphonenumber-js';
 import TextInput from "./TextInput";
 
 interface RadioButton {
@@ -11,6 +12,19 @@ interface RadioButtonsProps {
   buttons: Array<RadioButton>;
   onClick?: (value: number | string) => void;
 };
+
+interface UserDetails {
+  firstname: string;
+  lastname: string;
+  preferredname: string;
+  phone: string;
+  email: string;
+  password: string;
+};
+
+interface PersonalDetailsProps extends PropsWithChildren {
+  onValidate?: (isValid: boolean) => void;
+}
 
 const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
   const onClickButton = (value: number) => onClick ? onClick(value) : false;
@@ -31,12 +45,35 @@ const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
   );
 };
 
-const PersonalDetails = () => {
+const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps): JSX.Element => {
   const [radioButtons, setRadioButtons] = useState<Array<RadioButton>>([
     { value: 1, label: 'Vet Practitioner', selected: true, },
     { value: 2, label: 'Office - Marketing', selected: false, },
     { value: 3, label: 'Office - CEO', selected: false, },
   ]);
+
+  const [userDetails, setUserDetails] = useState<UserDetails>({
+    firstname: '',
+    preferredname: '',
+    lastname: '',
+    phone: '',
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState<UserDetails>({} as UserDetails);
+  const isFormValid = useRef<boolean>(false);
+
+  // useEffect(() => {
+  //   console.log('ERRORS UPDATE', errors);
+  //   isFormValid.current = true;
+
+  //   Object.keys(errors).forEach((field: string) => {
+  //     if (errors[field as keyof UserDetails]) {
+  //       isFormValid.current = false;
+  //     }
+  //   });
+  // }, [errors]);
 
   const onClickPosition = (value: number | string) => {
     const updatedRadioButtons: Array<RadioButton> = radioButtons.map((button: RadioButton) => {
@@ -52,23 +89,145 @@ const PersonalDetails = () => {
     setRadioButtons(updatedRadioButtons);
   };
 
+  const updateUserDetails = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserDetails({...userDetails, [name]: value });
+  };
+
+  const validateName = (name: string) => {
+    let nameString: string = '';
+
+    switch(name) {
+      case 'firstname':
+        nameString = 'First Name';
+        break;
+      case 'preferredname':
+        nameString = 'Preferred Name';
+        break;
+      case 'lastname':
+        nameString = 'Family Name';
+        break;
+    }
+
+    if (!userDetails[name as keyof typeof userDetails]) {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, [name]: 'Please enter your ' + nameString }));
+      isFormValid.current = false;
+    } else {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, [name]: '' }));
+    }
+  };
+
+  const validateEmail = () => {
+    const regex: RegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const isEmailValid: boolean = regex.test(userDetails.email);
+
+    if (!isEmailValid || !userDetails.email) {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, email: 'Please enter a valid email' }));
+      isFormValid.current = false;
+    } else {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, email: '' }));
+    }
+  };
+
+  const validatePhoneNumber = () => {
+    if (!isPossiblePhoneNumber(userDetails.phone, 'AU')) {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, phone: 'Please enter a valid phone number' }));
+      isFormValid.current = false;
+    } else {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, phone: '' }));
+    }
+  };
+
+  const validatePassword = () => {
+    if (!userDetails.password) {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, password: 'Please enter a password' }));
+      isFormValid.current = false;
+    } else {
+      setErrors((prevErrors: UserDetails) => ({ ...prevErrors, password: '' }));
+    }
+  };
+
+  const onSubmit = (event: FormEvent | undefined) => {
+    event?.preventDefault();
+    isFormValid.current = true;
+    validateName('firstname');
+    validateName('preferredname');
+    validateName('lastname');
+    validateEmail();
+    validatePhoneNumber();
+    validatePassword();
+    onValidate?.(false);
+  };
+
   return (
-    <>
+    <form onSubmit={onSubmit} noValidate>
       <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
         <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
         <RadioButtons buttons={radioButtons} onClick={onClickPosition} />
       </div>
       <div className="tw:flex tw:gap-4">
-        <TextInput label="First Name" placeholder="Enter first name" />
-        <TextInput label="Preferred Name" placeholder="Enter preferred name" />
+        <TextInput
+          label="First Name"
+          name="firstname"
+          value={userDetails?.firstname}
+          placeholder="Enter first name"
+          error={errors.firstname}
+          onChange={updateUserDetails}
+          onBlur={() => errors.firstname && validateName('firstname')}
+        />
+        <TextInput
+          label="Preferred Name"
+          name="preferredname"
+          value={userDetails?.preferredname}
+          placeholder="Enter preferred name"
+          error={errors.preferredname}
+          onChange={updateUserDetails}
+          onBlur={() => errors.preferredname && validateName('preferredname')}
+        />
       </div>
-      <TextInput label="Family Name" placeholder="Enter family name" />
       <div className="tw:flex tw:gap-4">
-        <TextInput label="Email" placeholder="Enter email" />
-        <TextInput label="Phone" placeholder="Enter phone" />
+        <TextInput
+          label="Family Name"
+          name="lastname"
+          value={userDetails?.lastname}
+          placeholder="Enter family name"
+          error={errors.lastname}
+          onChange={updateUserDetails}
+          onBlur={() => errors.lastname && validateName('lastname')}
+        />
+        <TextInput
+          label="Phone"
+          name="phone"
+          value={userDetails?.phone}
+          placeholder="Enter phone"
+          error={errors.phone}
+          onChange={updateUserDetails}
+          onBlur={() => errors.phone && validatePhoneNumber()}
+        />
       </div>
-    </>
+      <div className="tw:flex tw:gap-4">
+        <TextInput
+          label="Email"
+          name="email"
+          value={userDetails?.email}
+          placeholder="Enter email"
+          error={errors.email}
+          onChange={updateUserDetails}
+          onBlur={() => errors.email && validateEmail()}
+        />
+        <TextInput
+          label="Password"
+          name="password"
+          value={userDetails?.password}
+          placeholder="Enter password"
+          error={errors.password}
+          onChange={updateUserDetails}
+          onBlur={() => errors.password && validatePassword()}
+        />
+      </div>
+      {children}
+    </form>
   );
 };
 
-export default PersonalDetails;
+export default PersonalDetailsForm;

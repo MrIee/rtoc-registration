@@ -1,51 +1,43 @@
 import logo from "../assets/images/logo-rtoc.png";
-import { type Step } from "~/utilities/interfaces";
-import { useEffect, useState } from "react";
+import { type RegistrationFormComponentProps, type Step } from "~/utilities/interfaces";
+import { useState, type FC, type JSX } from "react";
 import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualifications from '../components/VETQualifications';
 
-const CreateProfile = () => {
+const CreateProfile: FC = (): JSX.Element => {
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isSaveBtnVisible, setIsSaveBtnVisible] = useState<boolean>(false);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
       active: true,
-      component: <PersonalDetailsForm />,
+      component: PersonalDetailsForm,
     },
     {
       label: '2. VET Qualifications',
       active: false,
-      component: <VETQualifications />,
+      component: VETQualifications,
     },
     {
       label: '3. Higher Education',
       active: false,
-      component: <PersonalDetailsForm />,
+      component: PersonalDetailsForm,
     },
     {
       label: '4. Experience',
       active: false,
-      component: <PersonalDetailsForm />,
+      component: PersonalDetailsForm,
     },
   ]);
+  const RegistrationFormComponent: FC<RegistrationFormComponentProps> = profileSteps[currentStep].component;
 
-  useEffect(() => {
-    updateProfileSteps(currentStep);
-
-    if (currentStep === profileSteps.length - 1) {
-      setIsSaveBtnVisible(true);
-    } else {
-      setIsSaveBtnVisible(false);
-    }
-  }, [currentStep]);
-
-  const updateProfileSteps = (index: number) => {
+  const updateProfileSteps = (newStep: number) => {
     const updatedProfileSteps = profileSteps.map((step: Step, i: number) => {
       step.active = false;
 
-      if (index === i) {
+      if (newStep === i) {
         step.active = true;
       }
 
@@ -53,11 +45,29 @@ const CreateProfile = () => {
     });
 
     setProfileSteps(updatedProfileSteps);
-  }
+  };
 
-  const updateStep = (index: number) => {
-    setCurrentStep(index);
-    updateProfileSteps(index);
+  const updateStep = (newStep: number) => {
+    setCurrentStep(newStep);
+    updateProfileSteps(newStep);
+
+    if (newStep === profileSteps.length - 1) {
+      setIsSaveBtnVisible(true);
+    } else {
+      setIsSaveBtnVisible(false);
+    }
+  };
+
+  const handleValidation = (isValid: boolean) => {
+    if (isValid) {
+      setIsFormValid(isValid);
+    }
+  };
+
+  const handleNavButtonClick = (step: number) => {
+    if (isFormValid) {
+      setCurrentStep(step);
+    }
   };
 
   return (
@@ -66,27 +76,22 @@ const CreateProfile = () => {
       <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
       <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={updateStep}  />
-      {profileSteps[currentStep].component}
-
-      <div className="tw:flex tw:justify-between tw:mt-auto">
-        {
-          currentStep === 0 ? (
-            null
-          ) : (
-            <button className="btn btn--hollow" onClick={() => setCurrentStep(currentStep - 1)}>Back</button>
-        )}
-        <div className="tw:ml-auto">
-          {
-            isSaveBtnVisible ? (
-              <button className="btn">Save</button>
-            ) : (
-              <div>
-                <button className="btn btn--clear tw:mr-4" onClick={() => setCurrentStep(currentStep + 1)}>Skip</button>
-                <button className="btn" onClick={() => setCurrentStep(currentStep + 1)}>Next</button>
-              </div>
-          )}
+      <RegistrationFormComponent onValidate={handleValidation}>
+        <div className="tw:flex tw:justify-between tw:mt-auto tw:lg:mb-96">
+          { currentStep > 0 && <button className="btn btn--hollow" onClick={() => updateStep(currentStep - 1)}>Back</button> }
+          <div className="tw:ml-auto">
+            {
+              isSaveBtnVisible ? (
+                <button className="btn">Save</button>
+              ) : (
+                <div>
+                  <button className="btn btn--clear tw:mr-4" onClick={() => updateStep(currentStep + 1)}>Skip</button>
+                  <button type="submit" className="btn" onClick={() => handleNavButtonClick(currentStep + 1)}>Next</button>
+                </div>
+            )}
+          </div>
         </div>
-      </div>
+      </RegistrationFormComponent>
     </div>
   );
 };
