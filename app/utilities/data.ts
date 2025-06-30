@@ -1,5 +1,5 @@
-import axios from "axios";
-import { type ReactSelectOption } from "./interfaces";
+import axios, { type AxiosError, type AxiosResponse } from "axios";
+import { type ReactSelectOption, type UserDetails } from "./interfaces";
 
 export interface Organisation {
   id: number;
@@ -12,16 +12,30 @@ export interface Certification {
   title: string;
 };
 
+axios.defaults.baseURL = 'https://vps1.w617.com:5000';
 
-const BASE_URL = 'https://vps1.w617.com:5000';
+axios.interceptors.response.use(
+  (res: AxiosResponse) => res,
+  (err: AxiosError) => Promise.reject(err?.response?.data),
+);
+
+export const createUser = async (userDetails: UserDetails) => {
+  try {
+    const res: AxiosResponse = await axios.post('/add', userDetails);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const authUser = async (email: string, password: string) => {
+  const res = await axios.post('/auth', { email, password });
+  return res;
+};
 
 const getOrganisations = async (name: string): Promise<Array<Organisation>> => {
-  try {
-    const res = await axios.get(`${BASE_URL}/tga_organisations/search/${name}`);
-    return res.data;
-  } catch {
-    return [];
-  }
+  const res = await axios.get(`/tga_organisations/search/${name}`);
+  return res.data;
 };
 
 export const getOrganisationsAsOptions = async (name: string): Promise<Array<ReactSelectOption>> => {
@@ -30,12 +44,8 @@ export const getOrganisationsAsOptions = async (name: string): Promise<Array<Rea
 };
 
 const getCertification = async (id: number): Promise<Array<Certification>> => {
-  try {
-    const res = await axios.get(`${BASE_URL}/tga_organisation/courses/${id}`);
-    return res.data;
-  } catch {
-    return [];
-  }
+  const res = await axios.get(`/tga_organisation/courses/${id}`);
+  return res.data;
 };
 
 export const getCertificationsAsOptions = async (id: number): Promise<Array<ReactSelectOption>> => {

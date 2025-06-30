@@ -6,7 +6,6 @@ import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualifications from '../components/VETQualifications';
 
 const CreateProfile: FC = (): JSX.Element => {
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isSaveBtnVisible, setIsSaveBtnVisible] = useState<boolean>(false);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
@@ -58,16 +57,10 @@ const CreateProfile: FC = (): JSX.Element => {
     }
   };
 
-  const handleValidation = (isValid: boolean) => {
-    if (isValid) {
-      setIsFormValid(isValid);
-    }
-  };
-
-  const handleNavButtonClick = (step: number) => {
-    if (isFormValid) {
-      setCurrentStep(step);
-    }
+  const handleValidation = (isFormValid: boolean) => {
+      if (isFormValid) {
+        updateStep(currentStep + 1);
+      }
   };
 
   return (
@@ -85,8 +78,8 @@ const CreateProfile: FC = (): JSX.Element => {
                 <button className="btn">Save</button>
               ) : (
                 <div>
-                  <button className="btn btn--clear tw:mr-4" onClick={() => updateStep(currentStep + 1)}>Skip</button>
-                  <button type="submit" className="btn" onClick={() => handleNavButtonClick(currentStep + 1)}>Next</button>
+                  { currentStep > 0 && <button className="btn btn--clear tw:mr-4" onClick={() => updateStep(currentStep + 1)}>Skip</button> }
+                  <button type="submit" className="btn">Next</button>
                 </div>
             )}
           </div>

@@ -1,6 +1,8 @@
-import { useState, type FormEvent, type FC, type JSX, type ReactNode, type PropsWithChildren, type ChangeEvent, useRef, useEffect } from 'react';
+import { useState, type FormEvent, type FC, type JSX, type ReactNode, type PropsWithChildren, type ChangeEvent, useRef } from 'react';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
+import type { UserDetails } from '~/utilities/interfaces';
 import TextInput from "./TextInput";
+import { authUser, createUser } from '~/utilities/data';
 
 interface RadioButton {
   value: number;
@@ -11,15 +13,6 @@ interface RadioButton {
 interface RadioButtonsProps {
   buttons: Array<RadioButton>;
   onClick?: (value: number | string) => void;
-};
-
-interface UserDetails {
-  firstname: string;
-  lastname: string;
-  preferredname: string;
-  phone: string;
-  email: string;
-  password: string;
 };
 
 interface PersonalDetailsProps extends PropsWithChildren {
@@ -55,7 +48,7 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
   const [userDetails, setUserDetails] = useState<UserDetails>({
     firstname: '',
     preferredname: '',
-    lastname: '',
+    familyname: '',
     phone: '',
     email: '',
     password: '',
@@ -63,17 +56,6 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
 
   const [errors, setErrors] = useState<UserDetails>({} as UserDetails);
   const isFormValid = useRef<boolean>(false);
-
-  // useEffect(() => {
-  //   console.log('ERRORS UPDATE', errors);
-  //   isFormValid.current = true;
-
-  //   Object.keys(errors).forEach((field: string) => {
-  //     if (errors[field as keyof UserDetails]) {
-  //       isFormValid.current = false;
-  //     }
-  //   });
-  // }, [errors]);
 
   const onClickPosition = (value: number | string) => {
     const updatedRadioButtons: Array<RadioButton> = radioButtons.map((button: RadioButton) => {
@@ -104,7 +86,7 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
       case 'preferredname':
         nameString = 'Preferred Name';
         break;
-      case 'lastname':
+      case 'familyname':
         nameString = 'Family Name';
         break;
     }
@@ -147,16 +129,27 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
     }
   };
 
-  const onSubmit = (event: FormEvent | undefined) => {
+  const onSubmit = async (event: FormEvent | undefined) => {
     event?.preventDefault();
     isFormValid.current = true;
     validateName('firstname');
     validateName('preferredname');
-    validateName('lastname');
+    validateName('familyname');
     validateEmail();
     validatePhoneNumber();
     validatePassword();
-    onValidate?.(false);
+
+    if (isFormValid.current) {
+      const newUser = await createUser(userDetails);
+
+      if (newUser && Object.hasOwn(newUser, 'error')) {
+        setErrors((prevErrors: UserDetails) => ({ ...prevErrors, email: newUser?.error }));
+        return false;
+      }
+
+      await authUser(userDetails.email, userDetails.password);
+      onValidate?.(isFormValid.current);
+    }
   };
 
   return (
@@ -188,12 +181,12 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
       <div className="tw:flex tw:gap-4">
         <TextInput
           label="Family Name"
-          name="lastname"
-          value={userDetails?.lastname}
+          name="familyname"
+          value={userDetails?.familyname}
           placeholder="Enter family name"
-          error={errors.lastname}
+          error={errors.familyname}
           onChange={updateUserDetails}
-          onBlur={() => errors.lastname && validateName('lastname')}
+          onBlur={() => errors.familyname && validateName('familyname')}
         />
         <TextInput
           label="Phone"

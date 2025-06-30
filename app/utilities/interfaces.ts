@@ -14,3 +14,12 @@ export interface ReactSelectOption {
   value: string | number;
   label: string;
 }
+
+export interface UserDetails {
+  firstname: string;
+  familyname: string;
+  preferredname: string;
+  phone: string;
+  email: string;
+  password: string;
+};
