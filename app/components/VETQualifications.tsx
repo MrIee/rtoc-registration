@@ -1,22 +1,23 @@
-import plusIcon from "../assets/images/icon-plus.svg";
-import { useState, type FC, type JSX, type PropsWithChildren } from "react";
-import UpdateDetailsModal from "./UpdateDetailsModal";
-import VETQualificationsForm from "./VETQualificationsForm";
+import plusIcon from '../assets/images/icon-plus.svg';
+import { useState, type FC, type JSX } from 'react';
+import Modal from './Modal';
+import VETQualificationsForm from './VETQualificationsForm';
+import FormButtons from "./FormButtons";
 
-const VETQualifications: FC<PropsWithChildren> = ({ children }): JSX.Element => {
+const VETQualifications: FC = (): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   return (
-    <>
+    <div className="registration-form">
       <button className="btn btn--hollow tw:flex tw:ml-auto" onClick={() => setIsModalVisible(true)}>
         <img className="tw:mr-1.5" src={plusIcon} alt="plus icon" />
         Add VET Qualifications
       </button>
-      <UpdateDetailsModal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
+      <Modal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
         <VETQualificationsForm />
-      </UpdateDetailsModal>
-      {children}
-    </>
+      </Modal>
+      <FormButtons classes="tw:mt-auto"  />
+    </div>
   );
 };
 

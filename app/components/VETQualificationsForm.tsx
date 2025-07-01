@@ -27,7 +27,7 @@ const VETQualificationsForm = () => {
 
   const loadOrganisations = debounce((
     inputValue: string,
-    callback: (options: any) => void,
+    callback: (options: unknown) => void,
   ) => {
     setIsCertificationsLoading(true);
     getOrganisationsAsOptions(inputValue).then((res: Array<ReactSelectOption>) => {

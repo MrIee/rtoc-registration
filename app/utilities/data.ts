@@ -52,4 +52,3 @@ export const getCertificationsAsOptions = async (id: number): Promise<Array<Reac
   const certifications: Array<Certification> = await getCertification(id);
   return certifications.map((cert: Certification) => ({ value: cert.pkgCode, label: cert.title }));
 };
-

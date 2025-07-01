@@ -1,8 +1,8 @@
-import { useState, type FormEvent, type FC, type JSX, type ReactNode, type PropsWithChildren, type ChangeEvent, useRef } from 'react';
+import { useState, type FormEvent, type FC, type JSX, type ReactNode, type ChangeEvent, useRef, useEffect } from 'react';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
 import type { UserDetails } from '~/utilities/interfaces';
-import TextInput from "./TextInput";
-import { authUser, createUser } from '~/utilities/data';
+import TextInput from './TextInput';
+import FormButtons from './FormButtons';
 
 interface RadioButton {
   value: number;
@@ -10,20 +10,23 @@ interface RadioButton {
   selected: boolean;
 };
 
-interface RadioButtonsProps {
+interface RoleRadioButtonsProps {
   buttons: Array<RadioButton>;
   onClick?: (value: number | string) => void;
 };
 
-interface PersonalDetailsProps extends PropsWithChildren {
-  onValidate?: (isValid: boolean) => void;
+interface PersonalDetailsFormProps {
+  handleValidate: (isValid: boolean, userDetails: UserDetails) => void;
+  onClickBackBtn?: () => void;
+  onClickNextBtn?: () => void;
+  customErrors?: UserDetails;
 }
 
-const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
+const RoleRadioButtons: FC<RoleRadioButtonsProps> = ({ buttons, onClick }): JSX.Element => {
   const onClickButton = (value: number) => onClick ? onClick(value) : false;
 
   const buttonsDOM: ReactNode = buttons.map((button: RadioButton, index: number) =>
-    <label key={index} className="tw:cursor-pointer">
+    <label key={index} className="tw:!cursor-pointer">
       <input type="radio" name="btn" checked={button.selected} onClick={() => onClickButton(button.value)} readOnly />
       <button className="btn tw:!py-2.5 tw:!px-4 tw:lg:!text-base tw:!text-sm tw:!font-normal tw:!rounded-xl tw:!pointer-events-none">
         {button.label}
@@ -38,7 +41,7 @@ const RadioButtons = ({ buttons, onClick }: RadioButtonsProps) => {
   );
 };
 
-const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps): JSX.Element => {
+const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onClickBackBtn, onClickNextBtn, customErrors }): JSX.Element => {
   const [radioButtons, setRadioButtons] = useState<Array<RadioButton>>([
     { value: 1, label: 'Vet Practitioner', selected: true, },
     { value: 2, label: 'Office - Marketing', selected: false, },
@@ -56,6 +59,10 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
 
   const [errors, setErrors] = useState<UserDetails>({} as UserDetails);
   const isFormValid = useRef<boolean>(false);
+
+  useEffect(() => {
+    setErrors({ ...errors, ...customErrors });
+  }, [customErrors]);
 
   const onClickPosition = (value: number | string) => {
     const updatedRadioButtons: Array<RadioButton> = radioButtons.map((button: RadioButton) => {
@@ -112,7 +119,9 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
   };
 
   const validatePhoneNumber = () => {
-    if (!isPossiblePhoneNumber(userDetails.phone, 'AU')) {
+    const isPhoneValid: boolean = isPossiblePhoneNumber(userDetails.phone, 'AU') || isPossiblePhoneNumber(userDetails.phone, 'NZ');
+
+    if (!isPhoneValid) {
       setErrors((prevErrors: UserDetails) => ({ ...prevErrors, phone: 'Please enter a valid phone number' }));
       isFormValid.current = false;
     } else {
@@ -129,7 +138,7 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
     }
   };
 
-  const onSubmit = async (event: FormEvent | undefined) => {
+  const onSubmit = (event: FormEvent | undefined) => {
     event?.preventDefault();
     isFormValid.current = true;
     validateName('firstname');
@@ -138,26 +147,21 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
     validateEmail();
     validatePhoneNumber();
     validatePassword();
-
-    if (isFormValid.current) {
-      const newUser = await createUser(userDetails);
-
-      if (newUser && Object.hasOwn(newUser, 'error')) {
-        setErrors((prevErrors: UserDetails) => ({ ...prevErrors, email: newUser?.error }));
-        return false;
-      }
-
-      await authUser(userDetails.email, userDetails.password);
-      onValidate?.(isFormValid.current);
-    }
+    handleValidate(isFormValid.current, userDetails);
   };
 
   return (
-    <form onSubmit={onSubmit} noValidate>
-      <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
-        <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
-        <RadioButtons buttons={radioButtons} onClick={onClickPosition} />
-      </div>
+    <form className="registration-form" onSubmit={onSubmit} noValidate>
+      {
+        // Hide Role radio buttons for the time being.
+        // eslint-disable-next-line no-constant-binary-expression
+        false && (
+          <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
+            <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
+            <RoleRadioButtons buttons={radioButtons} onClick={onClickPosition} />
+          </div>
+        )
+      }
       <div className="tw:flex tw:gap-4">
         <TextInput
           label="First Name"
@@ -218,7 +222,7 @@ const PersonalDetailsForm: FC = ({ onValidate, children}: PersonalDetailsProps):
           onBlur={() => errors.password && validatePassword()}
         />
       </div>
-      {children}
+      <FormButtons classes="tw:mt-auto" onClickBackBtn={onClickBackBtn} onClickNextBtn={onClickNextBtn} />
     </form>
   );
 };

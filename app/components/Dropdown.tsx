@@ -27,7 +27,7 @@ interface DropdownProps {
   isAsync?: boolean;
   isCreatable?: boolean;
   options?: OptionsOrGroups<unknown, GroupBase<unknown>> | undefined;
-  loadOptions?: ((inputValue: string, callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>) | undefined;
+  loadOptions?: ((inputValue: string, callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>> | unknown) => void) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>) | undefined;
 };
 
 const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: boolean ) => {
