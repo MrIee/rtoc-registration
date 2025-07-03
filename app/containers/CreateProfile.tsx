@@ -1,5 +1,6 @@
 import logo from '../assets/images/logo-rtoc.png';
-import { type Step, type UserDetails } from '../utilities/interfaces';
+import { v4 as uuidv4 } from 'uuid';
+import { type Step, type UserDetails, type VETQualificationDetails } from '../utilities/interfaces';
 import type { RootState } from '~/store/store';
 import { useState, type FC, type JSX } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ import { goToNextStep } from '~/store/registrationSlice';
 import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualifications from '../components/VETQualifications';
-import { authUser, createUser } from '~/utilities/data';
+import { authUser, createUser, createVETQualifications } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const CreateProfile: FC = (): JSX.Element => {
     updateProfileSteps(newStep);
   };
 
-  const handleValidation = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
+  const handleSubmitPersonalDetails = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
       if (isFormValid) {
         const newUser = await createUser(userDetails);
 
@@ -81,16 +82,24 @@ const CreateProfile: FC = (): JSX.Element => {
       }
   };
 
+  const handleSubmitVETQualifications = async (isFormValid: boolean, qualificationDetails: VETQualificationDetails): Promise<void> => {
+    if (isFormValid) {
+      console.log('details:', qualificationDetails);
+      const res = await createVETQualifications({ ...qualificationDetails, userid: uuidv4() });
+      console.log('res:', res);
+    }
+  };
+
   return (
     <div className="tw:h-full tw:lg:w-[640px] tw:w-full tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto tw:flex tw:flex-col">
       <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
       <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
       <Steps classes={'tw:mb-8'} steps={profileSteps} />
-      { step === 0 && <PersonalDetailsForm  handleValidate={handleValidation} customErrors={errors.personalDetails} />}
-      { step === 1 && <VETQualifications />}
-      { step === 2 && <PersonalDetailsForm handleValidate={handleValidation} />}
-      { step === 3 && <PersonalDetailsForm handleValidate={handleValidation} />}
+      { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
+      { step === 1 && <VETQualifications onSubmit={handleSubmitVETQualifications} />}
+      { step === 2 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
+      { step === 3 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
     </div>
   );
 };

@@ -16,11 +16,18 @@ interface RoleRadioButtonsProps {
 };
 
 interface PersonalDetailsFormProps {
-  handleValidate: (isValid: boolean, userDetails: UserDetails) => void;
-  onClickBackBtn?: () => void;
-  onClickNextBtn?: () => void;
+  onSubmit: (isValid: boolean, userDetails: UserDetails) => void;
   customErrors?: UserDetails;
 }
+
+const newUserDetails: UserDetails = {
+  firstname: '',
+  preferredname: '',
+  familyname: '',
+  phone: '',
+  email: '',
+  password: '',
+};
 
 const RoleRadioButtons: FC<RoleRadioButtonsProps> = ({ buttons, onClick }): JSX.Element => {
   const onClickButton = (value: number) => onClick ? onClick(value) : false;
@@ -41,23 +48,15 @@ const RoleRadioButtons: FC<RoleRadioButtonsProps> = ({ buttons, onClick }): JSX.
   );
 };
 
-const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onClickBackBtn, onClickNextBtn, customErrors }): JSX.Element => {
+const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErrors }): JSX.Element => {
   const [radioButtons, setRadioButtons] = useState<Array<RadioButton>>([
     { value: 1, label: 'Vet Practitioner', selected: true, },
     { value: 2, label: 'Office - Marketing', selected: false, },
     { value: 3, label: 'Office - CEO', selected: false, },
   ]);
 
-  const [userDetails, setUserDetails] = useState<UserDetails>({
-    firstname: '',
-    preferredname: '',
-    familyname: '',
-    phone: '',
-    email: '',
-    password: '',
-  });
-
-  const [errors, setErrors] = useState<UserDetails>({} as UserDetails);
+  const [userDetails, setUserDetails] = useState<UserDetails>(newUserDetails);
+  const [errors, setErrors] = useState<UserDetails>(newUserDetails);
   const isFormValid = useRef<boolean>(false);
 
   useEffect(() => {
@@ -98,7 +97,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onC
         break;
     }
 
-    if (!userDetails[name as keyof typeof userDetails]) {
+    if (!userDetails[name as keyof UserDetails]) {
       setErrors((prevErrors: UserDetails) => ({ ...prevErrors, [name]: 'Please enter your ' + nameString }));
       isFormValid.current = false;
     } else {
@@ -138,7 +137,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onC
     }
   };
 
-  const onSubmit = (event: FormEvent | undefined) => {
+  const handleSubmit = (event: FormEvent) => {
     event?.preventDefault();
     isFormValid.current = true;
     validateName('firstname');
@@ -147,11 +146,11 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onC
     validateEmail();
     validatePhoneNumber();
     validatePassword();
-    handleValidate(isFormValid.current, userDetails);
+    onSubmit(isFormValid.current, userDetails);
   };
 
   return (
-    <form className="registration-form" onSubmit={onSubmit} noValidate>
+    <form className="registration-form" onSubmit={handleSubmit} noValidate>
       {
         // Hide Role radio buttons for the time being.
         // eslint-disable-next-line no-constant-binary-expression
@@ -222,7 +221,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ handleValidate, onC
           onBlur={() => errors.password && validatePassword()}
         />
       </div>
-      <FormButtons classes="tw:mt-auto" onClickBackBtn={onClickBackBtn} onClickNextBtn={onClickNextBtn} />
+      <FormButtons classes="tw:mt-auto" />
     </form>
   );
 };

@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type AxiosResponse } from "axios";
-import { type ReactSelectOption, type UserDetails } from "./interfaces";
+import { type ReactSelectOption, type UserDetails, type VETQualificationDetails } from "./interfaces";
 
 export interface Organisation {
   id: number;
@@ -7,9 +7,15 @@ export interface Organisation {
 };
 
 export interface Certification {
-  pkgCode: string;
+  pkgcode: string;
   status: string;
   title: string;
+};
+
+const SESSION_KEY_ITEM = 'rtoc-user-session-key';
+
+export const getSessionKey = (): string => {
+  return localStorage.getItem(SESSION_KEY_ITEM) || '';
 };
 
 axios.defaults.baseURL = 'https://vps1.w617.com:5000';
@@ -29,26 +35,63 @@ export const createUser = async (userDetails: UserDetails) => {
 };
 
 export const authUser = async (email: string, password: string) => {
-  const res = await axios.post('/auth', { email, password });
-  return res;
+  try {
+    const res = await axios.post('/auth', { email, password });
+    const { auth } = res.data;
+
+    if (auth) {
+      localStorage.setItem(SESSION_KEY_ITEM, res.data['sessionKey:']);
+    }
+
+    return res.data;
+  } catch(err) {
+    return err;
+  }
 };
 
-const getOrganisations = async (name: string): Promise<Array<Organisation>> => {
-  const res = await axios.get(`/tga_organisations/search/${name}`);
-  return res.data;
+export const createVETQualifications = async (qualificationDetails: VETQualificationDetails) => {
+  try {
+    const res = await axios.post('/user/qualifications/vet', qualificationDetails, {
+      headers: { 'X-session': getSessionKey(), 'Content-Type': 'application/json' },
+    });
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+const getOrganisations = async (name: string) => {
+  try {
+    const res = await axios.get('/tga_organisations/search/' + name);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
 };
 
 export const getOrganisationsAsOptions = async (name: string): Promise<Array<ReactSelectOption>> => {
-  const organisations: Array<Organisation> = await getOrganisations(name);
-  return organisations.map((org: Organisation) => ({ value: org.id, label: org.name }));
+  try {
+    const organisations: Array<Organisation> = await getOrganisations(name);
+    return organisations.map((org: Organisation) => ({ value: org.id.toString(), label: org.name }));
+  } catch {
+    return [];
+  }
 };
 
-const getCertification = async (id: number): Promise<Array<Certification>> => {
-  const res = await axios.get(`/tga_organisation/courses/${id}`);
-  return res.data;
+const getCertification = async (id: string) => {
+  try {
+    const res = await axios.get('tga_organisation/courses/' + id);
+    return res.data;
+  } catch(err) {
+  return err;
+  }
 };
 
-export const getCertificationsAsOptions = async (id: number): Promise<Array<ReactSelectOption>> => {
-  const certifications: Array<Certification> = await getCertification(id);
-  return certifications.map((cert: Certification) => ({ value: cert.pkgCode, label: cert.title }));
+export const getCertificationsAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const certifications: Array<Certification> = await getCertification(id);
+    return certifications.map((cert: Certification) => ({ value: cert.pkgcode, label: `${cert.pkgcode} - ${cert.title}`}));
+  } catch {
+    return [];
+  }
 };

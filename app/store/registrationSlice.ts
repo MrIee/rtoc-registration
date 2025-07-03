@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface RegistrationState {
   step: number;
@@ -24,8 +24,11 @@ const registrationSlice = createSlice({
         state.step -= 1;
       }
     },
+    goToStep: (state, action: PayloadAction<number>) => {
+      state.step = action.payload;
+    },
   },
 });
 
-export const { goToNextStep, goToPreviousStep } = registrationSlice.actions;
+export const { goToNextStep, goToPreviousStep, goToStep } = registrationSlice.actions;
 export default registrationSlice.reducer;

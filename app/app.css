@@ -4,8 +4,8 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --color-rtoc-purple-200: rgba(240, 230, 248, 1);
-  --color-rtoc-purple-500: rgba(93, 55, 113, 1);
+  --color-rtoc-purple-200: rgb(240, 230, 248);
+  --color-rtoc-purple-500: rgb(93, 55, 113);
 
 
 }
@@ -24,7 +24,7 @@ h2 {
 }
 
 .step {
-  @apply tw:text-sm tw:relative;
+  @apply tw:w-full tw:text-sm tw:relative;
 }
 
 .step:before {

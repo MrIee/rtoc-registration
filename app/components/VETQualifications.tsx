@@ -1,22 +1,30 @@
-import plusIcon from '../assets/images/icon-plus.svg';
 import { useState, type FC, type JSX } from 'react';
+import AddDetailsButton from './AddDetailsButton';
 import Modal from './Modal';
 import VETQualificationsForm from './VETQualificationsForm';
 import FormButtons from "./FormButtons";
+import type { VETQualificationDetails } from '~/utilities/interfaces';
 
-const VETQualifications: FC = (): JSX.Element => {
+interface VETQualificationsProps {
+  onSubmit: (isValid: boolean, qualificationDetails: VETQualificationDetails) => void;
+};
+
+const VETQualifications: FC<VETQualificationsProps> = ({ onSubmit }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const handleSubmit = (isValid: boolean, qualificationDetails: VETQualificationDetails) => {
+    if (isValid) {
+      setIsModalVisible(false);
+      onSubmit(isValid, qualificationDetails);
+    }
+  };
 
   return (
     <div className="registration-form">
-      <button className="btn btn--hollow tw:flex tw:ml-auto" onClick={() => setIsModalVisible(true)}>
-        <img className="tw:mr-1.5" src={plusIcon} alt="plus icon" />
-        Add VET Qualifications
-      </button>
+      <AddDetailsButton label="Add VET Qualifications" onClick={() => setIsModalVisible(true)} />
       <Modal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
-        <VETQualificationsForm />
+        <VETQualificationsForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
       </Modal>
-      <FormButtons classes="tw:mt-auto"  />
+      <FormButtons classes="tw:mt-auto" enableForwardNav />
     </div>
   );
 };

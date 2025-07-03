@@ -16,3 +16,10 @@ export interface UserDetails {
   email: string;
   password: string;
 };
+
+export interface VETQualificationDetails {
+  userid?: string;
+  orgID: string;
+  completed: string;
+  qualification: string;
+};

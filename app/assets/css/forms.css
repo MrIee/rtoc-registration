@@ -6,6 +6,10 @@ Registration Form
   @apply tw:lg:h-[500px] tw:h-full tw:flex tw:flex-col;
 }
 
+.registration-form--auto {
+  @apply tw:lg:h-auto;
+}
+
 /* ============================================================================
 Label
 ============================================================================= */

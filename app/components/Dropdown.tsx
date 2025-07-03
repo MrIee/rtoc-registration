@@ -22,12 +22,18 @@ interface DropdownProps {
   isSearchable?: boolean;
   isDisabled?: boolean;
   isMulti?: boolean;
-  onChange?: (option: ReactSelectOption | unknown) => void;
+  onChange?: (option:  ReactSelectOption, name: string) => void;
+  onBlur?: () => void;
   required?: boolean;
   isAsync?: boolean;
   isCreatable?: boolean;
   options?: OptionsOrGroups<unknown, GroupBase<unknown>> | undefined;
-  loadOptions?: ((inputValue: string, callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>> | unknown) => void) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>) | undefined;
+  loadOptions?: (
+    inputValue: string,
+    callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void
+  ) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>;
+  error?: string;
+  showErrorText?: boolean;
 };
 
 const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: boolean ) => {
@@ -63,14 +69,30 @@ const Dropdown = ({
   isDisabled = false,
   isMulti = false,
   onChange,
+  onBlur,
   required = true,
   isAsync = false,
   isCreatable = false,
   options,
-  loadOptions
+  loadOptions,
+  error,
+  showErrorText = true,
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
   const inputId: string = 'react-select-' + useId();
+
+  const getBoxShadowStyle = (isFocused: boolean): string => {
+    if (error) {
+      return 'red';
+    } else if (isFocused) {
+      return '0 0 0 2px rgb(93, 55, 113)';
+    } else {
+      if (isMulti) {
+        return '0 0 0 2px lightgray';
+      }
+      return 'none';
+    }
+  };
 
   const selectStyles: StylesConfig = {
     control: (base, state) => ({
@@ -79,9 +101,9 @@ const Dropdown = ({
         boxShadowColor: 'none',
       },
       padding: 5,
+      borderWidth: 0,
       borderRadius: 8,
-      borderColor: state.isFocused ? 'rgba(93, 55, 113, 1)' : undefined,
-      boxShadow: state.isFocused ? '0 0 0 1px rgba(93, 55, 113, 1)' : 'none',
+      boxShadow: getBoxShadowStyle(state.isFocused),
       backgroundColor: 'rgba(0,0,0,0)',
       cursor: isSearchable ? 'text' : 'pointer',
     }),
@@ -108,9 +130,9 @@ const Dropdown = ({
     },
   });
 
-  const handleOnChange = (option: unknown) => {
+  const handleOnChange = (option: ReactSelectOption | unknown) => {
     setValue(option);
-    onChange?.(option);
+    onChange?.(option as ReactSelectOption, name || '');
   };
 
   const handleRemoveOption = (optionToRemove: ReactSelectOption) => {
@@ -123,7 +145,7 @@ const Dropdown = ({
   const selectProps = {
     inputId,
     options,
-    className: "tw:bg-gray-100",
+    className: 'tw:bg-gray-100 tw:rounded-lg',
     styles: selectStyles,
     theme: selectTheme,
     components: {
@@ -133,14 +155,13 @@ const Dropdown = ({
     value,
     placeholder,
     required,
-    name,
     isMulti,
-    hideSelectedOptions: !isMulti,
+    hideSelectedOptions: isMulti,
     controlShouldRenderValue: !isMulti,
-    isClearable: true,
     isSearchable: isSearchable,
     noOptionsMessage: () => 'Start typing to search',
     onChange: handleOnChange,
+    onBlur,
     isDisabled: isDisabled,
   };
 
@@ -197,9 +218,10 @@ const Dropdown = ({
           </span>
         )}
       </label>
-      <div className={classNames({'tw:p-4': isMulti, 'tw:rounded-lg': isMulti, 'tw:bg-gray-100': isMulti})}>
+      <div className={classNames({'tw:p-4 tw:rounded-lg tw:bg-gray-100': isMulti})}>
         { <OptionList /> }
         { <SelectComponent /> }
+        { error && showErrorText && <span className="tw:text-sm tw:text-red-500">{error}</span> }
       </div>
     </div>
   );

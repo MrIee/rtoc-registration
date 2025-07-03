@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import classNames from "classnames";
-import { type Step } from "../utilities/interfaces";
+import { useDispatch } from 'react-redux';
+import { goToStep } from '~/store/registrationSlice';
+import { type Step } from '../utilities/interfaces';
 
 interface StepsProps {
   classes?: string;
@@ -9,10 +11,20 @@ interface StepsProps {
 };
 
 const Steps = ({ classes, steps, onClick }: StepsProps) => {
-
+  const dispatch = useDispatch();
+  const handleClick = (index: number) => {
+    if (onClick) {
+      onClick(index);
+    }
+    dispatch(goToStep(index));
+  };
   const stepList: ReactNode = steps.map((step: Step, index: number) =>
-    <div className={classNames('tw:w-full', { 'tw:cursor-pointer': onClick })} key={index} onClick={() => onClick && onClick(index)}>
-      <span className={classNames('step', { 'step--active': step.active })}>{step.label}</span>
+    <div
+        className={classNames('step', { 'step--active': step.active, 'tw:cursor-pointer': onClick })}
+        key={index}
+        onClick={() => handleClick(index)}
+      >
+      {step.label}
     </div>
   );
 
