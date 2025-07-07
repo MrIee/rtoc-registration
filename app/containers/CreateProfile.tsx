@@ -1,5 +1,4 @@
 import logo from '../assets/images/logo-rtoc.png';
-import { v4 as uuidv4 } from 'uuid';
 import { type Step, type UserDetails, type VETQualificationDetails } from '../utilities/interfaces';
 import type { RootState } from '~/store/store';
 import { useState, type FC, type JSX } from "react";
@@ -7,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { goToNextStep } from '~/store/registrationSlice';
 import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
-import VETQualifications from '../components/VETQualifications';
-import { authUser, createUser, createVETQualifications } from '~/utilities/data';
+import VETQualificationsContainer from '../components/VETQualifications';
+import { authUser, createUser, createVETQualifications, getVETQualifications } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const step = useSelector((state: RootState) => state.registration.step);
+  const [vetQualifications, setVETQualifications] = useState<Array<VETQualificationDetails>>([]);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
@@ -76,17 +76,26 @@ const CreateProfile: FC = (): JSX.Element => {
           return;
         }
 
-        const res = await authUser(userDetails.email, userDetails.password);
-        console.log('auth:', res);
-        updateStep(step + 1);
+        const auth = await authUser(userDetails.email, userDetails.password);
+        if (auth) {
+          updateStep(step + 1);
+        }
       }
   };
 
   const handleSubmitVETQualifications = async (isFormValid: boolean, qualificationDetails: VETQualificationDetails): Promise<void> => {
     if (isFormValid) {
-      console.log('details:', qualificationDetails);
-      const res = await createVETQualifications({ ...qualificationDetails, userid: uuidv4() });
-      console.log('res:', res);
+
+      const res = await createVETQualifications({ ...qualificationDetails });
+
+      if (res) {
+        const qualifications = await getVETQualifications();
+        console.log('qualifications:', qualifications);
+
+        if (qualifications) {
+          setVETQualifications(qualifications);
+        }
+      }
     }
   };
 
@@ -97,7 +106,7 @@ const CreateProfile: FC = (): JSX.Element => {
 
       <Steps classes={'tw:mb-8'} steps={profileSteps} />
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
-      { step === 1 && <VETQualifications onSubmit={handleSubmitVETQualifications} />}
+      { step === 1 && <VETQualificationsContainer qualifications={vetQualifications} onSubmit={handleSubmitVETQualifications} />}
       { step === 2 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
       { step === 3 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
     </div>

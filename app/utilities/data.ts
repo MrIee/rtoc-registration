@@ -44,19 +44,30 @@ export const authUser = async (email: string, password: string) => {
     }
 
     return res.data;
-  } catch(err) {
-    return err;
+  } catch {
+    return null;
   }
 };
 
 export const createVETQualifications = async (qualificationDetails: VETQualificationDetails) => {
   try {
     const res = await axios.post('/user/qualifications/vet', qualificationDetails, {
-      headers: { 'X-session': getSessionKey(), 'Content-Type': 'application/json' },
+      headers: { 'x-session': getSessionKey() },
     });
     return res.data;
-  } catch(err) {
-    return err;
+  } catch {
+    return null;
+  }
+};
+
+export const getVETQualifications = async () => {
+  try {
+    const res = await axios.get('/user/qualifications/vet', {
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return [];
   }
 };
 
@@ -64,8 +75,8 @@ const getOrganisations = async (name: string) => {
   try {
     const res = await axios.get('/tga_organisations/search/' + name);
     return res.data;
-  } catch(err) {
-    return err;
+  } catch {
+    return [];
   }
 };
 

@@ -15,12 +15,20 @@ body {
   @apply tw:h-full tw:w-full tw:text-gray-500;
 }
 
+h1, h2, h3 {
+  @apply tw:font-semibold;
+}
+
 h1 {
-  @apply tw:text-[42px] tw:text-gray-700 tw:font-semibold;
+  @apply tw:text-[42px] tw:text-gray-700;
 }
 
 h2 {
-  @apply tw:text-[32px] tw:font-semibold tw:text-rtoc-purple-500;
+  @apply tw:text-[32px] tw:text-rtoc-purple-500;
+}
+
+h3 {
+  @apply tw:text-xl tw:text-rtoc-purple-500;
 }
 
 .step {

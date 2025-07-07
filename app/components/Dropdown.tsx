@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import crossIcon from '../assets/images/icon-cross.svg';
-import { useId, useState } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import Select, {
   type OptionsOrGroups,
   type GroupBase,
@@ -189,24 +189,18 @@ const Dropdown = ({
     }
   };
 
-  const OptionList = () => {
-    if (isMulti && value) {
-      return (
-        <div className="tw:flex tw:flex-col">
-          {
-            (value as Array<ReactSelectOption>).map((option: ReactSelectOption) => (
-              <div key={option.value} className="tw:flex tw:justify-between tw:mb-2.5">
-                <span>{option.label}</span>
-                <img className="tw:cursor-pointer" src={crossIcon} alt="Delete option" onClick={() => handleRemoveOption(option)} />
-              </div>
-            ))
-          }
-        </div>
-      );
-    }
-
-    return null;
-  };
+  const optionList: ReactNode = isMulti && value ? (
+    <div className="tw:flex tw:flex-col">
+      {
+        (value as Array<ReactSelectOption>).map((option: ReactSelectOption) => (
+          <div key={option.value} className="tw:flex tw:justify-between tw:mb-2.5">
+            <span>{option.label}</span>
+            <img className="tw:cursor-pointer" src={crossIcon} alt="Delete option" onClick={() => handleRemoveOption(option)} />
+          </div>
+        ))
+      }
+    </div>
+  ) : null;
 
   return (
     <div>
@@ -219,7 +213,7 @@ const Dropdown = ({
         )}
       </label>
       <div className={classNames({'tw:p-4 tw:rounded-lg tw:bg-gray-100': isMulti})}>
-        { <OptionList /> }
+        { optionList }
         { <SelectComponent /> }
         { error && showErrorText && <span className="tw:text-sm tw:text-red-500">{error}</span> }
       </div>

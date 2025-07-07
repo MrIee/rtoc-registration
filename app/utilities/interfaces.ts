@@ -19,7 +19,10 @@ export interface UserDetails {
 
 export interface VETQualificationDetails {
   userid?: string;
-  orgID: string;
+  orgID?: string;
+  orgName?: string;
+  course?: string;
+  title?: string;
   completed: string;
-  qualification: string;
+  qualification?: string;
 };
