@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import classNames from "classnames";
+import type { ReactNode } from 'react';
+import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { goToStep } from '~/store/registrationSlice';
 import { type Step } from '../utilities/interfaces';

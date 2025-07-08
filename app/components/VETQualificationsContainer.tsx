@@ -4,7 +4,7 @@ import { useState, type FC, type JSX, type ReactNode } from 'react';
 import AddDetailsButton from './AddDetailsButton';
 import Modal from './Modal';
 import VETQualificationsForm from './VETQualificationsForm';
-import FormButtons from "./FormButtons";
+import FormButtons from './FormButtons';
 import { type VETQualificationDetails } from '~/utilities/interfaces';
 
 interface VETQualificationsProps {
@@ -14,6 +14,7 @@ interface VETQualificationsProps {
 
 const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], onSubmit }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   const handleSubmit = (isValid: boolean, qualificationDetails: VETQualificationDetails) => {
     if (isValid) {
       setIsModalVisible(false);
@@ -22,7 +23,7 @@ const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], on
   };
 
   const qualificationsList: ReactNode = qualifications.map((qualification: VETQualificationDetails) =>
-    <div className="tw:flex tw:justify-between tw:py-4 tw:[&:not(:first-child)]:border-t tw:border-t-rtoc-purple-500">
+    <div key={qualification.rowID} className="tw:flex tw:justify-between tw:py-4 tw:[&:not(:first-child)]:border-t tw:border-t-rtoc-purple-500">
       <div className="tw:flex tw:flex-col tw:gap-1.5 tw:text-sm">
         <strong className="tw:text-black tw:text-xl tw:font-semibold">{ qualification.orgName }</strong>
         <span>{ qualification.title }</span>

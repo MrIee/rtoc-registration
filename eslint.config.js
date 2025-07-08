@@ -24,6 +24,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'semi': [2, 'always'],
+      'quotes': ['error', 'single', { 'avoidEscape': true }]
     },
   },
 );

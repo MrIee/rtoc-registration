@@ -1,27 +1,12 @@
-import classNames from "classnames";
-import type { ChangeEvent } from "react";
+import classNames from 'classnames';
+import type { FC } from 'react';
+import type { InputProps } from '~/utilities/interfaces';
 
-interface TextInputProps {
-  label?: string;
-  placeholder?: string;
-  name?: string;
-  value?: string;
-  error?: string;
+interface TextInputProps extends InputProps {
   isPassword?: boolean;
-  required?: boolean;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
 };
 
-export const TextInput = ({ label, placeholder, name, value, error, isPassword, required = true, onChange, onBlur }: TextInputProps) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event);
-  };
-
-  const handleBlur = () => {
-    onBlur?.();
-  };
-
+export const TextInput: FC<TextInputProps> = ({ label, placeholder, name, value, error, isPassword, required = true, onChange, onBlur }) => {
   return (
     <label className="tw:w-full tw:inline-flex tw:flex-col tw:justify-start tw:mb-4">
       { label && <span>{label}{ required && (<span>*</span>)}</span> }
@@ -32,8 +17,8 @@ export const TextInput = ({ label, placeholder, name, value, error, isPassword, 
         name={name}
         placeholder={placeholder}
         required={required}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={onChange}
+        onBlur={onBlur}
       />
       { error && <span className="tw:text-sm tw:text-red-500">{error}</span> }
     </label>

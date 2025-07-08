@@ -193,7 +193,7 @@ const Dropdown = ({
     <div className="tw:flex tw:flex-col">
       {
         (value as Array<ReactSelectOption>).map((option: ReactSelectOption) => (
-          <div key={option.value} className="tw:flex tw:justify-between tw:mb-2.5">
+          <div key={option.id} className="tw:flex tw:justify-between tw:mb-2.5">
             <span>{option.label}</span>
             <img className="tw:cursor-pointer" src={crossIcon} alt="Delete option" onClick={() => handleRemoveOption(option)} />
           </div>

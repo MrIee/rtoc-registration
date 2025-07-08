@@ -1,6 +1,6 @@
 import { getOrganisationsAsOptions, getCertificationsAsOptions } from '~/utilities/data';
 import debounce from 'lodash.debounce';
-import Dropdown from "./Dropdown";
+import Dropdown from './Dropdown';
 import { type ReactSelectOption, type VETQualificationDetails } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import DatePicker from './DatePicker';
@@ -18,29 +18,14 @@ const newVETQualificationDetails: VETQualificationDetails = {
 };
 
 const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
-  const initialCertificationPlaceholder: string = 'Select an RTO to see Cerficatations';
   const [certificationOptions, setCertificationOptions] = useState<Array<ReactSelectOption>>([]);
   const [isCertificationsLoading, setIsCertificationsLoading] = useState<boolean>(true);
-  const [certificationPlaceholder, setCertificationPlaceholder] = useState<string>(initialCertificationPlaceholder);
+  const [certificationPlaceholder, setCertificationPlaceholder] = useState<string>('Select an RTO to see Cerficatations');
   const [vetQualificationDetails, setVETQualificationDetails] = useState<VETQualificationDetails>(newVETQualificationDetails);
   const [errors, setErrors] = useState<VETQualificationDetails>(newVETQualificationDetails);
   const organisationName: string = 'orgID';
   const certificationName: string = 'qualification';
   const isFormValid = useRef<boolean>(false);
-
-  // To be reused later
-  // const AQFLevels: Array<ReactSelectOption> = [
-  //   { value: 1, label: 'AQF Level 1 - Certificate I', },
-  //   { value: 2, label: 'AQF Level 2 - Certificate II', },
-  //   { value: 3, label: 'AQF Level 3 - Certificate III', },
-  //   { value: 4, label: 'AQF Level 4 - Certificate IV', },
-  //   { value: 5, label: 'AQF Level 5 - Diploma', },
-  //   { value: 6, label: 'AQF Level 6 - Advanced Diploma, Associate Degree', },
-  //   { value: 7, label: 'AQF Level 7 - Vocational Degree, Bachelor Degree', },
-  //   { value: 8, label: 'AQF Level 8 - Bachelor Honours Degree, Graduate Certificate, Graduate Diploma', },
-  //   { value: 9, label: 'AQF Level 9 - Masters Degree', },
-  //   { value: 10, label: 'AQF Level 10 - Doctoral Degree', },
-  // ];
 
   const loadOrganisations = debounce((
     inputValue: string,
@@ -133,7 +118,7 @@ const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSub
         isSearchable
         error={errors.orgID}
         onChange={handleOnChangeOrganisation}
-        onBlur={() => errors.orgID && validateDropdown('orgID')}
+        onBlur={() => errors.qualification && validateDropdown(organisationName)}
       />
       <Dropdown
         options={certificationOptions}
@@ -144,13 +129,13 @@ const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSub
         error={errors.qualification}
         isDisabled={isCertificationsLoading}
         onChange={handleOnChangeDropdown}
-        onBlur={() => errors.orgID && validateDropdown('qualifications')}
+        onBlur={() => errors.qualification && validateDropdown(certificationName)}
       />
       <DatePicker
         label="Completed on"
         error={errors.completed}
         onChange={handleOnChangeDate}
-        onBlur={() => errors.orgID && validateDate()}
+        onBlur={() => errors.completed && validateDate()}
       />
       <FormAddCancelButtons onCancel={onCancel} />
     </form>
