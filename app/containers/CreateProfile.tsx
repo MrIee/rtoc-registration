@@ -8,7 +8,7 @@ import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualificationsContainer from '../components/VETQualificationsContainer';
 import HigherEducationContainer from '../components/HigherEducationContainer';
-import { authUser, createTEQualifications, createUser, createVETQualifications, getTEQualifications, getVETQualifications } from '~/utilities/data';
+import { authUser, createTEQualifications, createUser, createVETQualifications, deleteVETQualification, getTEQualifications, getVETQualifications } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -50,6 +50,10 @@ const CreateProfile: FC = (): JSX.Element => {
   });
 
   useEffect(() => {
+    loadVETQualifications();
+  }, []);
+
+  useEffect(() => {
     const activeStepIndex = profileSteps.findIndex((profileStep: Step) => profileStep.active === true);
     const updateProfileSteps = (newStep: number) => {
       const updatedProfileSteps = profileSteps.map((profileStep: Step, i: number) => {
@@ -87,19 +91,28 @@ const CreateProfile: FC = (): JSX.Element => {
       }
   };
 
+  const loadVETQualifications = async () => {
+    const qualifications: Array<VETQualificationDetails> = await getVETQualifications();
+
+    if (qualifications) {
+      setVETQualifications(qualifications);
+    }
+  };
+
   const handleSubmitVETQualifications = async (isFormValid: boolean, qualificationDetails: VETQualificationDetails): Promise<void> => {
     if (isFormValid) {
 
       const res = await createVETQualifications({ ...qualificationDetails });
 
       if (res) {
-        const qualifications: Array<VETQualificationDetails> = await getVETQualifications();
-
-        if (qualifications) {
-          setVETQualifications(qualifications);
-        }
+        loadVETQualifications();
       }
     }
+  };
+
+  const handleDeleteVetQualification = async (id: number) => {
+    await deleteVETQualification(id);
+    loadVETQualifications();
   };
 
   const handleSubmitHigherEducation = async (isFormValid: boolean, teDetails: TEDetails) => {
@@ -120,7 +133,11 @@ const CreateProfile: FC = (): JSX.Element => {
 
       <Steps classes={'tw:mb-8'} steps={profileSteps} />
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
-      { step === 1 && <VETQualificationsContainer onSubmit={handleSubmitVETQualifications} qualifications={vetQualifications} />}
+      { step === 1 && <VETQualificationsContainer
+        onSubmit={handleSubmitVETQualifications}
+        onDelete={handleDeleteVetQualification}
+        qualifications={vetQualifications}
+      />}
       { step === 2 && <HigherEducationContainer onSubmit={handleSubmitHigherEducation} />}
       { step === 3 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
     </div>

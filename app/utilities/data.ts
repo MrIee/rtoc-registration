@@ -69,6 +69,19 @@ export const createVETQualifications = async (qualificationDetails: VETQualifica
   }
 };
 
+export const deleteVETQualification = async (id: number) => {
+  try {
+    const res = await axios.delete('/user/qualifications/vet', {
+      data: { rowID: id },
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+
 export const getVETQualifications = async () => {
   try {
     const res = await axios.get('/user/qualifications/vet', {
@@ -175,8 +188,7 @@ export const createTEQualifications = async (data: TEDetails) => {
       headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
     });
     return res.data;
-  } catch(err) {
-    console.log(err);
+  } catch {
     return null;
   }
 };

@@ -10,15 +10,22 @@ import { type VETQualificationDetails } from '~/utilities/interfaces';
 interface VETQualificationsProps {
   qualifications: Array<VETQualificationDetails>;
   onSubmit: (isValid: boolean, qualificationDetails: VETQualificationDetails) => void;
+  onDelete: (id: number) => void,
 };
 
-const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], onSubmit }): JSX.Element => {
+const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], onSubmit, onDelete }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleSubmit = (isValid: boolean, qualificationDetails: VETQualificationDetails) => {
     if (isValid) {
       setIsModalVisible(false);
       onSubmit(isValid, qualificationDetails);
+    }
+  };
+
+  const handleDelete = (id: number | undefined) => {
+    if (id) {
+      onDelete(id);
     }
   };
 
@@ -30,8 +37,7 @@ const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], on
         <span>{ qualification.completed }</span>
       </div>
       <div className="tw:h-4 tw:flex tw:gap-2">
-        <img className="tw:cursor-pointer" src={iconEdit} alt="edit" />
-        <img className="tw:cursor-pointer" src={iconDelete} alt="delete" />
+        <img className="tw:cursor-pointer" src={iconDelete} alt="delete" onClick={() => handleDelete(qualification.rowID)} />
       </div>
     </div>
   );
@@ -43,7 +49,7 @@ const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], on
         <VETQualificationsForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
       </Modal>
       { qualifications.length > 0 &&
-        <div className="tw:p-8 tw:mt-4 tw:rounded-xl tw:border-2 tw:border-rtoc-purple-500">
+        <div className="tw:p-8 tw:my-4 tw:rounded-xl tw:border-2 tw:border-rtoc-purple-500">
           <h3>VET Qualifications</h3>
           <div>
             { qualificationsList }
