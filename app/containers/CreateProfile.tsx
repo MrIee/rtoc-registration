@@ -1,5 +1,5 @@
 import logo from '../assets/images/logo-rtoc.png';
-import { type Step, type TEDetails, type UserDetails, type VETQualificationDetails } from '../utilities/interfaces';
+import type { Step, TeachingExperience, TEQualification, UserDetails, VETQualificationDetails } from '../utilities/interfaces';
 import type { RootState } from '~/store/store';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,12 +8,27 @@ import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualificationsContainer from '../components/VETQualificationsContainer';
 import HigherEducationContainer from '../components/HigherEducationContainer';
-import { authUser, createTEQualifications, createUser, createVETQualifications, deleteVETQualification, getTEQualifications, getVETQualifications } from '~/utilities/data';
+import ExperienceContainer from '../components/ExperienceContainer';
+import {
+  authUser,
+  createTEQualifications,
+  createUser,
+  createVETQualifications,
+  deleteVETQualification,
+  getTEQualifications,
+  deleteTEQualification,
+  getVETQualifications,
+  createTeachingExperience,
+  getTeachingExperience,
+  deleteTeachingExperience
+} from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const step = useSelector((state: RootState) => state.registration.step);
   const [vetQualifications, setVETQualifications] = useState<Array<VETQualificationDetails>>([]);
+  const [teQualifications, setTEQualifications] = useState<Array<TEQualification>>([]);
+  const [teachingExperience, setTeachingExperience] = useState<Array<TeachingExperience>>([]);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
@@ -51,6 +66,8 @@ const CreateProfile: FC = (): JSX.Element => {
 
   useEffect(() => {
     loadVETQualifications();
+    loadTEQualifications();
+    loadTeachingExperience();
   }, []);
 
   useEffect(() => {
@@ -115,13 +132,48 @@ const CreateProfile: FC = (): JSX.Element => {
     loadVETQualifications();
   };
 
-  const handleSubmitHigherEducation = async (isFormValid: boolean, teDetails: TEDetails) => {
+  const loadTEQualifications = async () => {
+    const qualifications: Array<TEQualification> = await getTEQualifications();
+
+    if (qualifications.length > 0) {
+      setTEQualifications(qualifications);
+    }
+  };
+
+  const handleDeleteTEQualification = async (id: number) => {
+    await deleteTEQualification(id);
+    loadTEQualifications();
+  };
+
+  const handleSubmitHigherEducation = async (isFormValid: boolean, teDetails: TEQualification) => {
     if (isFormValid) {
       const res = await createTEQualifications(teDetails);
 
       if (res) {
-        const teQualifications = await getTEQualifications();
-        console.log('teQualifications:', teQualifications);
+        loadTEQualifications();
+      }
+    }
+  };
+
+  const loadTeachingExperience = async () => {
+    const experience: Array<TeachingExperience> = await getTeachingExperience();
+
+    if (experience.length > 0) {
+      setTeachingExperience(experience);
+    }
+  };
+
+  const handleDeleteTeachingExperience = async (id: number) => {
+    await deleteTeachingExperience(id);
+    loadTeachingExperience();
+  };
+
+  const handleOnSubmitTE = async (isFormValid: boolean, teachingExperience: TeachingExperience) => {
+    if (isFormValid) {
+      const res = await createTeachingExperience(teachingExperience);
+
+      if (res) {
+        loadTeachingExperience();
       }
     }
   };
@@ -138,8 +190,16 @@ const CreateProfile: FC = (): JSX.Element => {
         onDelete={handleDeleteVetQualification}
         qualifications={vetQualifications}
       />}
-      { step === 2 && <HigherEducationContainer onSubmit={handleSubmitHigherEducation} />}
-      { step === 3 && <PersonalDetailsForm onSubmit={handleSubmitPersonalDetails} />}
+      { step === 2 && <HigherEducationContainer
+        onSubmit={handleSubmitHigherEducation}
+        onDelete={handleDeleteTEQualification}
+        qualifications={teQualifications}
+      />}
+      { step === 3 && <ExperienceContainer
+        onSubmitTE={handleOnSubmitTE}
+        onDeleteTE={handleDeleteTeachingExperience}
+        teachingExperience={teachingExperience}
+      />}
     </div>
   );
 };

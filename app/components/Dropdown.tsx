@@ -22,7 +22,9 @@ interface DropdownProps {
   isSearchable?: boolean;
   isDisabled?: boolean;
   isMulti?: boolean;
-  onChange?: (option:  ReactSelectOption, name: string) => void;
+  onChange?: (option: ReactSelectOption, name: string) => void;
+  onAddMulti?: (options: Array<ReactSelectOption>, name: string) => void;
+  onRemove?: (options: Array<ReactSelectOption>, name: string) => void;
   onBlur?: () => void;
   required?: boolean;
   isAsync?: boolean;
@@ -51,7 +53,7 @@ const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: bool
  *
  * @param isAsync If true then \<AsyncSelect /> component is rendered, which can load data from an api.
  * @param isCreatable If true then \<AsyncCreatableSelect /> component is rendered, which enables any typed input to be used as the value.
- * @param loadOptions Use this for the options when **isAsync** or is **Creatable** are true. Expects a callback with format
+ * @param loadOptions Use this for the options when **isAsync** or **isCreatable** are true. Expects a callback with format
  *
  * ```(inputValue: string, callback: (options: ColourOption[]) => void) => { ... }```
  * @param options Use this if **isAsync** and **isCreatable** are both false.
@@ -69,6 +71,8 @@ const Dropdown = ({
   isDisabled = false,
   isMulti = false,
   onChange,
+  onAddMulti,
+  onRemove,
   onBlur,
   required = true,
   isAsync = false,
@@ -83,7 +87,7 @@ const Dropdown = ({
 
   const getBoxShadowStyle = (isFocused: boolean): string => {
     if (error) {
-      return 'red';
+      return '0 0 0 2px red';
     } else if (isFocused) {
       return '0 0 0 2px rgb(93, 55, 113)';
     } else {
@@ -130,9 +134,14 @@ const Dropdown = ({
     },
   });
 
-  const handleOnChange = (option: ReactSelectOption | unknown) => {
+  const handleOnChange = (option: ReactSelectOption | Array<ReactSelectOption> | unknown) => {
     setValue(option);
-    onChange?.(option as ReactSelectOption, name || '');
+
+    if (typeof option === 'object' && Object.hasOwn(option || {}, 'length')) {
+      onAddMulti?.(option as Array<ReactSelectOption>, name || '');
+    } else {
+      onChange?.(option as ReactSelectOption, name || '');
+    }
   };
 
   const handleRemoveOption = (optionToRemove: ReactSelectOption) => {
@@ -140,6 +149,7 @@ const Dropdown = ({
       (value as Array<ReactSelectOption>).filter((option: ReactSelectOption) => option.value !== optionToRemove.value);
 
     setValue(newOptions);
+    onRemove?.(newOptions, name || '');
   };
 
   const selectProps = {
@@ -156,6 +166,7 @@ const Dropdown = ({
     placeholder,
     required,
     isMulti,
+    isClearable: false,
     hideSelectedOptions: isMulti,
     controlShouldRenderValue: !isMulti,
     isSearchable: isSearchable,
@@ -180,10 +191,10 @@ const Dropdown = ({
   };
 
   const SelectComponent = () => {
-    if (isAsync) {
-      return <AsyncSelect {...asyncSelectProps} />;
-    } else if (isCreatable) {
+    if (isCreatable) {
       return <AsyncCreatableSelect createOptionPosition='first' { ...asyncCreatableProps } />;
+    } else if (isAsync) {
+      return <AsyncSelect {...asyncSelectProps} />;
     } else {
       return <Select {...selectProps} />;
     }
@@ -215,8 +226,8 @@ const Dropdown = ({
       <div className={classNames({'tw:p-4 tw:rounded-lg tw:bg-gray-100': isMulti})}>
         { optionList }
         { <SelectComponent /> }
-        { error && showErrorText && <span className="tw:text-sm tw:text-red-500">{error}</span> }
       </div>
+      { error && showErrorText && <span className="tw:text-sm tw:text-red-500">{error}</span> }
     </div>
   );
 };

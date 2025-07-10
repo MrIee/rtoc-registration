@@ -118,7 +118,7 @@ const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSub
         isSearchable
         error={errors.orgID}
         onChange={handleOnChangeOrganisation}
-        onBlur={() => errors.qualification && validateDropdown(organisationName)}
+        onBlur={() => errors.orgID && validateDropdown(organisationName)}
       />
       <Dropdown
         options={certificationOptions}

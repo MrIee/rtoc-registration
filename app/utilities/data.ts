@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import { nanoid } from 'nanoid';
-import type { ReactSelectOption, UserDetails, VETQualificationDetails, TEProvider, TECourse, TEDetails } from './interfaces';
+import type { ReactSelectOption, UserDetails, VETQualificationDetails, TEProvider, TECourse, Unit, TEQualification, TeachingExperience } from './interfaces';
 
 interface Organisation {
   id: number;
@@ -116,7 +116,7 @@ const getCertification = async (id: string) => {
     const res = await axios.get('tga_organisation/courses/' + id);
     return res.data;
   } catch(err) {
-  return err;
+    return err;
   }
 };
 
@@ -169,16 +169,18 @@ export const getTECoursesAsOptions = async (id: number): Promise<Array<ReactSele
   }
 };
 
-export const createTEQualifications = async (data: TEDetails) => {
-  console.log('data:', data);
+export const createTEQualifications = async (data: TEQualification) => {
   try {
     const formData = new FormData();
-    formData.append('providerID', data.providerID);
-    formData.append('providerName', data.providerName);
-    formData.append('courseID', data.courseID);
-    formData.append('courseName', data.courseName);
-    formData.append('aqf', data.aqf);
-    formData.append('completed', data.completed);
+    const dataJSON: string = JSON.stringify({
+      providerID: data.providerID,
+      providerName: data.providerName,
+      courseID: data.courseID,
+      courseName: data.courseName,
+      aqf: data.aqf,
+      completed: data.completed,
+    });
+    formData.append('formData', dataJSON);
 
     if (data.file) {
       formData.append('file', data.file);
@@ -187,7 +189,8 @@ export const createTEQualifications = async (data: TEDetails) => {
     const res = await axios.post('/user/qualifications/te', formData, {
       headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
     });
-    return res.data;
+
+   return res.data;
   } catch {
     return null;
   }
@@ -198,8 +201,99 @@ export const getTEQualifications = async () => {
     const res = await axios.get('/user/qualifications/te', {
       headers: { 'x-session': getSessionKey() },
     });
+
+     const qualifications: Array<TEQualification> = res.data.map((qualification: TEQualification) => ({
+      providerID: qualification.providerID,
+      providerName: qualification.providerName,
+      courseID: qualification.courseID,
+      courseName: qualification.courseName,
+      aqf: qualification.aqf,
+      completed: qualification.f_completed,
+      fileName: qualification.fileName,
+      rowID: qualification.rowID,
+    }));
+
+    return qualifications;
+  } catch {
+    return [];
+  }
+};
+
+export const deleteTEQualification = async (id: number) => {
+  try {
+    const res = await axios.delete('/user/qualifications/te', {
+      data: { rowID: id },
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+// =============================================================================
+// Teaching Experience Endpoints
+// =============================================================================
+
+export const getUnits = async (id: string) => {
+  try {
+    const res = await axios.get('tga_organisation/units/' + id);
+    return { ...res.data, code: res.data.pkgcode };
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getUnitsAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const units: Array<Unit> = await getUnits(id);
+    return Object.keys(units).map((key: string) => {
+      const k: keyof Array<Unit> = key as keyof typeof units;
+      const unit = units[k] as Unit;
+
+      if (unit) {
+        return { id: nanoid(), value: unit.pkgcode, label: `${unit.pkgcode} - ${unit.title}`};
+      }
+
+      return { id: '', value: '', label: ''};
+    });
+  } catch {
+    return [];
+  }
+};
+
+export const createTeachingExperience = async (data: TeachingExperience) => {
+  try {
+    const res = await axios.post('/user/experience/vet_teach', data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+   return res.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getTeachingExperience = async () => {
+  try {
+    const res = await axios.get('/user/experience/vet_teach/', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
     return res.data;
   } catch {
     return [];
+  }
+};
+
+export const deleteTeachingExperience = async (id: number) => {
+  try {
+    const res = await axios.delete('/user/experience/vet_teach/', {
+      data: { rowID: id },
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return null;
   }
 };

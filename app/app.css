@@ -1,5 +1,6 @@
 @import "tailwindcss" prefix(tw);
 @import "./assets/css/forms.css";
+@import "./assets/css/list.css";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,

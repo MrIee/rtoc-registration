@@ -32,7 +32,16 @@ export interface ReactSelectOption {
   id: string;
   value: unknown;
   label: string;
-}
+  __isNew__?: boolean;
+};
+
+export interface ListItem {
+  id: number;
+  title: string;
+  list: Array<string>;
+  points?: Array<string>;
+  fileName?: string;
+};
 
 export interface UserDetails {
   firstname: string;
@@ -47,6 +56,7 @@ export interface VETQualificationDetails {
   userid?: string;
   orgID?: string;
   orgName?: string;
+  OrgName?: string;
   course?: string;
   title?: string;
   completed: string;
@@ -65,21 +75,31 @@ export interface TECourse {
   id: number,
 };
 
-export interface TEDetails {
+export interface TEQualification {
   providerID: string;
   providerName: string;
   courseID: string;
   courseName: string;
   aqf: string;
   completed: string;
+  f_completed?: string;
   file: File | null;
   fileName: string;
+  rowID?: number;
 };
 
-export interface TEData {
-  providerName: string;
-  aqf: string;
-  courseID: string;
-  courseName: string;
+export interface Unit {
+  rowID?: string;
+  code?: string;
+  pkgcode?: string;
+  status?: string;
+  title: string;
+};
+
+export interface TeachingExperience {
+  orgID: string;
+  orgName?: string;
+  started: string;
   completed: string;
-}
+  units: Array<string> | Array<Unit> | string;
+};

@@ -1,6 +1,6 @@
 import type { ReactSelectOption } from '~/utilities/interfaces';
 import Dropdown from './Dropdown';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface DatePickerProps {
   label?: string;
@@ -18,7 +18,7 @@ const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
   const months: Array<ReactSelectOption> = [...Array(12).keys()].map((key: number): ReactSelectOption => {
     const monthName: string = new Date(0, key).toLocaleString('en', { month: 'long' });
     const monthValue: string = `${key + 1}`.padStart(2, '0');
-    return { value: monthValue, label: monthName };
+    return { id: key.toString(), value: monthValue, label: monthName };
   });
 
   const years = (): Array<ReactSelectOption> => {
@@ -26,27 +26,31 @@ const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
 
     return [...Array(startYear - END_YEAR).keys()].map((key: number): ReactSelectOption => {
       const year: number = startYear - key;
-      return { value: year.toString(), label: year.toString() };
+      return { id: key.toString(), value: year.toString(), label: year.toString() };
     });
   };
 
-  useEffect(() => {
-    if (month && year) {
-      onChange?.(`${year}-${month}-01`);
-    } else {
-      onChange?.('');
-    }
-  }, [month, year]);
+  const handleOnChangeMonth = (monthOption: ReactSelectOption) => {
+    if (typeof monthOption.value === 'string') {
+      setMonth(monthOption.value);
 
-  const handleOnChangeMonth = (month: ReactSelectOption) => {
-    if (typeof month.value === 'string') {
-      setMonth(month.value);
+      if (monthOption && year) {
+        onChange?.(`${year}-${monthOption.value}-01`);
+      } else {
+        onChange?.('');
+      }
     }
   };
 
-  const handleOnChangeYear = (year: ReactSelectOption) => {
-    if (typeof year.value === 'string') {
-      setYear(year.value);
+  const handleOnChangeYear = (yearOption: ReactSelectOption) => {
+    if (typeof yearOption.value === 'string') {
+      setYear(yearOption.value);
+
+      if (month && yearOption) {
+        onChange?.(`${yearOption.value}-${month}-01`);
+      } else {
+        onChange?.('');
+      }
     }
   };
 
