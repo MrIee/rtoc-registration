@@ -38,7 +38,7 @@ const HigherEducationContainer: FC<HigherEducationProps> = ({ qualifications = [
 
   return (
     <div className="registration-form">
-      <List title="VET Qualifications" items={listItems} onDelete={handleDelete}>
+      <List title="Higher Education" items={listItems} onDelete={handleDelete}>
         <AddDetailsButton classes="tw:ml-auto" label="Higher Education" onClick={() => setIsModalVisible(true)} />
         <Modal title="Add Higher Education" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
           <HigherEducationForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />

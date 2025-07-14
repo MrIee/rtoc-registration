@@ -56,7 +56,7 @@ const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
 
   return (
     <div className="tw:flex tw:flex-col">
-      { label && (<span className="label"><span>{label}<span>*</span></span></span>)}
+      { label && (<span className="label"><span className="label__text">{label}<span>*</span></span></span>)}
       <div className="tw:flex tw:gap-4">
         <Dropdown
           className="tw:w-full"

@@ -19,13 +19,13 @@ label {
   @apply tw:cursor-default;
 }
 
-label > span:first-child,
-.label > span:first-child {
+label > span,
+.label .label__text {
   @apply tw:inline-block tw:mb-1.5 tw:text-sm;
 }
 
-label > span:first-child > span,
-.label > span:first-child > span {
+label .label__text > span,
+.label .label__text > span {
   @apply tw:ml-1 tw:text-red-500;
 }
 
@@ -72,7 +72,7 @@ input[type="checkbox"]:checked + .input__checkmark:after {
 Button
 ============================================================================= */
 
-button.btn {
+.btn {
   @apply tw:px-7
   tw:py-3
   tw:text-lg
@@ -84,19 +84,23 @@ button.btn {
   tw:hover:brightness-75;
 }
 
-button.btn.btn--secondary {
+.btn--small {
+  @apply tw:px-3.5 tw:py-1 tw:text-sm tw:rounded-lg;
+}
+
+.btn.btn--secondary {
   @apply tw:text-rtoc-purple-500 tw:font-normal tw:bg-gray-100
 }
 
-button.btn.btn--hollow {
+.btn.btn--hollow {
   @apply tw:px-6 tw:py-2 tw:text-rtoc-purple-500 tw:border-2 tw:border-rtoc-purple-500 tw:bg-transparent tw:hover:bg-gray-100;
 }
 
-button.btn.btn--hollow.btn--hollow-sm {
+.btn.btn--hollow.btn--hollow-sm {
   @apply tw:px-4 tw:py-1.5 tw:font-medium tw:rounded-xl
 }
 
-button.btn.btn--clear {
+.btn.btn--clear {
   @apply tw:p-0 tw:bg-transparent tw:text-rtoc-purple-500;
 }
 

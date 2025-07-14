@@ -94,12 +94,44 @@ export interface Unit {
   pkgcode?: string;
   status?: string;
   title: string;
+  unit?: string;
+};
+
+export interface TeachingExperienceData {
+  orgID: string;
+  started: string;
+  completed: string;
+  units: Array<string>;
+  unitsMsg: string;
 };
 
 export interface TeachingExperience {
   orgID: string;
-  orgName?: string;
+  orgName: string;
   started: string;
   completed: string;
-  units: Array<string> | Array<Unit> | string;
+  units: Array<Unit>;
+};
+
+export interface IndustryExperienceData {
+  companyName: string;
+  ABN: string;
+  positionTitle: string;
+  started: string;
+  completed: string | null;
+  file: File | null;
+  fileName: string;
+  units: Array<string>;
+  unitsMsg?: string;
+};
+
+export interface IndustryExperience {
+  rowID: number;
+  companyName: string;
+  ABN: string;
+  positionDescription: string;
+  positionTitle: string;
+  started: string;
+  completed: string | null;
+  units: Array<Unit>;
 };

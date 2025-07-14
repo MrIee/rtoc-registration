@@ -3,32 +3,58 @@ import { useState, type FC, type JSX } from 'react';
 import AddDetailsButton from './AddDetailsButton';
 import Modal from './Modal';
 import TeachingExperienceForm from './TeachingExperienceForm';
+import IndustryExperienceForm from './IndustryExperienceForm';
 import FormButtons from './FormButtons';
 import List from './List';
-import { type ListItem, type TeachingExperience, type Unit } from '~/utilities/interfaces';
+import type {
+  ListItem,
+  TeachingExperienceData,
+  TeachingExperience,
+  IndustryExperienceData,
+  IndustryExperience,
+  Unit,
+} from '~/utilities/interfaces';
 
 interface ExperienceProps {
   teachingExperience: Array<TeachingExperience>;
-  onSubmitTE: (isValid: boolean, teachingExperience: TeachingExperience) => void;
+  industryExperience: Array<IndustryExperience>;
+  onSubmitTE: (isValid: boolean, teachingExperience: TeachingExperienceData) => void;
+  onSubmitIndustry: (isValid: boolean, industryExperience: IndustryExperienceData) => void;
   onDeleteTE: (id: number) => void;
+  onDeleteIndustry: (id: number) => void;
 };
 
-const ExperienceContainer: FC<ExperienceProps> = ({ teachingExperience, onSubmitTE, onDeleteTE }): JSX.Element => {
+const ExperienceContainer: FC<ExperienceProps> = ({
+  teachingExperience,
+  industryExperience,
+  onSubmitTE,
+  onSubmitIndustry,
+  onDeleteTE,
+  onDeleteIndustry,
+}): JSX.Element => {
   const [isTEModalVisible, setIsTEModalVisible] = useState<boolean>(false);
+  const [isIndustryModalVisible, setIsIndustryModalVisible] = useState<boolean>(false);
 
   const getPoints = (units: Array<Unit>): Array<string> => units.map((unit: Unit) => `${unit.code} ${unit.title}`);
 
-  const listItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
+  const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
     id: 0,
     title: te.orgName || '',
     list: [`${te.started} - ${te.completed}`],
     points: getPoints(te.units as Array<Unit>),
   }));
 
-  const handleSubmitTeachingExperience = (isValid: boolean, teachingExperience: TeachingExperience) => {
+  // const industryListItems: Array<ListItem> = industryExperience.map((te: TeachingExperience): ListItem => ({
+  //   id: 0,
+  //   title: te.orgName || '',
+  //   list: [`${te.started} - ${te.completed}`],
+  //   points: getPoints(te.units as Array<Unit>),
+  // }));
+
+  const handleSubmitTeachingExperience = (isValid: boolean, experience: TeachingExperienceData) => {
     if (isValid) {
       setIsTEModalVisible(false);
-      onSubmitTE(isValid, teachingExperience);
+      onSubmitTE(isValid, experience);
     }
   };
 
@@ -38,14 +64,33 @@ const ExperienceContainer: FC<ExperienceProps> = ({ teachingExperience, onSubmit
     }
   };
 
+  const handleSubmitIndustryExperience = (isValid: boolean, experience: IndustryExperienceData) => {
+    if (isValid) {
+      setIsTEModalVisible(false);
+      onSubmitIndustry(isValid, experience);
+    }
+  };
+
+  const handleDeleteIndustry = (id: number | undefined) => {
+    if (id) {
+      onDeleteIndustry(id);
+    }
+  };
+
   return (
     <div className="registration-form">
-      <List title="Teaching Experience" items={listItems} onDelete={handleDeleteTE}>
+      <List title="Teaching Experience" items={teListItems} onDelete={handleDeleteTE}>
         <AddDetailsButton classes="tw:ml-auto" label="Add Teaching Experience" onClick={() => setIsTEModalVisible(true)} />
         <Modal title="Add Teaching Experience" showModal={isTEModalVisible} onClose={(isVisible) => setIsTEModalVisible(isVisible)}>
           <TeachingExperienceForm onSubmit={handleSubmitTeachingExperience} onCancel={() => setIsTEModalVisible(false)} />
         </Modal>
       </List>
+      {/* <List title="Industry Experience" items={industryListItems} onDelete={handleDeleteIndustry}> */}
+        <AddDetailsButton classes="tw:ml-auto" label="Add Industry Experience" onClick={() => setIsIndustryModalVisible(true)} />
+        <Modal title="Add Industry Experience" showModal={isIndustryModalVisible} onClose={(isVisible) => setIsIndustryModalVisible(isVisible)}>
+          <IndustryExperienceForm onSubmit={handleSubmitIndustryExperience} onCancel={() => setIsIndustryModalVisible(false)} />
+        </Modal>
+      {/* </List> */}
       <FormButtons classes="tw:mt-auto" enableForwardNav />
     </div>
   );

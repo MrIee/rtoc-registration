@@ -12,6 +12,7 @@ import Select, {
 } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect  from 'react-select/async-creatable';
+import CreatableSelect  from 'react-select/creatable';
 import type { ReactSelectOption } from '~/utilities/interfaces';
 
 interface DropdownProps {
@@ -24,7 +25,7 @@ interface DropdownProps {
   isMulti?: boolean;
   onChange?: (option: ReactSelectOption, name: string) => void;
   onAddMulti?: (options: Array<ReactSelectOption>, name: string) => void;
-  onRemove?: (options: Array<ReactSelectOption>, name: string) => void;
+  onRemoveMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onBlur?: () => void;
   required?: boolean;
   isAsync?: boolean;
@@ -51,12 +52,14 @@ const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: bool
  *
  * **Default Select** - If neither **isAsync** or **isCreatable** is true, then \<Select /> component is rendered, which is the default react-select component
  *
- * @param isAsync If true then \<AsyncSelect /> component is rendered, which can load data from an api.
- * @param isCreatable If true then \<AsyncCreatableSelect /> component is rendered, which enables any typed input to be used as the value.
- * @param loadOptions Use this for the options when **isAsync** or **isCreatable** are true. Expects a callback with format
+ * @param {boolean} isAsync If true then \<AsyncSelect /> component is rendered, which can load data from an api.
+ * @param {boolean} isCreatable If true then \<CreatableSelect /> component is rendered, which enables any typed input to be used as the value.
+ *
+ * If both isAsync and isCreatable are true, then <AsyncCreatableSelect /> component is rendered.
+ * @param {Promise} loadOptions Use this for the options when **isAsync** or **isCreatable** are true. Expects a callback with format
  *
  * ```(inputValue: string, callback: (options: ColourOption[]) => void) => { ... }```
- * @param options Use this if **isAsync** and **isCreatable** are both false.
+ * @param {Array<ReactSelectOption>} options Use this if **isAsync** and **isCreatable** are both false.
  *
  * Expects an array of options ```[value: 1, label: "a", ...]```
  *
@@ -72,7 +75,7 @@ const Dropdown = ({
   isMulti = false,
   onChange,
   onAddMulti,
-  onRemove,
+  onRemoveMulti,
   onBlur,
   required = true,
   isAsync = false,
@@ -149,7 +152,7 @@ const Dropdown = ({
       (value as Array<ReactSelectOption>).filter((option: ReactSelectOption) => option.value !== optionToRemove.value);
 
     setValue(newOptions);
-    onRemove?.(newOptions, name || '');
+    onRemoveMulti?.(newOptions, name || '');
   };
 
   const selectProps = {
@@ -182,17 +185,26 @@ const Dropdown = ({
     components: { IndicatorsContainer: () => null, IndicatorSeparator: () => null },
   };
 
-  const asyncCreatableProps = {
+  const creatableProps = {
     ...selectProps,
-    loadOptions,
     allowCreateWhileLoading: true,
     formatCreateLabel: (value: string) => 'Use ' + value,
     components: { DropdownIndicator: () => null, IndicatorSeparator: () => null },
   };
 
+  const asyncCreatableProps = {
+    ...selectProps,
+    ...creatableProps,
+    loadOptions,
+  };
+
   const SelectComponent = () => {
     if (isCreatable) {
-      return <AsyncCreatableSelect createOptionPosition='first' { ...asyncCreatableProps } />;
+      if (isAsync) {
+        return <AsyncCreatableSelect createOptionPosition='first' { ...asyncCreatableProps } />;
+      } else {
+        return <CreatableSelect createOptionPosition='first' { ...creatableProps } />;
+      }
     } else if (isAsync) {
       return <AsyncSelect {...asyncSelectProps} />;
     } else {
@@ -217,7 +229,7 @@ const Dropdown = ({
     <div>
       <label htmlFor={inputId} className={className}>
         { label && (
-          <span>
+          <span className="label__text">
             {label}
             { required && (<span>*</span>)}
           </span>

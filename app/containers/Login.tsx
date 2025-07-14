@@ -1,5 +1,5 @@
-import logo from "../assets/images/logo-rtoc.png";
-import { NavLink } from "react-router";
+import logo from '../assets/images/logo-rtoc.png';
+import { NavLink } from 'react-router';
 import TextInput from '../components/TextInput';
 
 const Login = () => {
@@ -10,8 +10,8 @@ const Login = () => {
       <p className="tw:text-center">lorem ipsum dolor sit amet</p>
 
       <div className="tw:mt-10">
-        <TextInput label="Email Address" placeholder="Enter your email" />
-        <TextInput label="Password" placeholder="Enter password" isPassword />
+        <TextInput classes="tw:mb-4" label="Email Address" placeholder="Enter your email" />
+        <TextInput classes="tw:mb-4" label="Password" placeholder="Enter password" isPassword />
 
         <div className="tw:flex tw:justify-between tw:mt-2 tw:mb-8">
           <label className="input__checkbox-container">

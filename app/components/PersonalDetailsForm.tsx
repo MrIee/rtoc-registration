@@ -87,13 +87,13 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
 
     switch(name) {
       case 'firstname':
-        nameString = 'First Name';
+        nameString = 'first name';
         break;
       case 'preferredname':
-        nameString = 'Preferred Name';
+        nameString = 'preferred name';
         break;
       case 'familyname':
-        nameString = 'Family Name';
+        nameString = 'family name';
         break;
     }
 
@@ -161,7 +161,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
           </div>
         )
       }
-      <div className="tw:flex tw:gap-4">
+      <div className="tw:flex tw:gap-4 tw:mb-4">
         <TextInput
           label="First Name"
           name="firstname"
@@ -181,7 +181,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
           onBlur={() => errors.preferredname && validateName('preferredname')}
         />
       </div>
-      <div className="tw:flex tw:gap-4">
+      <div className="tw:flex tw:gap-4 tw:mb-4">
         <TextInput
           label="Family Name"
           name="familyname"
@@ -201,7 +201,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
           onBlur={() => errors.phone && validatePhoneNumber()}
         />
       </div>
-      <div className="tw:flex tw:gap-4">
+      <div className="tw:flex tw:gap-4 tw:mb-4">
         <TextInput
           label="Email"
           name="email"

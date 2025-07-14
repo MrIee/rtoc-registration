@@ -1,5 +1,14 @@
 import logo from '../assets/images/logo-rtoc.png';
-import type { Step, TeachingExperience, TEQualification, UserDetails, VETQualificationDetails } from '../utilities/interfaces';
+import type {
+  Step,
+  TeachingExperience,
+  TeachingExperienceData,
+  TEQualification,
+  UserDetails,
+  VETQualificationDetails,
+  IndustryExperience,
+  IndustryExperienceData,
+} from '../utilities/interfaces';
 import type { RootState } from '~/store/store';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +29,10 @@ import {
   getVETQualifications,
   createTeachingExperience,
   getTeachingExperience,
-  deleteTeachingExperience
+  deleteTeachingExperience,
+  createIndustryExperience,
+  getIndustryExperience,
+  deleteIndustryExperience,
 } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
@@ -29,6 +41,7 @@ const CreateProfile: FC = (): JSX.Element => {
   const [vetQualifications, setVETQualifications] = useState<Array<VETQualificationDetails>>([]);
   const [teQualifications, setTEQualifications] = useState<Array<TEQualification>>([]);
   const [teachingExperience, setTeachingExperience] = useState<Array<TeachingExperience>>([]);
+  const [industryExperience, setIndustryExperience] = useState<Array<IndustryExperience>>([]);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
@@ -68,6 +81,7 @@ const CreateProfile: FC = (): JSX.Element => {
     loadVETQualifications();
     loadTEQualifications();
     loadTeachingExperience();
+    // loadIndustryExperience();
   }, []);
 
   useEffect(() => {
@@ -91,6 +105,7 @@ const CreateProfile: FC = (): JSX.Element => {
     }
   }, [step, profileSteps]);
 
+  // Personal Details operations
   const handleSubmitPersonalDetails = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
       if (isFormValid) {
         const newUser = await createUser(userDetails);
@@ -108,6 +123,7 @@ const CreateProfile: FC = (): JSX.Element => {
       }
   };
 
+  // VET Qualifications operations
   const loadVETQualifications = async () => {
     const qualifications: Array<VETQualificationDetails> = await getVETQualifications();
 
@@ -132,6 +148,7 @@ const CreateProfile: FC = (): JSX.Element => {
     loadVETQualifications();
   };
 
+  // TE Qualifications operations
   const loadTEQualifications = async () => {
     const qualifications: Array<TEQualification> = await getTEQualifications();
 
@@ -145,7 +162,7 @@ const CreateProfile: FC = (): JSX.Element => {
     loadTEQualifications();
   };
 
-  const handleSubmitHigherEducation = async (isFormValid: boolean, teDetails: TEQualification) => {
+  const handleSubmitTEQualification = async (isFormValid: boolean, teDetails: TEQualification) => {
     if (isFormValid) {
       const res = await createTEQualifications(teDetails);
 
@@ -155,6 +172,7 @@ const CreateProfile: FC = (): JSX.Element => {
     }
   };
 
+  // Teaching Experience operations
   const loadTeachingExperience = async () => {
     const experience: Array<TeachingExperience> = await getTeachingExperience();
 
@@ -168,12 +186,36 @@ const CreateProfile: FC = (): JSX.Element => {
     loadTeachingExperience();
   };
 
-  const handleOnSubmitTE = async (isFormValid: boolean, teachingExperience: TeachingExperience) => {
+  const handleOnSubmitTE = async (isFormValid: boolean, teachingExperience: TeachingExperienceData) => {
     if (isFormValid) {
       const res = await createTeachingExperience(teachingExperience);
 
       if (res) {
         loadTeachingExperience();
+      }
+    }
+  };
+
+  // Industry Experience operations
+  const loadIndustryExperience = async () => {
+    const experience: Array<IndustryExperience> = await getIndustryExperience();
+
+    if (experience.length > 0) {
+      setIndustryExperience(experience);
+    }
+  };
+
+  const handleDeleteIndustryExperience = async (id: number) => {
+    await deleteIndustryExperience(id);
+    loadIndustryExperience();
+  };
+
+  const handleOnSubmitIndustry = async (isFormValid: boolean, industryExperience: IndustryExperienceData) => {
+    if (isFormValid) {
+      const res = await createIndustryExperience(industryExperience);
+
+      if (res) {
+        loadIndustryExperience();
       }
     }
   };
@@ -191,7 +233,7 @@ const CreateProfile: FC = (): JSX.Element => {
         qualifications={vetQualifications}
       />}
       { step === 2 && <HigherEducationContainer
-        onSubmit={handleSubmitHigherEducation}
+        onSubmit={handleSubmitTEQualification}
         onDelete={handleDeleteTEQualification}
         qualifications={teQualifications}
       />}
@@ -199,6 +241,9 @@ const CreateProfile: FC = (): JSX.Element => {
         onSubmitTE={handleOnSubmitTE}
         onDeleteTE={handleDeleteTeachingExperience}
         teachingExperience={teachingExperience}
+        onSubmitIndustry={handleOnSubmitIndustry}
+        onDeleteIndustry={handleDeleteIndustryExperience}
+        industryExperience={industryExperience}
       />}
     </div>
   );

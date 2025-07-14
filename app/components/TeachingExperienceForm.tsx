@@ -1,29 +1,31 @@
 import { getOrganisationsAsOptions, getUnitsAsOptions } from '~/utilities/data';
 import debounce from 'lodash.debounce';
 import Dropdown from './Dropdown';
-import type { ReactSelectOption, TeachingExperience } from '../utilities/interfaces';
+import type { ReactSelectOption, TeachingExperienceData } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import DatePicker from './DatePicker';
 import FormAddCancelButtons from './FormAddCancelButtons';
+import { isDateRangeValid } from '~/utilities/helpers';
 
 interface TeachingExperienceFormProps {
   onCancel?: () => void;
-  onSubmit: (isValid: boolean, teachingExperience: TeachingExperience) => void;
+  onSubmit: (isValid: boolean, teachingExperience: TeachingExperienceData) => void;
 };
 
-const newTeachingExperience: TeachingExperience = {
+const newTeachingExperience: TeachingExperienceData = {
   orgID: '',
   started: '',
   completed: '',
   units: [],
+  unitsMsg: '',
 };
 
 const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
   const [unitOptions, setUnitOptions] = useState<Array<ReactSelectOption>>([]);
   const [isUnitsLoading, setIsUnitsLoading] = useState<boolean>(true);
   const [unitsPlaceholder, setUnitsPlaceholder] = useState<string>('Select an RTO to see Cerficatations');
-  const [teachingExperience, setTeachingExperience] = useState<TeachingExperience>(newTeachingExperience);
-  const [errors, setErrors] = useState<TeachingExperience>(newTeachingExperience);
+  const [teachingExperience, setTeachingExperience] = useState<TeachingExperienceData>(newTeachingExperience);
+  const [errors, setErrors] = useState<TeachingExperienceData>(newTeachingExperience);
   const organisationName: string = 'orgID';
   const unitsName: string = 'unit';
   const isFormValid = useRef<boolean>(false);
@@ -84,43 +86,40 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
     const isValid: boolean = !!teachingExperience.orgID;
 
     if (!isValid) {
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, orgID: 'Please choose an organisation' }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, orgID: 'Please choose an organisation' }));
       isFormValid.current = false;
     } else {
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, orgID: '' }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, orgID: '' }));
     }
   };
 
   const validateUnits = () => {
-    const isValid: boolean = teachingExperience.units.length > 0;
+    const isValid: boolean = !errors.unitsMsg;
 
     if (!isValid) {
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, units: 'Please choose units' }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, unitsMsg: 'Please choose units' }));
       isFormValid.current = false;
     } else {
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, units: [] }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, unitsMsg: '' }));
     }
   };
 
   const validateDate = () => {
-    const dateStarted = new Date(teachingExperience.started);
-    const dateCompleted= new Date(teachingExperience.completed);
     const isEmpty: boolean = !teachingExperience.started && !teachingExperience.completed;
-    const isValid: boolean = dateCompleted > dateStarted;
 
     if (isEmpty) {
       const errorMsg = 'Please choose a month and a year';
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, started: errorMsg, completed: errorMsg }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, started: errorMsg, completed: errorMsg }));
       isFormValid.current = false;
-    } else if (!isValid) {
-      setErrors((prevErrors: TeachingExperience) => ({
+    } else if (!isDateRangeValid(teachingExperience.started, teachingExperience.completed)) {
+      setErrors((prevErrors: TeachingExperienceData) => ({
         ...prevErrors,
         started: 'Please choose a start date that is before the finish date',
         completed: 'Please choose a finish date that is after the start date',
       }));
       isFormValid.current = false;
     } else {
-      setErrors((prevErrors: TeachingExperience) => ({ ...prevErrors, started: '', completed: '' }));
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, started: '', completed: '' }));
     }
   };
 
@@ -153,11 +152,11 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
         placeholder={unitsPlaceholder}
         name={unitsName}
         isSearchable
-        error={typeof errors.units === 'string' && errors.units || ''}
+        error={errors.unitsMsg}
         isDisabled={isUnitsLoading}
         onAddMulti={handleOnChangeUnits}
-        onRemove={handleOnChangeUnits}
-        onBlur={() => typeof errors.units === 'string' && errors.units && validateUnits()}
+        onRemoveMulti={handleOnChangeUnits}
+        onBlur={() => errors.unitsMsg && validateUnits()}
       />
       <div className="tw:flex tw:gap-4">
         <DatePicker

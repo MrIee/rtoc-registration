@@ -1,6 +1,16 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import { nanoid } from 'nanoid';
-import type { ReactSelectOption, UserDetails, VETQualificationDetails, TEProvider, TECourse, Unit, TEQualification, TeachingExperience } from './interfaces';
+import type {
+  ReactSelectOption,
+  UserDetails,
+  VETQualificationDetails,
+  TEProvider,
+  TECourse,
+  Unit,
+  TEQualification,
+  TeachingExperienceData,
+  IndustryExperienceData,
+} from './interfaces';
 
 interface Organisation {
   id: number;
@@ -238,7 +248,7 @@ export const deleteTEQualification = async (id: number) => {
 export const getUnits = async (id: string) => {
   try {
     const res = await axios.get('tga_organisation/units/' + id);
-    return { ...res.data, code: res.data.pkgcode };
+    return res.data;
   } catch(err) {
     return err;
   }
@@ -247,22 +257,13 @@ export const getUnits = async (id: string) => {
 export const getUnitsAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
   try {
     const units: Array<Unit> = await getUnits(id);
-    return Object.keys(units).map((key: string) => {
-      const k: keyof Array<Unit> = key as keyof typeof units;
-      const unit = units[k] as Unit;
-
-      if (unit) {
-        return { id: nanoid(), value: unit.pkgcode, label: `${unit.pkgcode} - ${unit.title}`};
-      }
-
-      return { id: '', value: '', label: ''};
-    });
+    return units.map((unit: Unit) => ({ id: nanoid(), value: unit.pkgcode, label: `${unit.pkgcode} - ${unit.title}`}));
   } catch {
     return [];
   }
 };
 
-export const createTeachingExperience = async (data: TeachingExperience) => {
+export const createTeachingExperience = async (data: TeachingExperienceData) => {
   try {
     const res = await axios.post('/user/experience/vet_teach', data, {
       headers: { 'x-session': getSessionKey() },
@@ -289,6 +290,69 @@ export const getTeachingExperience = async () => {
 export const deleteTeachingExperience = async (id: number) => {
   try {
     const res = await axios.delete('/user/experience/vet_teach/', {
+      data: { rowID: id },
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getTaughtUnits = async (): Promise<Array<ReactSelectOption>> => {
+  try {
+    const units = await axios.get('/user/related_teach', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return units.data.map((unit: Unit) => ({ id: nanoid(), value: unit.unit, label: unit.title }));
+  } catch {
+    return [];
+  }
+};
+
+export const createIndustryExperience = async (data: IndustryExperienceData) => {
+  try {
+    const formData = new FormData();
+    const dataJSON: string = JSON.stringify({
+      companyName: data.companyName,
+      ABN: data.ABN,
+      positionTitle: data.positionTitle,
+      started: data.started,
+      completed: data.completed,
+      units: data.units,
+    });
+    formData.append('formData', dataJSON);
+
+    if (data.file) {
+      formData.append('file', data.file);
+    }
+
+    const res = await axios.post('/user/experience/industry', formData, {
+      headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
+    });
+
+   return res.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getIndustryExperience = async () => {
+  try {
+    const res = await axios.get('/user/experience/industry', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return [];
+  }
+};
+
+export const deleteIndustryExperience = async (id: number) => {
+  try {
+    const res = await axios.delete('/user/experience/industry', {
       data: { rowID: id },
       headers: { 'x-session': getSessionKey() },
     });

@@ -68,7 +68,7 @@ const FileUpload: FC<FileUploadProps> = ({ label, name, required = true, error, 
   return (
     <div className="tw:flex tw:flex-col">
       <label className="tw:inline-flex tw:flex-col tw:justify-start tw:items-start tw:self-start tw:mb-4">
-        { label && <span>{label}{ required && (<span>*</span>)}</span> }
+        { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
         <button className="btn btn--hollow btn--hollow-sm tw:flex" type="button" onClick={handleOnClickUploadBtn}>
           <img className="tw:mr-1" src={iconPaperClip} alt="paperclip" />
           Attach File
