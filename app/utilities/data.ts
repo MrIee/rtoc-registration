@@ -65,6 +65,10 @@ export const authUser = async (email: string, password: string) => {
   }
 };
 
+export const userHasAuth = () => {
+  return localStorage.getItem(SESSION_KEY_ITEM);
+};
+
 // =============================================================================
 // VET Qualifications Endpoints
 // =============================================================================

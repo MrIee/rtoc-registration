@@ -7,7 +7,7 @@ interface RegistrationState {
 
 const initialState: RegistrationState = {
   step: 0,
-  maxSteps: 3,
+  maxSteps: 4,
 };
 
 const registrationSlice = createSlice({

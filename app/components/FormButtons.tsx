@@ -15,7 +15,7 @@ const FormButtons: FC<FormButtonsProps> = ({ classes, enableForwardNav }): JSX.E
 
   return (
     <div className={ classNames('tw:flex tw:justify-between', classes)}>
-      { step > 0 && <button className="btn btn--hollow" onClick={() => dispatch(goToPreviousStep())}>Back</button> }
+      { step > 1 && <button className="btn btn--hollow" onClick={() => dispatch(goToPreviousStep())}>Back</button> }
       <div className="tw:ml-auto">
         <button type="submit" className="btn" onClick={() => enableForwardNav && dispatch(goToNextStep())}>Next</button>
       </div>

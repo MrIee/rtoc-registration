@@ -26,6 +26,7 @@ export interface InputProps extends InputPropsNoEvents, InputPropEvents {
 export interface Step {
   label: string;
   active: boolean;
+  clickable: boolean;
 };
 
 export interface ReactSelectOption {

@@ -14,7 +14,7 @@ import type {
 import type { RootState } from '~/store/store';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { goToNextStep } from '~/store/registrationSlice';
+import { goToNextStep, goToStep } from '~/store/registrationSlice';
 import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualificationsContainer from '../components/VETQualificationsContainer';
@@ -22,6 +22,7 @@ import HigherEducationContainer from '../components/HigherEducationContainer';
 import ExperienceContainer from '../components/ExperienceContainer';
 import {
   authUser,
+  userHasAuth,
   createTEQualifications,
   createUser,
   createVETQualifications,
@@ -51,18 +52,22 @@ const CreateProfile: FC = (): JSX.Element => {
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
+      clickable: false,
       active: true,
     },
     {
       label: '2. VET Qualifications',
+      clickable: true,
       active: false,
     },
     {
       label: '3. Higher Education',
+      clickable: true,
       active: false,
     },
     {
       label: '4. Experience',
+      clickable: true,
       active: false,
     },
   ]);
@@ -108,6 +113,12 @@ const CreateProfile: FC = (): JSX.Element => {
       updateProfileSteps(step);
     }
   }, [step, profileSteps]);
+
+  const handleClickStep = (step: number) => {
+    if (userHasAuth() && step > 0) {
+      return dispatch(goToStep(step));
+    }
+  };
 
   // Personal Details operations
   const handleSubmitPersonalDetails = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
@@ -253,7 +264,7 @@ const CreateProfile: FC = (): JSX.Element => {
       <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
       <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
-      <Steps classes={'tw:mb-8'} steps={profileSteps} />
+      <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={handleClickStep} />
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
       { step === 1 && <VETQualificationsContainer
         onSubmit={handleSubmitVETQualifications}
