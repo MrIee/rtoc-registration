@@ -94,7 +94,7 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
   };
 
   const validateUnits = () => {
-    const isValid: boolean = !errors.unitsMsg;
+    const isValid: boolean = teachingExperience.units.length > 0;
 
     if (!isValid) {
       setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, unitsMsg: 'Please choose units' }));
@@ -137,7 +137,7 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
       <Dropdown
         isAsync
         loadOptions={loadOrganisations}
-        label="My Certificate IV in training and assessment was completed at"
+        label="I worked at this RTO"
         name={organisationName}
         placeholder="Search for RTO"
         isSearchable
@@ -148,7 +148,7 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
       <Dropdown
         isMulti
         options={unitOptions}
-        label="My Certificate IV in training and assessment"
+        label="I have taught these units"
         placeholder={unitsPlaceholder}
         name={unitsName}
         isSearchable

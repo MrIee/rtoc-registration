@@ -173,8 +173,8 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
         onBlur={() => errors.fileName && validateFile()}
       />
       <Dropdown
-        options={relatedExperienceOptions}
         isMulti
+        options={relatedExperienceOptions}
         isSearchable
         label="Related Experience"
         placeholder="Select related experience"

@@ -8,6 +8,8 @@ import type {
   VETQualificationDetails,
   IndustryExperience,
   IndustryExperienceData,
+  UnitsICanTeachData,
+  UnitsICanTeach,
 } from '../utilities/interfaces';
 import type { RootState } from '~/store/store';
 import { useEffect, useState, type FC, type JSX } from 'react';
@@ -33,6 +35,9 @@ import {
   createIndustryExperience,
   getIndustryExperience,
   deleteIndustryExperience,
+  createUnitsICanTeach,
+  getUnitsICanTeach,
+  deleteUnitsICanTeach,
 } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
@@ -42,6 +47,7 @@ const CreateProfile: FC = (): JSX.Element => {
   const [teQualifications, setTEQualifications] = useState<Array<TEQualification>>([]);
   const [teachingExperience, setTeachingExperience] = useState<Array<TeachingExperience>>([]);
   const [industryExperience, setIndustryExperience] = useState<Array<IndustryExperience>>([]);
+  const [unitsICanTeach, setUnitsICanTeach] = useState<Array<UnitsICanTeach>>([]);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
@@ -72,16 +78,14 @@ const CreateProfile: FC = (): JSX.Element => {
 
   const [errors, setErrors] = useState<Record<string, UserDetails>>({
     personalDetails: userDetails,
-    VETQualifications: userDetails,
-    HigherEducation: userDetails,
-    Experience: userDetails,
   });
 
   useEffect(() => {
     loadVETQualifications();
     loadTEQualifications();
     loadTeachingExperience();
-    // loadIndustryExperience();
+    loadIndustryExperience();
+    loadUnitsICanTeach();
   }, []);
 
   useEffect(() => {
@@ -220,6 +224,30 @@ const CreateProfile: FC = (): JSX.Element => {
     }
   };
 
+  // Units I can Teach operations
+  const loadUnitsICanTeach = async () => {
+    const units: Array<UnitsICanTeach> = await getUnitsICanTeach();
+
+    if (units.length > 0) {
+      setUnitsICanTeach(units);
+    }
+  };
+
+  const handleDeleteUnitsICanTeach = async (id: number) => {
+    await deleteUnitsICanTeach(id);
+    loadUnitsICanTeach();
+  };
+
+  const handleOnSubmitUnitsICanTeach = async (isFormValid: boolean, units: UnitsICanTeachData) => {
+    if (isFormValid) {
+      const res = await createUnitsICanTeach(units);
+
+      if (res) {
+        loadUnitsICanTeach();
+      }
+    }
+  };
+
   return (
     <div className="tw:h-full tw:lg:w-[640px] tw:w-full tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto tw:flex tw:flex-col">
       <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
@@ -244,6 +272,9 @@ const CreateProfile: FC = (): JSX.Element => {
         onSubmitIndustry={handleOnSubmitIndustry}
         onDeleteIndustry={handleDeleteIndustryExperience}
         industryExperience={industryExperience}
+        onDeleteUnits={handleDeleteUnitsICanTeach}
+        onSubmitUnits={handleOnSubmitUnitsICanTeach}
+        unitsICanTeach={unitsICanTeach}
       />}
     </div>
   );

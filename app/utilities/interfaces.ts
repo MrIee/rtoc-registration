@@ -36,9 +36,9 @@ export interface ReactSelectOption {
 };
 
 export interface ListItem {
-  id: number;
-  title: string;
-  list: Array<string>;
+  id?: number;
+  title?: string;
+  list?: Array<string>;
   points?: Array<string>;
   fileName?: string;
 };
@@ -133,5 +133,17 @@ export interface IndustryExperience {
   positionTitle: string;
   started: string;
   completed: string | null;
+  units: Array<Unit>;
+};
+
+export interface UnitsICanTeachData {
+  orgID: string;
+  units: Array<string>;
+  unitsMsg?: string;
+};
+
+export interface UnitsICanTeach {
+  orgID: string;
+  orgName: string;
   units: Array<Unit>;
 };

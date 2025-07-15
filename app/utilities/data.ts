@@ -10,6 +10,7 @@ import type {
   TEQualification,
   TeachingExperienceData,
   IndustryExperienceData,
+  UnitsICanTeachData,
 } from './interfaces';
 
 interface Organisation {
@@ -311,6 +312,10 @@ export const getTaughtUnits = async (): Promise<Array<ReactSelectOption>> => {
   }
 };
 
+// =============================================================================
+// Industry Experience Endpoints
+// =============================================================================
+
 export const createIndustryExperience = async (data: IndustryExperienceData) => {
   try {
     const formData = new FormData();
@@ -353,6 +358,46 @@ export const getIndustryExperience = async () => {
 export const deleteIndustryExperience = async (id: number) => {
   try {
     const res = await axios.delete('/user/experience/industry', {
+      data: { rowID: id },
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+// =============================================================================
+// Units I can Teach Endpoints
+// =============================================================================
+
+export const createUnitsICanTeach = async (data: UnitsICanTeachData) => {
+  try {
+    const res = await axios.post('/user/experience/canteach', data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+   return res.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getUnitsICanTeach = async () => {
+  try {
+    const res = await axios.get('/user/experience/canteach/', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return [];
+  }
+};
+
+export const deleteUnitsICanTeach = async (id: number) => {
+  try {
+    const res = await axios.delete('/user/experience/canteach/', {
       data: { rowID: id },
       headers: { 'x-session': getSessionKey() },
     });

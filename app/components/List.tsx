@@ -21,8 +21,8 @@ const List: FC<ListProps> = ({ title, items, onDelete, children }) => {
     <div className="list__item" key={item.id || nanoid()}>
       <div className="tw:flex tw:justify-between">
         <div className="tw:flex tw:flex-col tw:gap-1.5 tw:text-sm">
-          <strong className="tw:text-black tw:text-lg tw:font-semibold">{ item.title }</strong>
-          {itemsList(item.list)}
+          {item.title && <strong className="tw:text-black tw:text-lg tw:font-semibold">{ item.title }</strong>}
+          {item.list && itemsList(item.list)}
           <ul className="tw:list-disc tw:mt-1.5 tw:ml-6">
             {
               item?.points?.map((point: string, key: number) => <li key={key} className="tw:mb-2">{point}</li> )
