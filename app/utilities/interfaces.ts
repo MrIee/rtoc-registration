@@ -35,11 +35,16 @@ export interface ReactSelectOption {
   __isNew__?: boolean;
 };
 
+export interface Point {
+  id: number;
+  label: string;
+};
+
 export interface ListItem {
   id?: number;
   title?: string;
   list?: Array<string>;
-  points?: Array<string>;
+  points?: Array<Point>;
   fileName?: string;
 };
 
@@ -89,7 +94,7 @@ export interface TEQualification {
 };
 
 export interface Unit {
-  rowID?: string;
+  rowID?: number;
   code?: string;
   pkgcode?: string;
   status?: string;

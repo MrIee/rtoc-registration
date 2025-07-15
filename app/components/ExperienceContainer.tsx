@@ -16,6 +16,7 @@ import type {
   UnitsICanTeach,
   UnitsICanTeachData,
   Unit,
+  Point,
 } from '~/utilities/interfaces';
 
 interface ExperienceProps {
@@ -45,7 +46,8 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   const [isIndustryModalVisible, setIsIndustryModalVisible] = useState<boolean>(false);
   const [isUnitsModalVisible, setIsUnitsModalVisible] = useState<boolean>(false);
 
-  const getPoints = (units: Array<Unit>): Array<string> => units.map((unit: Unit) => `${unit.code} ${unit.title}`);
+  const getPoints = (units: Array<Unit>): Array<Point> => units.map((unit: Unit) =>
+    ({ id: unit.rowID || 0, label: `${unit.code} ${unit.title}` }));
 
   const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
     title: te.orgName || '',
@@ -60,8 +62,9 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   //   points: getPoints(te.units as Array<Unit>),
   // }));
 
-  const unitsListItems: Array<ListItem> = unitsICanTeach.map((te: UnitsICanTeach): ListItem => ({
-    points: getPoints(te.units as Array<Unit>),
+  const unitsListItems: Array<ListItem> = unitsICanTeach.map((unit: UnitsICanTeach): ListItem => ({
+    title: unit.orgName,
+    points: getPoints(unit.units as Array<Unit>),
   }));
 
   const handleSubmitTeachingExperience = (isValid: boolean, experience: TeachingExperienceData) => {
@@ -105,7 +108,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
 
   return (
     <div className="registration-form">
-      <List title="Teaching Experience" items={teListItems} onDelete={handleDeleteTE}>
+      <List title="Teaching Experience" items={teListItems} onDeletePoint={handleDeleteTE}>
         <AddDetailsButton classes="tw:ml-auto" label="Add Teaching Experience" onClick={() => setIsTEModalVisible(true)} />
         <Modal title="Add Teaching Experience" showModal={isTEModalVisible} onClose={(isVisible) => setIsTEModalVisible(isVisible)}>
           <TeachingExperienceForm onSubmit={handleSubmitTeachingExperience} onCancel={() => setIsTEModalVisible(false)} />
@@ -117,7 +120,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
           <IndustryExperienceForm onSubmit={handleSubmitIndustryExperience} onCancel={() => setIsIndustryModalVisible(false)} />
         </Modal>
       {/* </List> */}
-      <List title="Units I can Teach" items={unitsListItems} onDelete={handleDeleteUnits}>
+      <List title="Units I can Teach" items={unitsListItems} onDeletePoint={handleDeleteUnits}>
         <AddDetailsButton classes="tw:ml-auto" label="Units I can Teach" onClick={() => setIsUnitsModalVisible(true)} />
         <Modal title="Units I can Teach" showModal={isUnitsModalVisible} onClose={(isVisible) => setIsUnitsModalVisible(isVisible)}>
           <UnitsICanTeachForm onSubmit={handleSubmitUnits} onCancel={() => setIsUnitsModalVisible(false)} />
