@@ -50,6 +50,7 @@ export interface ListItem {
 };
 
 export interface UserDetails {
+  URL?: string;
   firstname: string;
   familyname: string;
   preferredname: string;
@@ -134,6 +135,7 @@ export interface IndustryExperienceData {
 export interface IndustryExperience {
   rowID: number;
   companyName: string;
+  Company?: string;
   ABN: string;
   positionDescription: string;
   positionTitle: string;
@@ -152,4 +154,13 @@ export interface UnitsICanTeach {
   orgID: string;
   orgName: string;
   units: Array<Unit>;
+};
+export interface Profile {
+  firstname: string;
+  familyname: string;
+  type: string;
+  industry: Array<IndustryExperience>,
+  qualifications: Array<TEQualification>,
+  vetQuals: Array<VETQualificationDetails>,
+  vetTeach: Array<TeachingExperience>,
 };

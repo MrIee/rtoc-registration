@@ -41,6 +41,18 @@ axios.interceptors.response.use(
 // User Endpoints
 // =============================================================================
 
+export const getUser = async () => {
+  try {
+    const res = await axios.get('/user', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
 export const createUser = async (userDetails: UserDetails) => {
   try {
     const res: AxiosResponse = await axios.post('/add', userDetails);
@@ -67,6 +79,11 @@ export const authUser = async (email: string, password: string) => {
 
 export const userHasAuth = () => {
   return localStorage.getItem(SESSION_KEY_ITEM);
+};
+
+export const getUserProfile = async (url: string) => {
+  const res = await axios.get('/profile/' + url);
+  return res.data[0];
 };
 
 // =============================================================================

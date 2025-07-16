@@ -11,9 +11,10 @@ import type {
   UnitsICanTeachData,
   UnitsICanTeach,
 } from '../utilities/interfaces';
-import type { RootState } from '~/store/store';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import type { RootState } from '~/store/store';
 import { goToNextStep, goToStep } from '~/store/registrationSlice';
 import Steps from '../components/Steps';
 import PersonalDetailsForm from '../components/PersonalDetailsForm';
@@ -42,8 +43,10 @@ import {
 } from '~/utilities/data';
 
 const CreateProfile: FC = (): JSX.Element => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const step = useSelector((state: RootState) => state.registration.step);
+  const maxSteps = useSelector((state: RootState) => state.registration.maxSteps);
   const [vetQualifications, setVETQualifications] = useState<Array<VETQualificationDetails>>([]);
   const [teQualifications, setTEQualifications] = useState<Array<TEQualification>>([]);
   const [teachingExperience, setTeachingExperience] = useState<Array<TeachingExperience>>([]);
@@ -92,6 +95,13 @@ const CreateProfile: FC = (): JSX.Element => {
     loadIndustryExperience();
     loadUnitsICanTeach();
   }, []);
+
+  useEffect(() => {
+    if (step > maxSteps) {
+      dispatch(goToStep(0));
+      navigate('/user-profile');
+    }
+  }, [step, maxSteps, navigate, dispatch]);
 
   useEffect(() => {
     const activeStepIndex = profileSteps.findIndex((profileStep: Step) => profileStep.active === true);

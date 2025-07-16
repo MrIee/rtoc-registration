@@ -2,6 +2,10 @@
   @apply tw:p-8 tw:my-4 tw:rounded-xl tw:border-2 tw:border-rtoc-purple-500;
 }
 
+.list--row {
+  @apply tw:flex tw:p-0 tw:my-0 tw:rounded-none tw:border-0 tw:border-t;
+}
+
 .list__item {
   @apply tw:flex tw:flex-col tw:py-4 tw:[&:not(:first-child)]:border-t tw:border-t-rtoc-purple-500;
 }

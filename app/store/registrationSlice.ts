@@ -7,7 +7,7 @@ interface RegistrationState {
 
 const initialState: RegistrationState = {
   step: 0,
-  maxSteps: 4,
+  maxSteps: 3,
 };
 
 const registrationSlice = createSlice({
@@ -15,7 +15,7 @@ const registrationSlice = createSlice({
   initialState,
   reducers: {
     goToNextStep: (state) => {
-      if (state.step < state.maxSteps) {
+      if (state.step) {
         state.step += 1;
       }
     },
