@@ -1,16 +1,5 @@
 import logo from '../assets/images/logo-rtoc.png';
-import type {
-  Step,
-  TeachingExperience,
-  TeachingExperienceData,
-  TEQualification,
-  UserDetails,
-  VETQualificationDetails,
-  IndustryExperience,
-  IndustryExperienceData,
-  UnitsICanTeachData,
-  UnitsICanTeach,
-} from '../utilities/interfaces';
+import type { Step,  UserDetails } from '../utilities/interfaces';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -21,37 +10,19 @@ import PersonalDetailsForm from '../components/PersonalDetailsForm';
 import VETQualificationsContainer from '../components/VETQualificationsContainer';
 import HigherEducationContainer from '../components/HigherEducationContainer';
 import ExperienceContainer from '../components/ExperienceContainer';
-import {
-  authUser,
-  userHasAuth,
-  createTEQualifications,
-  createUser,
-  createVETQualifications,
-  deleteVETQualification,
-  getTEQualifications,
-  deleteTEQualification,
-  getVETQualifications,
-  createTeachingExperience,
-  getTeachingExperience,
-  deleteTeachingExperience,
-  createIndustryExperience,
-  getIndustryExperience,
-  deleteIndustryExperience,
-  createUnitsICanTeach,
-  getUnitsICanTeach,
-  deleteUnitsICanTeach,
-} from '~/utilities/data';
+import { authUser, userHasAuth, createUser } from '~/utilities/data';
+import useVETQualifications from '~/hooks/useVETQualifications';
+import useHigherEducation from '~/hooks/useHigherEducation';
+import useTeachingExperience from '~/hooks/useTeachingExperience';
+import useIndustryExperience from '~/hooks/useIndustryExperience';
+import useUnitsICanTeach from '~/hooks/useUnitsICanTeach';
+import FormButtons from '~/components/FormButtons';
 
 const CreateProfile: FC = (): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const step = useSelector((state: RootState) => state.registration.step);
   const maxSteps = useSelector((state: RootState) => state.registration.maxSteps);
-  const [vetQualifications, setVETQualifications] = useState<Array<VETQualificationDetails>>([]);
-  const [teQualifications, setTEQualifications] = useState<Array<TEQualification>>([]);
-  const [teachingExperience, setTeachingExperience] = useState<Array<TeachingExperience>>([]);
-  const [industryExperience, setIndustryExperience] = useState<Array<IndustryExperience>>([]);
-  const [unitsICanTeach, setUnitsICanTeach] = useState<Array<UnitsICanTeach>>([]);
   const [profileSteps, setProfileSteps] = useState<Array<Step>>([
     {
       label: '1. Personal details',
@@ -89,14 +60,6 @@ const CreateProfile: FC = (): JSX.Element => {
   });
 
   useEffect(() => {
-    loadVETQualifications();
-    loadTEQualifications();
-    loadTeachingExperience();
-    loadIndustryExperience();
-    loadUnitsICanTeach();
-  }, []);
-
-  useEffect(() => {
     if (step > maxSteps) {
       dispatch(goToStep(0));
       navigate('/user-profile');
@@ -130,7 +93,7 @@ const CreateProfile: FC = (): JSX.Element => {
     }
   };
 
-  // Personal Details operations
+  // Personal Details
   const handleSubmitPersonalDetails = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
       if (isFormValid) {
         const newUser = await createUser(userDetails);
@@ -148,155 +111,72 @@ const CreateProfile: FC = (): JSX.Element => {
       }
   };
 
-  // VET Qualifications operations
-  const loadVETQualifications = async () => {
-    const qualifications: Array<VETQualificationDetails> = await getVETQualifications();
+  // VET Qualifications
+  const {
+    vetQualifications,
+    submitQualification: handleSubmitVETQualification,
+    deleteQualification: handleDeleteVetQualification,
+  } = useVETQualifications();
 
-    if (qualifications) {
-      setVETQualifications(qualifications);
-    }
-  };
+  // Higher Education
+  const {
+    teQualifications,
+    submitQualification: handleSubmitTEQualification,
+    deleteQualification: handleDeleteTEQualification,
+  } = useHigherEducation();
 
-  const handleSubmitVETQualifications = async (isFormValid: boolean, qualificationDetails: VETQualificationDetails): Promise<void> => {
-    if (isFormValid) {
+  // Teaching Experience
+  const {
+    teachingExperience,
+    submitExperience: handleOnSubmitTeachingExperience,
+    deleteExperience: handleDeleteTeachingExperience,
+  } = useTeachingExperience();
 
-      const res = await createVETQualifications({ ...qualificationDetails });
+  // Industry Experience
+  const {
+    industryExperience,
+    submitExperience: handleOnSubmitIndustryExperience,
+    deleteExperience: handleDeleteIndustryExperience,
+  } = useIndustryExperience();
 
-      if (res) {
-        loadVETQualifications();
-      }
-    }
-  };
-
-  const handleDeleteVetQualification = async (id: number) => {
-    await deleteVETQualification(id);
-    loadVETQualifications();
-  };
-
-  // TE Qualifications operations
-  const loadTEQualifications = async () => {
-    const qualifications: Array<TEQualification> = await getTEQualifications();
-
-    if (qualifications.length > 0) {
-      setTEQualifications(qualifications);
-    }
-  };
-
-  const handleDeleteTEQualification = async (id: number) => {
-    await deleteTEQualification(id);
-    loadTEQualifications();
-  };
-
-  const handleSubmitTEQualification = async (isFormValid: boolean, teDetails: TEQualification) => {
-    if (isFormValid) {
-      const res = await createTEQualifications(teDetails);
-
-      if (res) {
-        loadTEQualifications();
-      }
-    }
-  };
-
-  // Teaching Experience operations
-  const loadTeachingExperience = async () => {
-    const experience: Array<TeachingExperience> = await getTeachingExperience();
-
-    if (experience.length > 0) {
-      setTeachingExperience(experience);
-    }
-  };
-
-  const handleDeleteTeachingExperience = async (id: number) => {
-    await deleteTeachingExperience(id);
-    loadTeachingExperience();
-  };
-
-  const handleOnSubmitTE = async (isFormValid: boolean, teachingExperience: TeachingExperienceData) => {
-    if (isFormValid) {
-      const res = await createTeachingExperience(teachingExperience);
-
-      if (res) {
-        loadTeachingExperience();
-      }
-    }
-  };
-
-  // Industry Experience operations
-  const loadIndustryExperience = async () => {
-    const experience: Array<IndustryExperience> = await getIndustryExperience();
-
-    if (experience.length > 0) {
-      setIndustryExperience(experience);
-    }
-  };
-
-  const handleDeleteIndustryExperience = async (id: number) => {
-    await deleteIndustryExperience(id);
-    loadIndustryExperience();
-  };
-
-  const handleOnSubmitIndustry = async (isFormValid: boolean, industryExperience: IndustryExperienceData) => {
-    if (isFormValid) {
-      const res = await createIndustryExperience(industryExperience);
-
-      if (res) {
-        loadIndustryExperience();
-      }
-    }
-  };
-
-  // Units I can Teach operations
-  const loadUnitsICanTeach = async () => {
-    const units: Array<UnitsICanTeach> = await getUnitsICanTeach();
-
-    if (units.length > 0) {
-      setUnitsICanTeach(units);
-    }
-  };
-
-  const handleDeleteUnitsICanTeach = async (id: number) => {
-    await deleteUnitsICanTeach(id);
-    loadUnitsICanTeach();
-  };
-
-  const handleOnSubmitUnitsICanTeach = async (isFormValid: boolean, units: UnitsICanTeachData) => {
-    if (isFormValid) {
-      const res = await createUnitsICanTeach(units);
-
-      if (res) {
-        loadUnitsICanTeach();
-      }
-    }
-  };
+  // Units I can Teach
+  const {
+    unitsICanTeach,
+    submitUnits: handleOnSubmitUnitsICanTeach,
+    deleteUnits: handleDeleteUnitsICanTeach,
+  } = useUnitsICanTeach();
 
   return (
-    <div className="tw:h-full tw:lg:w-[640px] tw:w-full tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto tw:flex tw:flex-col">
+    <div className="tw:lg:w-[640px] tw:w-full tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto tw:flex tw:flex-col">
       <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
       <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
       <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={handleClickStep} />
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
-      { step === 1 && <VETQualificationsContainer
-        onSubmit={handleSubmitVETQualifications}
-        onDelete={handleDeleteVetQualification}
-        qualifications={vetQualifications}
-      />}
-      { step === 2 && <HigherEducationContainer
-        onSubmit={handleSubmitTEQualification}
-        onDelete={handleDeleteTEQualification}
-        qualifications={teQualifications}
-      />}
-      { step === 3 && <ExperienceContainer
-        onSubmitTE={handleOnSubmitTE}
-        onDeleteTE={handleDeleteTeachingExperience}
-        teachingExperience={teachingExperience}
-        onSubmitIndustry={handleOnSubmitIndustry}
-        onDeleteIndustry={handleDeleteIndustryExperience}
-        industryExperience={industryExperience}
-        onDeleteUnits={handleDeleteUnitsICanTeach}
-        onSubmitUnits={handleOnSubmitUnitsICanTeach}
-        unitsICanTeach={unitsICanTeach}
-      />}
+      { step > 0 && <div className="container">
+        { step === 1 && <VETQualificationsContainer
+          onSubmit={handleSubmitVETQualification}
+          onDelete={handleDeleteVetQualification}
+          qualifications={vetQualifications}
+        />}
+        { step === 2 && <HigherEducationContainer
+          onSubmit={handleSubmitTEQualification}
+          onDelete={handleDeleteTEQualification}
+          qualifications={teQualifications}
+        />}
+        { step === 3 && <ExperienceContainer
+          onSubmitTE={handleOnSubmitTeachingExperience}
+          onDeleteTE={handleDeleteTeachingExperience}
+          teachingExperience={teachingExperience}
+          onSubmitIndustry={handleOnSubmitIndustryExperience}
+          onDeleteIndustry={handleDeleteIndustryExperience}
+          industryExperience={industryExperience}
+          onDeleteUnits={handleDeleteUnitsICanTeach}
+          onSubmitUnits={handleOnSubmitUnitsICanTeach}
+          unitsICanTeach={unitsICanTeach}
+        />}
+      </div> }
+      {step > 0 && <FormButtons classes="tw:mt-auto" enableForwardNav={step > 0} />}
     </div>
   );
 };

@@ -108,35 +108,37 @@ const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSub
   };
 
   return (
-    <form className="registration-form registration-form--auto tw:gap-4" onSubmit={handleSubmit} noValidate>
-      <Dropdown
-        isAsync
-        loadOptions={loadOrganisations}
-        label="My Certificate IV in training and assessment was completed at"
-        name={organisationName}
-        placeholder="Search for RTO"
-        isSearchable
-        error={errors.orgID}
-        onChange={handleOnChangeOrganisation}
-        onBlur={() => errors.orgID && validateDropdown(organisationName)}
-      />
-      <Dropdown
-        options={certificationOptions}
-        label="My Certificate IV in training and assessment"
-        placeholder={certificationPlaceholder}
-        name={certificationName}
-        isSearchable
-        error={errors.qualification}
-        isDisabled={isCertificationsLoading}
-        onChange={handleOnChangeDropdown}
-        onBlur={() => errors.qualification && validateDropdown(certificationName)}
-      />
-      <DatePicker
-        label="Completed on"
-        error={errors.completed}
-        onChange={handleOnChangeDate}
-        onBlur={() => errors.completed && validateDate()}
-      />
+    <form className="form-container" onSubmit={handleSubmit} noValidate>
+      <div className="scroll-container">
+        <Dropdown
+          isAsync
+          loadOptions={loadOrganisations}
+          label="My Certificate IV in training and assessment was completed at"
+          name={organisationName}
+          placeholder="Search for RTO"
+          isSearchable
+          error={errors.orgID}
+          onChange={handleOnChangeOrganisation}
+          onBlur={() => errors.orgID && validateDropdown(organisationName)}
+        />
+        <Dropdown
+          options={certificationOptions}
+          label="My Certificate IV in training and assessment"
+          placeholder={certificationPlaceholder}
+          name={certificationName}
+          isSearchable
+          error={errors.qualification}
+          isDisabled={isCertificationsLoading}
+          onChange={handleOnChangeDropdown}
+          onBlur={() => errors.qualification && validateDropdown(certificationName)}
+        />
+        <DatePicker
+          label="Completed on"
+          error={errors.completed}
+          onChange={handleOnChangeDate}
+          onBlur={() => errors.completed && validateDate()}
+        />
+      </div>
       <FormAddCancelButtons onCancel={onCancel} />
     </form>
   );

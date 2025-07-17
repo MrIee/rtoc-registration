@@ -73,10 +73,10 @@ const UnitsICanTeachForm: FC<UnitsICanTeachFormProps> = ({ onCancel, onSubmit })
     const isValid: boolean = !!unitsDetails.orgID;
 
     if (!isValid) {
-      setErrors((prevErrors: UnitsICanTeachData) => ({ ...prevErrors, [name]: 'Please choose an organisation' }));
+      setErrors((prevErrors: UnitsICanTeachData) => ({ ...prevErrors, orgID: 'Please choose an organisation' }));
       isFormValid.current = false;
     } else {
-      setErrors((prevErrors: UnitsICanTeachData) => ({ ...prevErrors, [name]: '' }));
+      setErrors((prevErrors: UnitsICanTeachData) => ({ ...prevErrors, orgID: '' }));
     }
   };
 
@@ -100,31 +100,33 @@ const UnitsICanTeachForm: FC<UnitsICanTeachFormProps> = ({ onCancel, onSubmit })
   };
 
   return (
-    <form className="registration-form registration-form--auto tw:gap-4" onSubmit={handleSubmit} noValidate>
-      <Dropdown
-        isAsync
-        loadOptions={loadOrganisations}
-        label="RTO Provider"
-        name={organisationName}
-        placeholder="Search for RTO"
-        isSearchable
-        error={errors.orgID}
-        onChange={handleOnChangeOrganisation}
-        onBlur={() => errors.orgID && validateOrganisation()}
-      />
-      <Dropdown
-        isMulti
-        options={unitOptions}
-        label="I can teach these units"
-        placeholder={unitOptionsPlaceholder}
-        name="unitsMsg"
-        isSearchable
-        error={errors.unitsMsg}
-        isDisabled={isUnitOptionsLoading}
-        onAddMulti={handleOnChangeUnits}
-        onRemoveMulti={handleOnChangeUnits}
-        onBlur={() => errors.unitsMsg && validateUnits()}
-      />
+    <form className="form-container" onSubmit={handleSubmit} noValidate>
+      <div className="scroll-container">
+        <Dropdown
+          isAsync
+          loadOptions={loadOrganisations}
+          label="RTO Provider"
+          name={organisationName}
+          placeholder="Search for RTO"
+          isSearchable
+          error={errors.orgID}
+          onChange={handleOnChangeOrganisation}
+          onBlur={() => errors.orgID && validateOrganisation()}
+        />
+        <Dropdown
+          isMulti
+          options={unitOptions}
+          label="I can teach these units"
+          placeholder={unitOptionsPlaceholder}
+          name="unitsMsg"
+          isSearchable
+          error={errors.unitsMsg}
+          isDisabled={isUnitOptionsLoading}
+          onAddMulti={handleOnChangeUnits}
+          onRemoveMulti={handleOnChangeUnits}
+          onBlur={() => errors.unitsMsg && validateUnits()}
+        />
+      </div>
       <FormAddCancelButtons onCancel={onCancel} />
     </form>
   );

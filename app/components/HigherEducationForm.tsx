@@ -160,53 +160,55 @@ const HigherEducationForm: FC<HigherEducationFormProps> = ({ onCancel, onSubmit 
   };
 
   return (
-    <form className="registration-form registration-form--auto tw:gap-4" onSubmit={handleSubmit} noValidate>
-      <Dropdown
-        isAsync
-        isCreatable
-        loadOptions={loadTEProviders}
-        label="Name of Australian Institution"
-        placeholder="Search for Institution"
-        name={providerName}
-        isSearchable
-        error={errors.providerName}
-        onChange={handleOnChangeProvider}
-        onBlur={() => errors.providerName && validateDropdown(providerName)}
+    <form className="form-container" onSubmit={handleSubmit} noValidate>
+      <div className="">
+        <Dropdown
+          isAsync
+          isCreatable
+          loadOptions={loadTEProviders}
+          label="Name of Australian Institution"
+          placeholder="Search for Institution"
+          name={providerName}
+          isSearchable
+          error={errors.providerName}
+          onChange={handleOnChangeProvider}
+          onBlur={() => errors.providerName && validateDropdown(providerName)}
+          />
+        <Dropdown
+          isCreatable
+          options={teCourseOptions}
+          label="Name of Qualification"
+          name={courseName}
+          placeholder={teCoursePlaceholder}
+          isSearchable
+          isDisabled={isTECourseLoading}
+          error={errors.courseName}
+          onChange={handleOnChangeCourse}
+          onBlur={() => errors.courseName && validateDropdown(courseName)}
         />
-      <Dropdown
-        isCreatable
-        options={teCourseOptions}
-        label="Name of Qualification"
-        name={courseName}
-        placeholder={teCoursePlaceholder}
-        isSearchable
-        isDisabled={isTECourseLoading}
-        error={errors.courseName}
-        onChange={handleOnChangeCourse}
-        onBlur={() => errors.courseName && validateDropdown(courseName)}
-      />
-      <Dropdown
-        options={AQF_LEVEL_OPTIONS}
-        label="AQF Level"
-        placeholder="Select AQF level"
-        name={aqfName}
-        isSearchable
-        error={errors.aqf}
-        onChange={handleOnChangeAQF}
-        onBlur={() => errors.aqf && validateDropdown('aqf')}
-      />
-      <FileUpload
-        label="Upload Transcript"
-        error={errors.fileName}
-        onChange={handleOnChangeFile}
-        onBlur={() => errors.fileName && validateFile()}
-      />
-      <DatePicker
-        label="Completed on"
-        error={errors.completed}
-        onChange={handleOnChangeDate}
-        onBlur={() => errors.completed && validateDate()}
-      />
+        <Dropdown
+          options={AQF_LEVEL_OPTIONS}
+          label="AQF Level"
+          placeholder="Select AQF level"
+          name={aqfName}
+          isSearchable
+          error={errors.aqf}
+          onChange={handleOnChangeAQF}
+          onBlur={() => errors.aqf && validateDropdown('aqf')}
+        />
+        <FileUpload
+          label="Upload Transcript"
+          error={errors.fileName}
+          onChange={handleOnChangeFile}
+          onBlur={() => errors.fileName && validateFile()}
+        />
+        <DatePicker
+          label="Completed on"
+          error={errors.completed}
+          onChange={handleOnChangeDate}
+          onBlur={() => errors.completed && validateDate()}
+        />
+      </div>
       <FormAddCancelButtons onCancel={onCancel} />
     </form>
   );

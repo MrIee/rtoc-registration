@@ -133,44 +133,46 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
   };
 
   return (
-    <form className="registration-form registration-form--auto tw:gap-4" onSubmit={handleSubmit} noValidate>
-      <Dropdown
-        isAsync
-        loadOptions={loadOrganisations}
-        label="I worked at this RTO"
-        name={organisationName}
-        placeholder="Search for RTO"
-        isSearchable
-        error={errors.orgID}
-        onChange={handleOnChangeOrganisation}
-        onBlur={() => errors.orgID && validateOrganisation()}
-      />
-      <Dropdown
-        isMulti
-        options={unitOptions}
-        label="I have taught these units"
-        placeholder={unitsPlaceholder}
-        name={unitsName}
-        isSearchable
-        error={errors.unitsMsg}
-        isDisabled={isUnitsLoading}
-        onAddMulti={handleOnChangeUnits}
-        onRemoveMulti={handleOnChangeUnits}
-        onBlur={() => errors.unitsMsg && validateUnits()}
-      />
-      <div className="tw:flex tw:gap-4">
-        <DatePicker
-          label="From"
-          error={errors.started}
-          onChange={(date) => handleOnChangeDate('started', date)}
-          onBlur={() => errors.started && validateDate()}
+    <form className="form-container" onSubmit={handleSubmit} noValidate>
+      <div className="scroll-container">
+        <Dropdown
+          isAsync
+          loadOptions={loadOrganisations}
+          label="I worked at this RTO"
+          name={organisationName}
+          placeholder="Search for RTO"
+          isSearchable
+          error={errors.orgID}
+          onChange={handleOnChangeOrganisation}
+          onBlur={() => errors.orgID && validateOrganisation()}
         />
-        <DatePicker
-          label="To"
-          error={errors.completed}
-          onChange={(date) => handleOnChangeDate('completed', date)}
-          onBlur={() => errors.completed && validateDate()}
+        <Dropdown
+          isMulti
+          options={unitOptions}
+          label="I have taught these units"
+          placeholder={unitsPlaceholder}
+          name={unitsName}
+          isSearchable
+          error={errors.unitsMsg}
+          isDisabled={isUnitsLoading}
+          onAddMulti={handleOnChangeUnits}
+          onRemoveMulti={handleOnChangeUnits}
+          onBlur={() => errors.unitsMsg && validateUnits()}
         />
+        <div className="tw:flex tw:gap-4">
+          <DatePicker
+            label="From"
+            error={errors.started}
+            onChange={(date) => handleOnChangeDate('started', date)}
+            onBlur={() => errors.started && validateDate()}
+          />
+          <DatePicker
+            label="To"
+            error={errors.completed}
+            onChange={(date) => handleOnChangeDate('completed', date)}
+            onBlur={() => errors.completed && validateDate()}
+          />
+        </div>
       </div>
       <FormAddCancelButtons onCancel={onCancel} />
     </form>

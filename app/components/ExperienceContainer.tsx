@@ -5,7 +5,6 @@ import Modal from './Modal';
 import TeachingExperienceForm from './TeachingExperienceForm';
 import IndustryExperienceForm from './IndustryExperienceForm';
 import UnitsICanTeachForm from './UnitsICanTeachForm';
-import FormButtons from './FormButtons';
 import List from './List';
 import type {
   ListItem,
@@ -107,7 +106,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   };
 
   return (
-    <div className="registration-form">
+    <div className="tw:flex tw:flex-col tw:gap-4 tw:mb-4">
       <List title="Teaching Experience" items={teListItems} onDeletePoint={handleDeleteTE}>
         <AddDetailsButton classes="tw:ml-auto" label="Add Teaching Experience" onClick={() => setIsTEModalVisible(true)} />
         <Modal title="Add Teaching Experience" showModal={isTEModalVisible} onClose={(isVisible) => setIsTEModalVisible(isVisible)}>
@@ -126,7 +125,6 @@ const ExperienceContainer: FC<ExperienceProps> = ({
           <UnitsICanTeachForm onSubmit={handleSubmitUnits} onCancel={() => setIsUnitsModalVisible(false)} />
         </Modal>
       </List>
-      <FormButtons classes="tw:mt-auto" enableForwardNav />
     </div>
   );
 };

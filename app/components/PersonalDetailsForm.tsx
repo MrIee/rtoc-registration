@@ -150,76 +150,78 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
   };
 
   return (
-    <form className="registration-form" onSubmit={handleSubmit} noValidate>
-      {
-        // Hide Role radio buttons for the time being.
-        // eslint-disable-next-line no-constant-binary-expression
-        false && (
-          <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
-            <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
-            <RoleRadioButtons buttons={radioButtons} onClick={onClickPosition} />
-          </div>
-        )
-      }
-      <div className="tw:flex tw:gap-4 tw:mb-4">
-        <TextInput
-          label="First Name"
-          name="firstname"
-          value={userDetails?.firstname}
-          placeholder="Enter first name"
-          error={errors.firstname}
-          onChange={updateUserDetails}
-          onBlur={() => errors.firstname && validateName('firstname')}
-        />
-        <TextInput
-          label="Preferred Name"
-          name="preferredname"
-          value={userDetails?.preferredname}
-          placeholder="Enter preferred name"
-          error={errors.preferredname}
-          onChange={updateUserDetails}
-          onBlur={() => errors.preferredname && validateName('preferredname')}
-        />
-      </div>
-      <div className="tw:flex tw:gap-4 tw:mb-4">
-        <TextInput
-          label="Family Name"
-          name="familyname"
-          value={userDetails?.familyname}
-          placeholder="Enter family name"
-          error={errors.familyname}
-          onChange={updateUserDetails}
-          onBlur={() => errors.familyname && validateName('familyname')}
-        />
-        <TextInput
-          label="Phone"
-          name="phone"
-          value={userDetails?.phone}
-          placeholder="Enter phone"
-          error={errors.phone}
-          onChange={updateUserDetails}
-          onBlur={() => errors.phone && validatePhoneNumber()}
-        />
-      </div>
-      <div className="tw:flex tw:gap-4 tw:mb-4">
-        <TextInput
-          label="Email"
-          name="email"
-          value={userDetails?.email}
-          placeholder="Enter email"
-          error={errors.email}
-          onChange={updateUserDetails}
-          onBlur={() => errors.email && validateEmail()}
-        />
-        <TextInput
-          label="Password"
-          name="password"
-          value={userDetails?.password}
-          placeholder="Enter password"
-          error={errors.password}
-          onChange={updateUserDetails}
-          onBlur={() => errors.password && validatePassword()}
-        />
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="container">
+        {
+          // Hide Role radio buttons for the time being.
+          // eslint-disable-next-line no-constant-binary-expression
+          false && (
+            <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
+              <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
+              <RoleRadioButtons buttons={radioButtons} onClick={onClickPosition} />
+            </div>
+          )
+        }
+        <div className="tw:flex tw:gap-4 tw:mb-4">
+          <TextInput
+            label="First Name"
+            name="firstname"
+            value={userDetails?.firstname}
+            placeholder="Enter first name"
+            error={errors.firstname}
+            onChange={updateUserDetails}
+            onBlur={() => errors.firstname && validateName('firstname')}
+          />
+          <TextInput
+            label="Preferred Name"
+            name="preferredname"
+            value={userDetails?.preferredname}
+            placeholder="Enter preferred name"
+            error={errors.preferredname}
+            onChange={updateUserDetails}
+            onBlur={() => errors.preferredname && validateName('preferredname')}
+          />
+        </div>
+        <div className="tw:flex tw:gap-4 tw:mb-4">
+          <TextInput
+            label="Family Name"
+            name="familyname"
+            value={userDetails?.familyname}
+            placeholder="Enter family name"
+            error={errors.familyname}
+            onChange={updateUserDetails}
+            onBlur={() => errors.familyname && validateName('familyname')}
+          />
+          <TextInput
+            label="Phone"
+            name="phone"
+            value={userDetails?.phone}
+            placeholder="Enter phone"
+            error={errors.phone}
+            onChange={updateUserDetails}
+            onBlur={() => errors.phone && validatePhoneNumber()}
+          />
+        </div>
+        <div className="tw:flex tw:gap-4 tw:mb-4">
+          <TextInput
+            label="Email"
+            name="email"
+            value={userDetails?.email}
+            placeholder="Enter email"
+            error={errors.email}
+            onChange={updateUserDetails}
+            onBlur={() => errors.email && validateEmail()}
+          />
+          <TextInput
+            label="Password"
+            name="password"
+            value={userDetails?.password}
+            placeholder="Enter password"
+            error={errors.password}
+            onChange={updateUserDetails}
+            onBlur={() => errors.password && validatePassword()}
+          />
+        </div>
       </div>
       <FormButtons classes="tw:mt-auto" />
     </form>

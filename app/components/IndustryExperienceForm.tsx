@@ -142,61 +142,63 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
   };
 
   return (
-    <form className="registration-form registration-form--auto tw:gap-4" onSubmit={handleSubmit} noValidate>
-      <TextInput
-        label="Company Name"
-        name="companyName"
-        error={errors.companyName}
-        onChange={handleOnChangeTextInput}
-        onBlur={() => errors.companyName && validateTextInput('companyName')}
-      />
-      <TextInput
-        label="Company ABN"
-        labelLink="https://abr.business.gov.au/"
-        labelLinkText="Look Up"
-        name="ABN"
-        error={errors.ABN}
-        onChange={handleOnChangeTextInput}
-        onBlur={() => errors.ABN && validateABN}
-      />
-      <TextInput
-        label="Position Title"
-        name="positionTitle"
-        error={errors.positionTitle}
-        onChange={handleOnChangeTextInput}
-        onBlur={() => errors.positionTitle && validateTextInput('positionTitle')}
-      />
-      <FileUpload
-        label="Upload Transcript"
-        error={errors.fileName}
-        onChange={handleOnChangeFile}
-        onBlur={() => errors.fileName && validateFile()}
-      />
-      <Dropdown
-        isMulti
-        options={relatedExperienceOptions}
-        isSearchable
-        label="Related Experience"
-        placeholder="Select related experience"
-        name={relatedExperienceName}
-        error={errors.unitsMsg}
-        onAddMulti={handleOnChangeRelatedExperience}
-        onRemoveMulti={handleOnChangeRelatedExperience}
-        onBlur={() => errors.unitsMsg && validateRelatedExperience()}
-      />
-      <div className="tw:flex tw:gap-4">
-        <DatePicker
-          label="From"
-          error={errors.started}
-          onChange={(date) => handleOnChangeDate('started', date)}
-          onBlur={() => errors.started && validateDate()}
+    <form className="form-container" onSubmit={handleSubmit} noValidate>
+      <div className="scroll-container">
+        <TextInput
+          label="Company Name"
+          name="companyName"
+          error={errors.companyName}
+          onChange={handleOnChangeTextInput}
+          onBlur={() => errors.companyName && validateTextInput('companyName')}
         />
-        <DatePicker
-          label="To"
-          error={errors.completed || ''}
-          onChange={(date) => handleOnChangeDate('completed', date)}
-          onBlur={() => errors.completed && validateDate()}
+        <TextInput
+          label="Company ABN"
+          labelLink="https://abr.business.gov.au/"
+          labelLinkText="Look Up"
+          name="ABN"
+          error={errors.ABN}
+          onChange={handleOnChangeTextInput}
+          onBlur={() => errors.ABN && validateABN}
         />
+        <TextInput
+          label="Position Title"
+          name="positionTitle"
+          error={errors.positionTitle}
+          onChange={handleOnChangeTextInput}
+          onBlur={() => errors.positionTitle && validateTextInput('positionTitle')}
+        />
+        <FileUpload
+          label="Upload Transcript"
+          error={errors.fileName}
+          onChange={handleOnChangeFile}
+          onBlur={() => errors.fileName && validateFile()}
+        />
+        <Dropdown
+          isMulti
+          options={relatedExperienceOptions}
+          isSearchable
+          label="Related Experience"
+          placeholder="Select related experience"
+          name={relatedExperienceName}
+          error={errors.unitsMsg}
+          onAddMulti={handleOnChangeRelatedExperience}
+          onRemoveMulti={handleOnChangeRelatedExperience}
+          onBlur={() => errors.unitsMsg && validateRelatedExperience()}
+        />
+        <div className="tw:flex tw:gap-4">
+          <DatePicker
+            label="From"
+            error={errors.started}
+            onChange={(date) => handleOnChangeDate('started', date)}
+            onBlur={() => errors.started && validateDate()}
+          />
+          <DatePicker
+            label="To"
+            error={errors.completed || ''}
+            onChange={(date) => handleOnChangeDate('completed', date)}
+            onBlur={() => errors.completed && validateDate()}
+          />
+        </div>
       </div>
       <FormAddCancelButtons onCancel={onCancel} />
     </form>

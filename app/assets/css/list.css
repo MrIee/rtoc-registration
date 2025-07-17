@@ -1,5 +1,5 @@
 .list {
-  @apply tw:p-8 tw:my-4 tw:rounded-xl tw:border-2 tw:border-rtoc-purple-500;
+  @apply tw:p-8 tw:rounded-xl tw:border-2 tw:border-rtoc-purple-500;
 }
 
 .list--row {
