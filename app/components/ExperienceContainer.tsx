@@ -49,17 +49,18 @@ const ExperienceContainer: FC<ExperienceProps> = ({
     ({ id: unit.rowID || 0, label: `${unit.code} ${unit.title}` }));
 
   const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
-    title: te.orgName || '',
+    title: te.orgName,
     list: [`${te.started} - ${te.completed}`],
     points: getPoints(te.units as Array<Unit>),
   }));
 
-  // const industryListItems: Array<ListItem> = industryExperience.map((te: TeachingExperience): ListItem => ({
-  //   id: 0,
-  //   title: te.orgName || '',
-  //   list: [`${te.started} - ${te.completed}`],
-  //   points: getPoints(te.units as Array<Unit>),
-  // }));
+  const industryListItems: Array<ListItem> = industryExperience.map((industry: IndustryExperience): ListItem => ({
+    id: industry.rowID,
+    title: industry.Company,
+    list: [industry.positionTitle, `${industry.started} - ${industry.completed}`],
+    points: getPoints(industry.units as Array<Unit>),
+    fileName: industry.positionDescription,
+  }));
 
   const unitsListItems: Array<ListItem> = unitsICanTeach.map((unit: UnitsICanTeach): ListItem => ({
     title: unit.orgName,
@@ -113,12 +114,12 @@ const ExperienceContainer: FC<ExperienceProps> = ({
           <TeachingExperienceForm onSubmit={handleSubmitTeachingExperience} onCancel={() => setIsTEModalVisible(false)} />
         </Modal>
       </List>
-      {/* <List title="Industry Experience" items={industryListItems} onDelete={handleDeleteIndustry}> */}
+      <List title="Industry Experience" items={industryListItems} onDelete={handleDeleteIndustry}>
         <AddDetailsButton classes="tw:ml-auto" label="Add Industry Experience" onClick={() => setIsIndustryModalVisible(true)} />
         <Modal title="Add Industry Experience" showModal={isIndustryModalVisible} onClose={(isVisible) => setIsIndustryModalVisible(isVisible)}>
           <IndustryExperienceForm onSubmit={handleSubmitIndustryExperience} onCancel={() => setIsIndustryModalVisible(false)} />
         </Modal>
-      {/* </List> */}
+      </List>
       <List title="Units I can Teach" items={unitsListItems} onDeletePoint={handleDeleteUnits}>
         <AddDetailsButton classes="tw:ml-auto" label="Units I can Teach" onClick={() => setIsUnitsModalVisible(true)} />
         <Modal title="Units I can Teach" showModal={isUnitsModalVisible} onClose={(isVisible) => setIsUnitsModalVisible(isVisible)}>

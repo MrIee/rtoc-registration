@@ -120,6 +120,7 @@ const Dropdown = ({
     }),
     menu: (base: CSSObjectWithLabel) => ({
       ...base,
+      zIndex: 99,
       borderRadius: 6,
       backgroundColor: 'oklch(96.7% 0.003 264.542)',
     }),
