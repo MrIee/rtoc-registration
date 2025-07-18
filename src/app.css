@@ -1,0 +1,60 @@
+@import "tailwindcss" prefix(tw);
+@import "./assets/css/forms.css";
+@import "./assets/css/list.css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-rtoc-purple-200: rgb(240, 230, 248);
+  --color-rtoc-purple-500: rgb(93, 55, 113);
+
+
+}
+
+html,
+body,
+#root {
+  @apply tw:h-full tw:w-full tw:text-gray-500;
+}
+
+h1, h2, h3 {
+  @apply tw:font-semibold;
+}
+
+h1 {
+  @apply tw:text-[42px] tw:text-gray-700;
+}
+
+h2 {
+  @apply tw:text-[32px] tw:text-rtoc-purple-500;
+}
+
+h3 {
+  @apply tw:text-xl tw:text-rtoc-purple-500;
+}
+
+.container {
+  @apply tw:min-h-[450px] tw:flex tw:flex-col;
+}
+
+.scroll-container {
+  @apply tw:min-h-[450px] tw:lg:max-h-[640px] tw:max-h-full tw:flex tw:flex-col tw:gap-4 tw:p-2 tw:overflow-y-auto tw:relative;
+}
+
+.form-container {
+  @apply tw:h-full tw:flex tw:flex-col tw:gap-4
+}
+
+.step {
+  @apply tw:w-full tw:text-sm tw:relative;
+}
+
+.step:before {
+  @apply tw:block tw:h-1.5 tw:w-full tw:rounded-4xl tw:bg-rtoc-purple-200;
+
+  content: "";
+}
+
+.step--active:before {
+  @apply tw:bg-rtoc-purple-500;
+}
