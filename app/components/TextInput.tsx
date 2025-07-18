@@ -4,16 +4,18 @@ import type { InputProps } from '~/utilities/interfaces';
 
 interface TextInputProps extends InputProps {
   classes?: string;
-  labelLink?: string;
-  labelLinkText?: string;
+  labelBtnLink?: string;
+  labelBtnText?: string;
+  labelBtnOnClick?: () => void;
   isPassword?: boolean;
 };
 
 export const TextInput: FC<TextInputProps> = ({
   classes,
   label,
-  labelLink,
-  labelLinkText,
+  labelBtnLink,
+  labelBtnText,
+  labelBtnOnClick,
   placeholder,
   name,
   value,
@@ -24,10 +26,11 @@ export const TextInput: FC<TextInputProps> = ({
   onBlur
 }) => {
   return (
-    <label className={classNames('tw:w-full tw:inline-flex tw:flex-col tw:justify-start', classes)}>
+    <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
       <span>
         { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
-        { labelLink && <a className="btn btn--small tw:ml-1.5" href={labelLink} target="_blank">{labelLinkText}</a> }
+        { labelBtnText &&
+          <a className="btn btn--small tw:ml-1.5 tw:select-none" href={labelBtnLink} target="_blank" onClick={labelBtnOnClick}>{labelBtnText}</a> }
       </span>
       <input
         className={classNames('tw:w-full', { 'tw:border-red-500 tw:border-2 tw:outline-red-500': error })}

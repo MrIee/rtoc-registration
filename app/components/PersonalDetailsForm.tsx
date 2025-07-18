@@ -3,6 +3,7 @@ import { isPossiblePhoneNumber } from 'libphonenumber-js';
 import type { UserDetails } from '~/utilities/interfaces';
 import TextInput from './TextInput';
 import FormButtons from './FormButtons';
+import { generatePassword } from '~/utilities/helpers';
 
 interface RadioButton {
   value: number;
@@ -149,6 +150,10 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
     onSubmit(isFormValid.current, userDetails);
   };
 
+  const handleGeneratePassword = () => {
+    setUserDetails({...userDetails, password: generatePassword()});
+  };
+
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div className="container">
@@ -156,13 +161,13 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
           // Hide Role radio buttons for the time being.
           // eslint-disable-next-line no-constant-binary-expression
           false && (
-            <div className="tw:flex tw:lg:flex-row tw:flex-col tw:lg:items-center tw:mb-4">
+            <div className="tw:flex tw:lg:flex-row tw:lg:items-center tw:mb-4">
               <span className="tw:lg:mb-0 tw:mb-1 tw:mr-3 tw:text-sm">I'm a:</span>
               <RoleRadioButtons buttons={radioButtons} onClick={onClickPosition} />
             </div>
           )
         }
-        <div className="tw:flex tw:gap-4 tw:mb-4">
+        <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
             label="First Name"
             name="firstname"
@@ -182,7 +187,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.preferredname && validateName('preferredname')}
           />
         </div>
-        <div className="tw:flex tw:gap-4 tw:mb-4">
+        <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
             label="Family Name"
             name="familyname"
@@ -202,7 +207,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.phone && validatePhoneNumber()}
           />
         </div>
-        <div className="tw:flex tw:gap-4 tw:mb-4">
+        <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
             label="Email"
             name="email"
@@ -213,6 +218,8 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.email && validateEmail()}
           />
           <TextInput
+            labelBtnText="Generate Password"
+            labelBtnOnClick={handleGeneratePassword}
             label="Password"
             name="password"
             value={userDetails?.password}

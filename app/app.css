@@ -37,7 +37,7 @@ h3 {
 }
 
 .scroll-container {
-  @apply tw:min-h-[400px] tw:lg:max-h-[550px] tw:max-h-full tw:p-2 tw:overflow-y-auto tw:relative;
+  @apply tw:min-h-[450px] tw:lg:max-h-[640px] tw:max-h-full tw:flex tw:flex-col tw:gap-4 tw:p-2 tw:overflow-y-auto tw:relative;
 }
 
 .form-container {

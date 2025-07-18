@@ -153,8 +153,8 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
         />
         <TextInput
           label="Company ABN"
-          labelLink="https://abr.business.gov.au/"
-          labelLinkText="Look Up"
+          labelBtnLink="https://abr.business.gov.au/"
+          labelBtnText="Look Up"
           name="ABN"
           error={errors.ABN}
           onChange={handleOnChangeTextInput}

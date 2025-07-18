@@ -15,7 +15,7 @@ const Login = () => {
 
         <div className="tw:flex tw:justify-between tw:mt-2 tw:mb-8">
           <label className="input__checkbox-container">
-            <input type="checkbox" id="sfdsf"/>
+            <input type="checkbox"/>
             <span className="input__checkmark"></span>
             <span className="tw:ml-1.5">Remember me</span>
           </label>

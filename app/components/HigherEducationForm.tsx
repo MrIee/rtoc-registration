@@ -161,7 +161,7 @@ const HigherEducationForm: FC<HigherEducationFormProps> = ({ onCancel, onSubmit 
 
   return (
     <form className="form-container" onSubmit={handleSubmit} noValidate>
-      <div className="">
+      <div className="scroll-container">
         <Dropdown
           isAsync
           isCreatable

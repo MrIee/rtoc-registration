@@ -22,11 +22,11 @@ label .label__text > span,
 Input
 ============================================================================= */
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="number"] {
   @apply tw:px-4 tw:py-3 tw:text-base tw:rounded-lg tw:bg-gray-100;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"] {
   @apply tw:outline-rtoc-purple-500;
 }
 
@@ -72,7 +72,7 @@ Button
   tw:hover:brightness-75;
 }
 
-.btn--small {
+.btn.btn--small {
   @apply tw:px-3.5 tw:py-1 tw:text-sm tw:rounded-lg;
 }
 
