@@ -82,7 +82,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
 
   const handleSubmitIndustryExperience = (isValid: boolean, experience: IndustryExperienceData) => {
     if (isValid) {
-      setIsTEModalVisible(false);
+      setIsIndustryModalVisible(false);
       onSubmitIndustry(isValid, experience);
     }
   };

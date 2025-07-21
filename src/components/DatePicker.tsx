@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 interface DatePickerProps {
   label?: string;
+  required?: boolean;
   error?: string;
   onChange?: (date: string) => void
   onBlur?: () => void;
@@ -11,7 +12,7 @@ interface DatePickerProps {
 
 const END_YEAR = 1970;
 
-const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
+const DatePicker = ({ label, required = true, error, onChange, onBlur }: DatePickerProps) => {
   const [month, setMonth] = useState<string>('');
   const [year, setYear] = useState<string>('');
 
@@ -56,12 +57,15 @@ const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
 
   return (
     <div className="tw:flex tw:flex-col">
-      { label && (<span className="label"><span className="label__text">{label}<span>*</span></span></span>)}
+      { label && (<span className="label">
+        <span className="label__text">{label}{ required && (<span>*</span>)}</span>
+      </span>)}
       <div className="tw:flex tw:gap-4">
         <Dropdown
           className="tw:w-full"
           options={months}
           placeholder="Month"
+          required={required}
           onChange={handleOnChangeMonth}
           onBlur={onBlur}
           error={error}
@@ -71,6 +75,7 @@ const DatePicker = ({ label, error, onChange, onBlur }: DatePickerProps) => {
           className="tw:w-full"
           options={years()}
           placeholder="Year"
+          required={required}
           onChange={handleOnChangeYear}
           onBlur={onBlur}
           error={error}

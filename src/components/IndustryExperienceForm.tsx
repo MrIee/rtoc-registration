@@ -29,6 +29,7 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
   const [experience, setExperience] = useState<IndustryExperienceData>(newIndustryDetails);
   const [relatedExperienceOptions, setRelatedExperienceOptions] = useState<Array<ReactSelectOption>>([]);
   const [errors, setErrors] = useState<IndustryExperienceData>(newIndustryDetails);
+  const [dateRequired, setDateRequired] = useState<boolean>(false);
   const relatedExperienceName: string = 'Related Experience';
   const isFormValid = useRef<boolean>(false);
 
@@ -51,6 +52,13 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
       typeof option.value === 'string' ? option.value : '');
 
     setExperience({ ...experience, units: newUnits });
+
+    if (newUnits.length > 0) {
+      setDateRequired(true);
+    } else {
+      setDateRequired(false);
+      setErrors((prevErrors: IndustryExperienceData) => ({ ...prevErrors, started: '', completed: '' }));
+    }
   };
 
   const handleOnChangeFile = (file: File) => {
@@ -136,8 +144,11 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
     validateABN();
     validateTextInput('positionTitle');
     validateFile();
-    validateRelatedExperience();
-    validateDate();
+
+    if (dateRequired) {
+      validateDate();
+    }
+
     onSubmit(isFormValid.current, experience);
   };
 
@@ -180,6 +191,7 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
           label="Related Experience"
           placeholder="Select related experience"
           name={relatedExperienceName}
+          required={false}
           error={errors.unitsMsg}
           onAddMulti={handleOnChangeRelatedExperience}
           onRemoveMulti={handleOnChangeRelatedExperience}
@@ -188,12 +200,14 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
         <div className="tw:flex tw:gap-4">
           <DatePicker
             label="From"
+            required={dateRequired}
             error={errors.started}
             onChange={(date) => handleOnChangeDate('started', date)}
             onBlur={() => errors.started && validateDate()}
           />
           <DatePicker
             label="To"
+            required={dateRequired}
             error={errors.completed || ''}
             onChange={(date) => handleOnChangeDate('completed', date)}
             onBlur={() => errors.completed && validateDate()}

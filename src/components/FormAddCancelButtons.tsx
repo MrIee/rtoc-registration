@@ -8,7 +8,7 @@ interface FormAddCancelButtonsProps {
 const FormAddCancelButtons: FC<FormAddCancelButtonsProps> = ({ onCancel, onAdd }): JSX.Element => {
   return (
     <div className="tw:flex tw:justify-end tw:mt-auto">
-      <button className="btn btn--secondary tw:mr-6" onClick={onCancel}>Cancel</button>
+      <button type="button" className="btn btn--secondary tw:mr-6" onClick={onCancel}>Cancel</button>
       <button type="submit" className="btn" onClick={onAdd}>Add</button>
     </div>
   );
