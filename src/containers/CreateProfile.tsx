@@ -95,20 +95,20 @@ const CreateProfile: FC = (): JSX.Element => {
 
   // Personal Details
   const handleSubmitPersonalDetails = async (isFormValid: boolean, userDetails: UserDetails): Promise<void> => {
-      if (isFormValid) {
-        const newUser = await createUser(userDetails);
+    if (isFormValid) {
+      const newUser = await createUser(userDetails);
 
-        if (newUser && newUser.error) {
-          setErrors((prevErrors: Record<string, UserDetails>) => ({...prevErrors, personalDetails: { ...prevErrors.personalDetails, email: newUser.error }}));
-          return;
-        }
-
-        const auth = await authUser(userDetails.email, userDetails.password);
-
-        if (auth) {
-          dispatch(goToNextStep());
-        }
+      if (newUser && newUser.error) {
+        setErrors((prevErrors: Record<string, UserDetails>) => ({...prevErrors, personalDetails: { ...prevErrors.personalDetails, email: newUser.error }}));
+        return;
       }
+
+      const auth = await authUser(userDetails.email, userDetails.password);
+
+      if (auth) {
+        dispatch(goToNextStep());
+      }
+    }
   };
 
   // VET Qualifications

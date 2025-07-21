@@ -15,9 +15,7 @@ const registrationSlice = createSlice({
   initialState,
   reducers: {
     goToNextStep: (state) => {
-      if (state.step) {
-        state.step += 1;
-      }
+      state.step += 1;
     },
     goToPreviousStep: (state) => {
       if (state.step > 0) {
