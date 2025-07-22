@@ -17,6 +17,7 @@ import type {
   Unit,
   Point,
 } from '../utilities/interfaces';
+import { printDateRange } from '../utilities/helpers';
 
 interface ExperienceProps {
   teachingExperience: Array<TeachingExperience>;
@@ -50,14 +51,14 @@ const ExperienceContainer: FC<ExperienceProps> = ({
 
   const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
     title: te.orgName,
-    list: [`${te.started} - ${te.completed}`],
+    list: [printDateRange(te.started, te.completed)],
     points: getPoints(te.courses as Array<Unit>),
   }));
 
   const industryListItems: Array<ListItem> = industryExperience.map((industry: IndustryExperience): ListItem => ({
     id: industry.rowID,
     title: industry.Company,
-    list: [industry.positionTitle, `${industry.started} - ${industry.completed}`],
+    list: [industry.positionTitle, printDateRange(industry.started, industry.completed)],
     points: getPoints(industry.units as Array<Unit>),
     fileName: industry.positionDescription,
   }));

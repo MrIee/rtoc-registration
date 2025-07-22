@@ -1,4 +1,4 @@
-import { getOrganisationsAsOptions, getCertificationsAsOptions } from '../utilities/data';
+import { getOrganisationsAsOptions, getTAECoursesAsOptions } from '../utilities/data';
 import debounce from 'lodash.debounce';
 import Dropdown from './Dropdown';
 import { type ReactSelectOption, type VETQualificationDetails } from '../utilities/interfaces';
@@ -44,7 +44,7 @@ const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSub
 
     if (typeof option.value === 'string') {
       setIsCertificationsLoading(true);
-      options = await getCertificationsAsOptions(option.value);
+      options = await getTAECoursesAsOptions(option.value);
     }
 
     if (options.length > 0) {

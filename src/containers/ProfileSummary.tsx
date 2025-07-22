@@ -54,7 +54,7 @@ const ProfileSummary: FC = (): JSX.Element => {
       id: i,
       title: data.orgName,
       list: [`${data.started} - ${data.completed}`],
-      points: getPoints(data.units as Array<Unit>),
+      points: getPoints(data.courses as Array<Unit>),
     })) || [];
   };
 

@@ -18,7 +18,7 @@ interface Organisation {
   name: string;
 };
 
-interface Certification {
+interface Course {
   pkgcode: string;
   status: string;
   title: string;
@@ -143,7 +143,7 @@ export const getOrganisationsAsOptions = async (searchTerm: string): Promise<Arr
   }
 };
 
-const getCertification = async (id: string) => {
+const getCourses = async (id: string) => {
   try {
     const res = await axios.get('tga_organisation/courses/' + id);
     return res.data;
@@ -152,14 +152,33 @@ const getCertification = async (id: string) => {
   }
 };
 
-export const getCertificationsAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+export const getCoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
   try {
-    const certifications: Array<Certification> = await getCertification(id);
-    return certifications.map((cert: Certification) => ({ id: nanoid(), value: cert.pkgcode, label: `${cert.pkgcode} - ${cert.title}`}));
+    const courses: Array<Course> = await getCourses(id);
+    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
   } catch {
     return [];
   }
 };
+
+export const getTAECourses = async (id: string) => {
+  try {
+    const res = await axios.get('/tga_organisation/tae_courses/' + id);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getTAECoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const courses: Array<Course> = await getTAECourses(id);
+    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
+  } catch {
+    return [];
+  }
+};
+
 
 // =============================================================================
 // Higher Education Endpoints

@@ -76,3 +76,8 @@ export const generatePassword = () => {
 
   return password;
 };
+
+export const printDateRange = (startDate: string, endDate: string | null) => {
+  const formattedEndDate: string = endDate ? endDate : 'current';
+  return `${startDate} - ${formattedEndDate}`;
+};
