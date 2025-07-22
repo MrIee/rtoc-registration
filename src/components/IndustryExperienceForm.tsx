@@ -1,4 +1,4 @@
-import { getTaughtUnits } from '../utilities/data';
+import { getTaughtUnits, lookupABN } from '../utilities/data';
 import Dropdown from './Dropdown';
 import type { ReactSelectOption, IndustryExperienceData } from '../utilities/interfaces';
 import { useEffect, useRef, useState, type ChangeEvent, type FC, type FormEvent, type JSX } from 'react';
@@ -67,6 +67,16 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
 
   const handleOnChangeDate = (name: string, date: string) => {
     setExperience({ ...experience, [name]: date });
+  };
+
+  const handleOnChangeABN = async (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    handleOnChangeTextInput(event);
+    const res = await lookupABN(value);
+
+    if (res && res.CompanyName) {
+      setExperience({...experience, companyName: res.CompanyName });
+    }
   };
 
   const validateTextInput = (name: string) => {
@@ -159,6 +169,7 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
           label="Company Name"
           name="companyName"
           error={errors.companyName}
+          value={experience.companyName}
           onChange={handleOnChangeTextInput}
           onBlur={() => errors.companyName && validateTextInput('companyName')}
         />
@@ -168,7 +179,7 @@ const IndustryExperienceForm: FC<IndustryExperienceFormProps> = ({ onCancel, onS
           labelBtnText="Look Up"
           name="ABN"
           error={errors.ABN}
-          onChange={handleOnChangeTextInput}
+          onChange={handleOnChangeABN}
           onBlur={() => errors.ABN && validateABN}
         />
         <TextInput

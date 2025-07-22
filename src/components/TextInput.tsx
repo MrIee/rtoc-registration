@@ -22,6 +22,7 @@ export const TextInput: FC<TextInputProps> = ({
   error,
   isPassword,
   required = true,
+  readOnly = false,
   onChange,
   onBlur
 }) => {
@@ -39,6 +40,7 @@ export const TextInput: FC<TextInputProps> = ({
         name={name}
         placeholder={placeholder}
         required={required}
+        readOnly={readOnly}
         onChange={onChange}
         onBlur={onBlur}
       />

@@ -407,6 +407,21 @@ export const deleteIndustryExperience = async (id: number) => {
   }
 };
 
+export const lookupABN = async (abn: string) => {
+  try {
+    const formattedABN = abn.replace(/[\s-]/g, '');
+
+    if (formattedABN && /^\d{11}$/.test(formattedABN)) {
+      const res = await axios.get('/abn_lookup/' + formattedABN);
+      return res.data;
+    }
+
+    return null;
+  } catch(err) {
+    return err;
+  }
+};
+
 // =============================================================================
 // Units I can Teach Endpoints
 // =============================================================================

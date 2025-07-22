@@ -12,16 +12,10 @@ export interface InputPropsNoEvents {
   value?: string;
   error?: string;
   required?: boolean;
+  readOnly?: boolean;
 };
 
-export interface InputProps extends InputPropsNoEvents, InputPropEvents {
-  label?: string;
-  placeholder?: string;
-  name?: string;
-  value?: string;
-  error?: string;
-  required?: boolean;
-};
+export interface InputProps extends InputPropsNoEvents, InputPropEvents {};
 
 export interface Step {
   label: string;
