@@ -45,8 +45,8 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   const [isIndustryModalVisible, setIsIndustryModalVisible] = useState<boolean>(false);
   const [isUnitsModalVisible, setIsUnitsModalVisible] = useState<boolean>(false);
 
-  const getPoints = (units: Array<Unit>): Array<Point> => units.map((unit: Unit) =>
-    ({ id: unit.rowID || 0, label: `${unit.code} ${unit.title}` }));
+  const getPoints = (units: Array<Unit>): Array<Point> => units ? units.map((unit: Unit) =>
+    ({ id: unit.rowID || 0, label: `${unit.code} ${unit.title}` })) : [];
 
   const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
     title: te.orgName,
