@@ -51,7 +51,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
     title: te.orgName,
     list: [`${te.started} - ${te.completed}`],
-    points: getPoints(te.units as Array<Unit>),
+    points: getPoints(te.courses as Array<Unit>),
   }));
 
   const industryListItems: Array<ListItem> = industryExperience.map((industry: IndustryExperience): ListItem => ({
