@@ -64,7 +64,7 @@ const List: FC<ListProps> = ({ display = 'col', title, items, onDelete, onDelete
         {items.length > 0 && <h3>{title}</h3>}
         <div className={classNames({'tw:w-full': items.length === 0})}>{children}</div>
       </div>
-      {items.length > 0 && <div>{ listItems }</div>}
+      {items.length > 0 && <div className="tw:w-full">{ listItems }</div>}
     </div>
   );
 };

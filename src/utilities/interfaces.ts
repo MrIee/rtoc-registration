@@ -102,6 +102,7 @@ export interface TeachingExperienceData {
   orgID: string;
   started: string;
   completed: string;
+  course: string;
   units: Array<string>;
   unitsMsg: string;
 };
@@ -111,7 +112,8 @@ export interface TeachingExperience {
   orgName: string;
   started: string;
   completed: string;
-  courses: Array<Unit>;
+  units?: Array<Unit>;
+  courses?: Array<Unit>;
 };
 
 export interface IndustryExperienceData {

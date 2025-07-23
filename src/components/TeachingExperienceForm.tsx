@@ -1,11 +1,11 @@
-import { getOrganisationsAsOptions, getUnitsAsOptions } from '../utilities/data';
-import debounce from 'lodash.debounce';
+import { getOrganisationsAsOptions, getCoursesAsOptions, getUnitsFromCourseAsOptions } from '../utilities/data';
+import { loadReactSelectOptionsAsync, isDateRangeValid } from '../utilities/helpers';
 import Dropdown from './Dropdown';
 import type { ReactSelectOption, TeachingExperienceData } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import DatePicker from './DatePicker';
 import FormAddCancelButtons from './FormAddCancelButtons';
-import { isDateRangeValid } from '../utilities/helpers';
+import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
 
 interface TeachingExperienceFormProps {
   onCancel?: () => void;
@@ -16,49 +16,33 @@ const newTeachingExperience: TeachingExperienceData = {
   orgID: '',
   started: '',
   completed: '',
+  course: '',
   units: [],
   unitsMsg: '',
 };
 
 const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
-  const [unitOptions, setUnitOptions] = useState<Array<ReactSelectOption>>([]);
-  const [isUnitsLoading, setIsUnitsLoading] = useState<boolean>(true);
-  const [unitsPlaceholder, setUnitsPlaceholder] = useState<string>('Select an RTO to see Cerficatations');
   const [teachingExperience, setTeachingExperience] = useState<TeachingExperienceData>(newTeachingExperience);
   const [errors, setErrors] = useState<TeachingExperienceData>(newTeachingExperience);
   const organisationName: string = 'orgID';
+  const courseName: string = 'course';
   const unitsName: string = 'unit';
   const isFormValid = useRef<boolean>(false);
 
-  const loadOrganisations = debounce((
-    inputValue: string,
-    callback: (options: Array<ReactSelectOption>) => void,
-  ) => {
-    getOrganisationsAsOptions(inputValue).then((res: Array<ReactSelectOption>) => {
-      if (res.length > 0) {
-        return callback(res);
-      }
-  });
-  }, 500);
+  const loadOrganisations = loadReactSelectOptionsAsync(getOrganisationsAsOptions);
+  const {
+    loadOptions: loadCourses,
+    options: courseOptions,
+    isLoading: isCoursesLoading,
+    placeholder: coursePlaceholder,
+  } = useLoadReactSelectOptions('Select an RTO to see Courses', 'Course', getCoursesAsOptions);
 
-  const loadUnits = async (option: ReactSelectOption ): Promise<void> => {
-    setUnitsPlaceholder('Finding Units...');
-    let options: Array<ReactSelectOption> = [];
-
-    if (typeof option.value === 'string') {
-      setIsUnitsLoading(true);
-      options = await getUnitsAsOptions(option.value);
-    }
-
-    if (options.length > 0) {
-      setUnitOptions(options);
-      setIsUnitsLoading(false);
-      setUnitsPlaceholder('Search for Units');
-    } else {
-      setUnitsPlaceholder('No Units found');
-      setIsUnitsLoading(true);
-    }
-  };
+  const {
+    loadOptions: loadUnits,
+    options: unitOptions,
+    isLoading: isUnitsLoading,
+    placeholder: unitsPlaceholder,
+  } = useLoadReactSelectOptions('Select a Course to see Units', 'Unit', getUnitsFromCourseAsOptions);
 
   const handleOnChangeDropdown = (option: ReactSelectOption, name: string) => {
     if (typeof option.value === 'string') {
@@ -66,16 +50,21 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
     }
   };
 
+  const handleOnChangeOrganisation = (option: ReactSelectOption, name: string) => {
+    loadCourses(option);
+    handleOnChangeDropdown(option, name);
+  };
+
+  const handleOnChangeCourse = (option: ReactSelectOption, name: string) => {
+    loadUnits(option);
+    handleOnChangeDropdown(option, name);
+  };
+
   const handleOnChangeUnits = (options: Array<ReactSelectOption>) => {
     const newUnits: Array<string> = options.map((option: ReactSelectOption): string =>
       typeof option.value === 'string' ? option.value : '');
 
     setTeachingExperience({ ...teachingExperience, units: newUnits });
-  };
-
-  const handleOnChangeOrganisation = (option: ReactSelectOption, name: string) => {
-    loadUnits(option);
-    handleOnChangeDropdown(option, name);
   };
 
   const handleOnChangeDate = (name: string, date: string) => {
@@ -90,6 +79,17 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
       isFormValid.current = false;
     } else {
       setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, orgID: '' }));
+    }
+  };
+
+  const validateCourse = () => {
+    const isValid: boolean = !!teachingExperience.course;
+
+    if (!isValid) {
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, course: 'Please choose a course' }));
+      isFormValid.current = false;
+    } else {
+      setErrors((prevErrors: TeachingExperienceData) => ({ ...prevErrors, course: '' }));
     }
   };
 
@@ -127,6 +127,7 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
     event.preventDefault();
     isFormValid.current = true;
     validateOrganisation();
+    validateCourse();
     validateUnits();
     validateDate();
     onSubmit(isFormValid.current, teachingExperience);
@@ -140,11 +141,22 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
           loadOptions={loadOrganisations}
           label="I worked at this RTO"
           name={organisationName}
-          placeholder="Search for RTO"
+          placeholder="Search for an RTO"
           isSearchable
           error={errors.orgID}
           onChange={handleOnChangeOrganisation}
           onBlur={() => errors.orgID && validateOrganisation()}
+        />
+        <Dropdown
+          options={courseOptions}
+          label="Course Taught"
+          placeholder={coursePlaceholder}
+          name={courseName}
+          isSearchable
+          error={errors.course}
+          isDisabled={isCoursesLoading}
+          onChange={handleOnChangeCourse}
+          onBlur={() => errors.course && validateCourse()}
         />
         <Dropdown
           isMulti

@@ -1,10 +1,11 @@
 import { getOrganisationsAsOptions, getTAECoursesAsOptions } from '../utilities/data';
-import debounce from 'lodash.debounce';
+import { loadReactSelectOptionsAsync } from '../utilities/helpers';
 import Dropdown from './Dropdown';
 import { type ReactSelectOption, type VETQualificationDetails } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import DatePicker from './DatePicker';
 import FormAddCancelButtons from './FormAddCancelButtons';
+import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
 
 interface VETQualificationsFormProps {
   onCancel?: () => void;
@@ -18,44 +19,19 @@ const newVETQualificationDetails: VETQualificationDetails = {
 };
 
 const VETQualificationsForm: FC<VETQualificationsFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
-  const [certificationOptions, setCertificationOptions] = useState<Array<ReactSelectOption>>([]);
-  const [isCertificationsLoading, setIsCertificationsLoading] = useState<boolean>(true);
-  const [certificationPlaceholder, setCertificationPlaceholder] = useState<string>('Select an RTO to see Cerficatations');
   const [vetQualificationDetails, setVETQualificationDetails] = useState<VETQualificationDetails>(newVETQualificationDetails);
   const [errors, setErrors] = useState<VETQualificationDetails>(newVETQualificationDetails);
   const organisationName: string = 'orgID';
   const certificationName: string = 'qualification';
   const isFormValid = useRef<boolean>(false);
 
-  const loadOrganisations = debounce((
-    inputValue: string,
-    callback: (options: Array<ReactSelectOption>) => void,
-  ) => {
-    getOrganisationsAsOptions(inputValue).then((res: Array<ReactSelectOption>) => {
-      if (res.length > 0) {
-        return callback(res);
-      }
-  });
-  }, 500);
-
-  const loadCertifications = async (option: ReactSelectOption ): Promise<void> => {
-    setCertificationPlaceholder('Finding Certifications...');
-    let options: Array<ReactSelectOption> = [];
-
-    if (typeof option.value === 'string') {
-      setIsCertificationsLoading(true);
-      options = await getTAECoursesAsOptions(option.value);
-    }
-
-    if (options.length > 0) {
-      setCertificationOptions(options);
-      setIsCertificationsLoading(false);
-      setCertificationPlaceholder('Search for Certification');
-    } else {
-      setCertificationPlaceholder('No Certifications found');
-      setIsCertificationsLoading(true);
-    }
-  };
+  const loadOrganisations = loadReactSelectOptionsAsync(getOrganisationsAsOptions);
+  const {
+    loadOptions: loadCertifications,
+    options: certificationOptions,
+    isLoading: isCertificationsLoading,
+    placeholder: certificationPlaceholder,
+  } = useLoadReactSelectOptions('Select an RTO to see Cerficatations', 'Cerficatation', getTAECoursesAsOptions);
 
   const handleOnChangeDropdown = (option: ReactSelectOption, name: string) => {
     if (typeof option.value === 'string') {

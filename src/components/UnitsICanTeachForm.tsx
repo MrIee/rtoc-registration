@@ -1,9 +1,10 @@
-import { getOrganisationsAsOptions, getUnitsAsOptions } from '../utilities/data';
-import debounce from 'lodash.debounce';
+import { getOrganisationsAsOptions, getUnitsFromOrgAsOptions } from '../utilities/data';
+import { loadReactSelectOptionsAsync } from '../utilities/helpers';
 import Dropdown from './Dropdown';
 import { type ReactSelectOption, type UnitsICanTeachData } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import FormAddCancelButtons from './FormAddCancelButtons';
+import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
 
 interface UnitsICanTeachFormProps {
   onCancel?: () => void;
@@ -17,43 +18,18 @@ const newUnitsDetails: UnitsICanTeachData = {
 };
 
 const UnitsICanTeachForm: FC<UnitsICanTeachFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
-  const [unitOptions, setUnitOptions] = useState<Array<ReactSelectOption>>([]);
-  const [isUnitOptionsLoading, setIsUnitOptionsLoading] = useState<boolean>(true);
-  const [unitOptionsPlaceholder, setCertificationPlaceholder] = useState<string>('Select an RTO to see Units');
   const [unitsDetails, setUnitsDetails] = useState<UnitsICanTeachData>(newUnitsDetails);
   const [errors, setErrors] = useState<UnitsICanTeachData>(newUnitsDetails);
   const organisationName: string = 'orgID';
   const isFormValid = useRef<boolean>(false);
 
-  const loadOrganisations = debounce((
-    inputValue: string,
-    callback: (options: Array<ReactSelectOption>) => void,
-  ) => {
-    getOrganisationsAsOptions(inputValue).then((res: Array<ReactSelectOption>) => {
-      if (res.length > 0) {
-        return callback(res);
-      }
-  });
-  }, 500);
-
-  const loadUnits = async (option: ReactSelectOption ): Promise<void> => {
-    setCertificationPlaceholder('Finding Units...');
-    let options: Array<ReactSelectOption> = [];
-
-    if (typeof option.value === 'string') {
-      setIsUnitOptionsLoading(true);
-      options = await getUnitsAsOptions(option.value);
-    }
-
-    if (options.length > 0) {
-      setUnitOptions(options);
-      setIsUnitOptionsLoading(false);
-      setCertificationPlaceholder('Search for Unit');
-    } else {
-      setCertificationPlaceholder('No Units found');
-      setIsUnitOptionsLoading(true);
-    }
-  };
+  const loadOrganisations = loadReactSelectOptionsAsync(getOrganisationsAsOptions);
+  const {
+    loadOptions: loadUnits,
+    options: unitOptions,
+    isLoading: isUnitsLoading,
+    placeholder: unitsPlaceholder,
+  } = useLoadReactSelectOptions('Select an RTO to see Units', 'Unit', getUnitsFromOrgAsOptions);
 
   const handleOnChangeUnits = (options: Array<ReactSelectOption>) => {
     const newUnits: Array<string> = options.map((option: ReactSelectOption): string =>
@@ -117,11 +93,11 @@ const UnitsICanTeachForm: FC<UnitsICanTeachFormProps> = ({ onCancel, onSubmit })
           isMulti
           options={unitOptions}
           label="I can teach these units"
-          placeholder={unitOptionsPlaceholder}
+          placeholder={unitsPlaceholder}
           name="unitsMsg"
           isSearchable
           error={errors.unitsMsg}
-          isDisabled={isUnitOptionsLoading}
+          isDisabled={isUnitsLoading}
           onAddMulti={handleOnChangeUnits}
           onRemoveMulti={handleOnChangeUnits}
           onBlur={() => errors.unitsMsg && validateUnits()}

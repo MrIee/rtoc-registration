@@ -1,12 +1,13 @@
 import { getTEProvidersAsOptions, getTECoursesAsOptions } from '../utilities/data';
+import { loadReactSelectOptionsAsync } from '../utilities/helpers';
 import { AQF_LEVEL_OPTIONS } from '../utilities/constants';
-import debounce from 'lodash.debounce';
 import Dropdown from './Dropdown';
 import type { ReactSelectOption, TEQualification } from '../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
 import DatePicker from './DatePicker';
 import FormAddCancelButtons from './FormAddCancelButtons';
 import FileUpload from './FileUpload';
+import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
 
 interface HigherEducationFormProps {
   onCancel?: () => void;
@@ -25,9 +26,6 @@ const newTEDetails: TEQualification = {
 };
 
 const HigherEducationForm: FC<HigherEducationFormProps> = ({ onCancel, onSubmit }): JSX.Element => {
-  const [teCourseOptions, setTECourseOptions] = useState<Array<ReactSelectOption>>([]);
-  const [isTECourseLoading, setIsTECourseLoading] = useState<boolean>(true);
-  const [teCoursePlaceholder, setTECoursePlaceholder] = useState<string>('Select an Institution to see Courses');
   const [teQualification, setTEQualification] = useState<TEQualification>(newTEDetails);
   const [errors, setErrors] = useState<TEQualification>(newTEDetails);
   const providerName: string = 'providerName';
@@ -35,35 +33,15 @@ const HigherEducationForm: FC<HigherEducationFormProps> = ({ onCancel, onSubmit 
   const aqfName: string = 'aqf';
   const isFormValid = useRef<boolean>(false);
 
-  const loadTEProviders = debounce((
-    inputValue: string,
-    callback: (options: Array<ReactSelectOption>) => void,
-  ) => {
-    getTEProvidersAsOptions(inputValue).then((res: Array<ReactSelectOption>) => {
-      if (res.length > 0) {
-        return callback(res);
-      }
-  });
-  }, 500);
-
-  const loadTECourses = async (option: ReactSelectOption): Promise<void> => {
-    let options: Array<ReactSelectOption> = [];
-
-    if (option.value && typeof option.value === 'object' && 'id' in option.value && typeof option.value.id === 'number') {
-      setTECoursePlaceholder('Finding Courses...');
-      setIsTECourseLoading(true);
-      options = await getTECoursesAsOptions(option.value.id);
-    }
-
-    if (options.length > 0) {
-      setTECourseOptions(options);
-      setIsTECourseLoading(false);
-      setTECoursePlaceholder('Search for Courses');
-    } else {
-      setTECoursePlaceholder('No Courses found');
-      setIsTECourseLoading(true);
-    }
-  };
+  const loadTEProviders = loadReactSelectOptionsAsync(getTEProvidersAsOptions);
+  const {
+    loadOptions: loadTECourses,
+    options: teCourseOptions,
+    isLoading: isTECourseLoading,
+    setIsLoading: setIsTECourseLoading,
+    placeholder: teCoursePlaceholder,
+    setPlaceholder: setTECoursePlaceholder,
+  } = useLoadReactSelectOptions('Select an Institution to see Courses', 'Course', getTECoursesAsOptions);
 
   const handleOnChangeProvider = (option: ReactSelectOption) => {
     if (option.__isNew__ && typeof option.value === 'string') {
@@ -77,7 +55,7 @@ const HigherEducationForm: FC<HigherEducationFormProps> = ({ onCancel, onSubmit 
       'id' in option.value && typeof option.value.id === 'number' &&
       'name' in option.value && typeof option.value.name=== 'string'
     ) {
-      loadTECourses(option);
+      loadTECourses({ id: option.id, value: option.value.id.toString(), label: option.label });
       setTEQualification({ ...teQualification, providerID: option.value.id.toString(), providerName: option.value.name });
     }
   };

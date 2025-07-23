@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import { AQF_LEVEL_OPTIONS } from './constants';
 import type { ReactSelectOption } from './interfaces';
 
@@ -80,4 +81,19 @@ export const generatePassword = () => {
 export const printDateRange = (startDate: string, endDate: string | null) => {
   const formattedEndDate: string = endDate ? endDate : 'current';
   return `${startDate} - ${formattedEndDate}`;
+};
+
+export const loadReactSelectOptionsAsync = (fetchDataFn: (id: string) => Promise<Array<ReactSelectOption>>) => {
+  const loadOptions = debounce((
+      inputValue: string,
+      callback: (options: Array<ReactSelectOption>) => void,
+    ) => {
+      fetchDataFn(inputValue).then((res: Array<ReactSelectOption>) => {
+        if (res.length > 0) {
+          return callback(res);
+        }
+    });
+    }, 500);
+
+    return loadOptions;
 };
