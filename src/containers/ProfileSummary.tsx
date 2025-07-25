@@ -13,7 +13,7 @@ import type {
   UserDetails,
   VETQualificationDetails
 } from '../utilities/interfaces';
-import List from '../components/List';
+import ListCard from '../components/ListCard';
 
 const ProfileSummary: FC = (): JSX.Element => {
   const [userInfo, setUserInfo] = useState<UserDetails | null>(null);
@@ -33,39 +33,31 @@ const ProfileSummary: FC = (): JSX.Element => {
   const getPoints = (units: Array<Unit>): Array<Point> => units.map((unit: Unit, i: number) =>
       ({ id: unit.rowID || i, label: `${unit.code} ${unit.title}` }));
 
-  const getVetQualificationsItems = () => {
-    return userProfile?.vetQuals.map((data: VETQualificationDetails, i: number): ListItem => ({
-      id: i,
-      title: data.OrgName,
-      list: [data.completed, `${data.course} ${data.title}`],
-    })) || [];
-  };
+  const vetQualificationsItems = userProfile?.vetQuals.map((data: VETQualificationDetails, i: number): ListItem => ({
+    id: i,
+    title: data.OrgName,
+    list: [data.completed, `${data.course} ${data.title}`],
+  })) || [];
 
-  const getTEQualificationsItems = () => {
-    return userProfile?.qualifications.map((data: TEQualification, i: number): ListItem => ({
-      id: i,
-      title: data.providerName,
-      list: [data.completed, data.courseName, getAQFString(data.aqf.toString())],
-    })) || [];
-  };
+  const teQualificationsItems = userProfile?.qualifications.map((data: TEQualification, i: number): ListItem => ({
+    id: i,
+    title: data.providerName,
+    list: [data.completed, data.courseName, getAQFString(data.aqf.toString())],
+  })) || [];
 
-  const getTeachingExperienceItems = () => {
-    return userProfile?.vetTeach.map((data: TeachingExperience, i: number): ListItem => ({
-      id: i,
-      title: data.orgName,
-      list: [`${data.started} - ${data.completed}`],
-      points: getPoints(data.units as Array<Unit>),
-    })) || [];
-  };
+  const teachingExperienceItems =  userProfile?.vetTeach.map((data: TeachingExperience, i: number): ListItem => ({
+    id: i,
+    title: data.orgName,
+    list: [`${data.started} - ${data.completed}`],
+    points: getPoints(data.units as Array<Unit>),
+  })) || [];
 
-  const getIndustryExperienceItems = () => {
-    return userProfile?.industry.map((data: IndustryExperience, i: number): ListItem => ({
-      id: i,
-      title: data.Company,
-      list: [data.positionTitle, `${data.started} - ${data.completed}`],
-      points: getPoints(data.units as Array<Unit>),
-    })) || [];
-  };
+  const industryExperienceItems = userProfile?.industry.map((data: IndustryExperience, i: number): ListItem => ({
+    id: i,
+    title: data.Company,
+    list: [data.positionTitle, `${data.started} - ${data.completed}`],
+    points: getPoints(data.units as Array<Unit>),
+  })) || [];
 
   return (
     <>
@@ -77,10 +69,10 @@ const ProfileSummary: FC = (): JSX.Element => {
           <span>{userInfo?.email}</span>
           <span>{userInfo?.phone}</span>
         </div>
-        <List display="row" title="Vet Qualifications" items={getVetQualificationsItems()} />
-        <List display="row" title="Credentials" items={getTEQualificationsItems()} />
-        <List display="row" title="Teaching Experience" items={getTeachingExperienceItems()} />
-        <List display="row" title="Industry Experience" items={getIndustryExperienceItems()} />
+        <ListCard display="row" title="Vet Qualifications" items={vetQualificationsItems} />
+        <ListCard display="row" title="Credentials" items={teQualificationsItems} />
+        <ListCard display="row" title="Teaching Experience" items={teachingExperienceItems} />
+        <ListCard display="row" title="Industry Experience" items={industryExperienceItems} />
       </div>
     </>
   );

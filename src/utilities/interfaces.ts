@@ -38,6 +38,7 @@ export interface Point {
 export interface ListItem {
   id?: number;
   title?: string;
+  subtitle?: string;
   list?: Array<string>;
   points?: Array<Point>;
   fileName?: string;
@@ -113,7 +114,21 @@ export interface TeachingExperience {
   started: string;
   completed: string;
   units?: Array<Unit>;
-  courses?: Array<Unit>;
+  courses?: Array<TeachingExperienceCourse>;
+};
+
+export interface TeachingExperienceCourse {
+  course: string;
+  courseTitle: string;
+  units: Array<TeachingExperienceUnit>;
+};
+
+export interface TeachingExperienceUnit {
+  f_completed: string;
+  f_started: string;
+  rowID: number;
+  unit: string;
+  unitTitle: string;
 };
 
 export interface IndustryExperienceData {

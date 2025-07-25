@@ -155,7 +155,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form className="tw:w-full" onSubmit={handleSubmit} noValidate>
       <div className="container">
         {
           // Hide Role radio buttons for the time being.

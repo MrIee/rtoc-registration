@@ -2,7 +2,7 @@ import { useState, type FC, type JSX } from 'react';
 import AddDetailsButton from './AddDetailsButton';
 import Modal from './Modal';
 import HigherEducationForm from './HigherEducationForm';
-import List from './List';
+import ListCard from './ListCard';
 import { type ListItem, type TEQualification } from '../utilities/interfaces';
 import { getAQFString } from '../utilities/helpers';
 
@@ -37,12 +37,12 @@ const HigherEducationContainer: FC<HigherEducationProps> = ({ qualifications = [
 
   return (
     <div className="tw:flex tw:flex-col tw:gap-4 tw:mb-4">
-      <List title="Higher Education" items={listItems} onDelete={handleDelete}>
+      <ListCard title="Higher Education" items={listItems} onDelete={handleDelete}>
         <AddDetailsButton classes="tw:ml-auto" label="Higher Education" onClick={() => setIsModalVisible(true)} />
         <Modal title="Add Higher Education" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
           <HigherEducationForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
         </Modal>
-      </List>
+      </ListCard>
     </div>
   );
 };

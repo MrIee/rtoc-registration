@@ -82,8 +82,12 @@ export const userHasAuth = () => {
 };
 
 export const getUserProfile = async (url: string) => {
-  const res = await axios.get('/profile/' + url);
-  return res.data[0];
+  try {
+    const res = await axios.get('/profile/' + url);
+    return res.data[0];
+  } catch {
+    return null;
+  }
 };
 
 // =============================================================================
@@ -143,7 +147,7 @@ export const getOrganisationsAsOptions = async (searchTerm: string): Promise<Arr
   }
 };
 
-export const getTAECourses = async (id: string) => {
+const getTAECourses = async (id: string) => {
   try {
     const res = await axios.get('/tga_organisation/tae_courses/' + id);
     return res.data;

@@ -17,8 +17,12 @@ body,
   @apply tw:h-full tw:w-full tw:text-gray-500;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
   @apply tw:font-semibold;
+}
+
+h2, h3, h4 {
+  @apply tw:text-rtoc-purple-500;
 }
 
 h1 {
@@ -26,15 +30,23 @@ h1 {
 }
 
 h2 {
-  @apply tw:text-[32px] tw:text-rtoc-purple-500;
+  @apply tw:text-[32px];
 }
 
 h3 {
-  @apply tw:text-xl tw:text-rtoc-purple-500;
+  @apply tw:text-xl;
+}
+
+h4 {
+  @apply tw:text-lg;
+}
+
+h5 {
+  @apply tw:text-gray-800;
 }
 
 .container {
-  @apply tw:min-h-[450px] tw:flex tw:flex-col;
+  @apply tw:min-h-[450px] tw:w-full tw:flex tw:flex-col;
 }
 
 .scroll-container {

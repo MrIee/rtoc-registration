@@ -9,7 +9,3 @@
 .list__item {
   @apply tw:flex tw:flex-col tw:py-4 tw:[&:not(:first-child)]:border-t tw:border-t-rtoc-purple-500;
 }
-
-.list__ {
-  @apply tw:flex tw:flex-col tw:gap-1.5 tw:text-sm;
-}
