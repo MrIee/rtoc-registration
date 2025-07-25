@@ -147,11 +147,13 @@ const CreateProfile: FC = (): JSX.Element => {
   } = useUnitsICanTeach();
 
   return (
-    <div className="tw:lg:w-[640px] tw:w-full tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto tw:flex tw:flex-col">
-      <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
-      <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
+    <div className="tw:lg:w-[800px] tw:w-full tw:flex tw:flex-col tw:items-center tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto">
+      <div className="tw:lg:w-[640px] tw:w-full tw:flex tw:flex-col tw:items-center">
+        <img className="tw:w-20 tw:mb-1" src={logo} alt="logo" />
+        <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
 
-      <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={handleClickStep} />
+        <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={handleClickStep} />
+      </div>
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
       { step > 0 && <div className="container">
         { step === 1 && <VETQualificationsContainer
