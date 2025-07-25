@@ -1,4 +1,3 @@
-import logo from '../assets/images/logo-rtoc.png';
 import type { FC, JSX } from 'react';
 import useHigherEducation from '../hooks/useHigherEducation';
 import useIndustryExperience from '../hooks/useIndustryExperience';
@@ -46,32 +45,28 @@ const Profile: FC = (): JSX.Element => {
   } = useUnitsICanTeach();
 
   return (
-    <div className="tw:w-[980px] tw:flex tw:flex-col tw:py-9 tw:mx-auto">
-      <img className="tw:w-20 tw:mb-1 tw:self-center" src={logo} alt="logo" />
-      <h2 className="tw:text-center tw:mt-8">Your Profile</h2>
-      <div className="tw:mt-8">
-        <VETQualificationsContainer
-          onSubmit={handleSubmitVETQualification}
-          onDelete={handleDeleteVetQualification}
-          qualifications={vetQualifications}
-        />
-        <HigherEducationContainer
-          onSubmit={handleSubmitTEQualification}
-          onDelete={handleDeleteTEQualification}
-          qualifications={teQualifications}
-        />
-        <ExperienceContainer
-          onSubmitTE={handleOnSubmitTeachingExperience}
-          onDeleteTE={handleDeleteTeachingExperience}
-          teachingExperience={teachingExperience}
-          onSubmitIndustry={handleOnSubmitIndustryExperience}
-          onDeleteIndustry={handleDeleteIndustryExperience}
-          industryExperience={industryExperience}
-          onDeleteUnits={handleDeleteUnitsICanTeach}
-          onSubmitUnits={handleOnSubmitUnitsICanTeach}
-          unitsICanTeach={unitsICanTeach}
-        />
-      </div>
+    <div className="tw:mt-8">
+      <VETQualificationsContainer
+        onSubmit={handleSubmitVETQualification}
+        onDelete={handleDeleteVetQualification}
+        qualifications={vetQualifications}
+      />
+      <HigherEducationContainer
+        onSubmit={handleSubmitTEQualification}
+        onDelete={handleDeleteTEQualification}
+        qualifications={teQualifications}
+      />
+      <ExperienceContainer
+        onSubmitTE={handleOnSubmitTeachingExperience}
+        onDeleteTE={handleDeleteTeachingExperience}
+        teachingExperience={teachingExperience}
+        onSubmitIndustry={handleOnSubmitIndustryExperience}
+        onDeleteIndustry={handleDeleteIndustryExperience}
+        industryExperience={industryExperience}
+        onDeleteUnits={handleDeleteUnitsICanTeach}
+        onSubmitUnits={handleOnSubmitUnitsICanTeach}
+        unitsICanTeach={unitsICanTeach}
+      />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import logo from '../assets/images/logo-rtoc.png';
 import type { Step,  UserDetails } from '../utilities/interfaces';
 import { useEffect, useState, type FC, type JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -147,11 +146,8 @@ const CreateProfile: FC = (): JSX.Element => {
   } = useUnitsICanTeach();
 
   return (
-    <div className="tw:lg:w-[800px] tw:w-full tw:flex tw:flex-col tw:items-center tw:lg:px-0 tw:px-3 tw:py-9 tw:mx-auto">
-      <div className="tw:lg:w-[640px] tw:w-full tw:flex tw:flex-col tw:items-center">
-        <img className="tw:w-20 tw:mb-1" src={logo} alt="logo" />
-        <h2 className="tw:text-center tw:mb-8">Create a Profile</h2>
-
+    <>
+      <div className="tw:lg:w-[640px] tw:w-full">
         <Steps classes={'tw:mb-8'} steps={profileSteps} onClick={handleClickStep} />
       </div>
       { step === 0 && <PersonalDetailsForm  onSubmit={handleSubmitPersonalDetails} customErrors={errors.personalDetails} />}
@@ -179,7 +175,7 @@ const CreateProfile: FC = (): JSX.Element => {
         />}
       </div> }
       {step > 0 && <FormButtons classes="tw:mt-auto" enableForwardNav={step > 0} />}
-    </div>
+    </>
   );
 };
 
