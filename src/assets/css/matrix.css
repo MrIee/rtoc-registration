@@ -1,0 +1,19 @@
+/* ============================================================================
+Matrix
+============================================================================= */
+
+.matrix {
+  @apply tw:px-4 tw:rounded-lg tw:bg-gray-100;
+}
+
+.matrix__section {
+  @apply tw:not-last:border-b tw:border-gray-300
+}
+
+.matrix__body {
+  @apply tw:px-2 tw:py-2.5;
+}
+
+.matrix-accordion {
+  @apply tw:pl-2 tw:pr-2 tw:rounded-lg;
+}

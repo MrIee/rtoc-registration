@@ -462,7 +462,7 @@ export const createUnitsICanTeach = async (data: UnitsICanTeachData) => {
 
 export const getUnitsICanTeach = async () => {
   try {
-    const res = await axios.get('/user/experience/canteach/', {
+    const res = await axios.get('/user/experience/canteach', {
       headers: { 'x-session': getSessionKey() },
     });
 
@@ -474,12 +474,28 @@ export const getUnitsICanTeach = async () => {
 
 export const deleteUnitsICanTeach = async (id: number) => {
   try {
-    const res = await axios.delete('/user/experience/canteach/', {
+    const res = await axios.delete('/user/experience/canteach', {
       data: { rowID: id },
       headers: { 'x-session': getSessionKey() },
     });
     return res.data;
   } catch {
     return null;
+  }
+};
+
+// =============================================================================
+// Trainers Matrix Endpoints
+// =============================================================================
+
+export const getMatrixTeachingExperience = async () => {
+  try {
+    const res = await axios.get('/user/matrix/teach', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return [];
   }
 };
