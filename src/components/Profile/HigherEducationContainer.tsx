@@ -1,10 +1,10 @@
 import { useState, type FC, type JSX } from 'react';
-import AddDetailsButton from './AddDetailsButton';
-import Modal from './Modal';
+import AddDetailsButton from '../Inputs/AddDetailsButton';
+import Modal from '../Modal';
 import HigherEducationForm from './HigherEducationForm';
-import ListCard from './ListCard';
-import { type ListItem, type TEQualification } from '../utilities/interfaces';
-import { getAQFString } from '../utilities/helpers';
+import ListCard from '../ListCard';
+import { type ListItem, type TEQualification } from '../../utilities/interfaces';
+import { getAQFString } from '../../utilities/helpers';
 
 interface HigherEducationProps {
   qualifications: Array<TEQualification>;

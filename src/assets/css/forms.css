@@ -30,6 +30,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="number"] {
   @apply tw:outline-rtoc-purple-500;
 }
 
+/* Checkbox */
 input[type="checkbox"] {
   @apply tw:h-0 tw:w-0 tw:opacity-0 tw:cursor-pointer tw:absolute;
 }
@@ -53,6 +54,37 @@ input[type="checkbox"] + .input__checkmark:after {
 }
 
 input[type="checkbox"]:checked + .input__checkmark:after {
+  @apply tw:block;
+}
+
+/* Radio Button */
+.radio-group .input__radio-wrapper:not(:last-child) {
+  @apply tw:pr-4;
+}
+
+input[type="radio"] {
+  @apply tw:h-0 tw:w-0 tw:opacity-0 tw:cursor-pointer tw:absolute;
+}
+
+.input__radio-wrapper {
+  @apply tw:pl-7 tw:relative tw:cursor-pointer tw:select-none;
+}
+
+.input__radio-wrapper .input__radio {
+  @apply tw:h-5 tw:w-5 tw:border-2 tw:border-gray-300 tw:rounded-full tw:absolute tw:top-0 tw:left-0;
+}
+
+input[type="radio"]:checked + .input__radio {
+  @apply tw:border-rtoc-purple-500;
+}
+
+input[type="radio"] + .input__radio:after {
+  @apply tw:hidden tw:h-2.5 tw:w-2.5 tw:mx-auto tw:rounded-full tw:bg-rtoc-purple-500 tw:absolute tw:-translate-y-1/2 tw:top-1/2 tw:left-0 tw:right-0;
+
+  content: "";
+}
+
+input[type="radio"]:checked + .input__radio:after {
   @apply tw:block;
 }
 

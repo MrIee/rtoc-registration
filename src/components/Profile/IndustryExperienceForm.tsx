@@ -1,12 +1,12 @@
-import { getTaughtUnits, lookupABN } from '../utilities/data';
-import Dropdown from './Dropdown';
-import type { ReactSelectOption, IndustryExperienceData } from '../utilities/interfaces';
+import { getTaughtUnits, lookupABN } from '../../utilities/data';
+import Dropdown from '../Inputs/Dropdown';
+import type { ReactSelectOption, IndustryExperienceData } from '../../utilities/interfaces';
 import { useEffect, useRef, useState, type ChangeEvent, type FC, type FormEvent, type JSX } from 'react';
-import TextInput from './TextInput';
-import DatePicker from './DatePicker';
-import FormAddCancelButtons from './FormAddCancelButtons';
-import FileUpload from './FileUpload';
-import { isDateRangeValid, isValidABN } from '../utilities/helpers';
+import TextInput from '../Inputs/TextInput';
+import DatePicker from '../Inputs/DatePicker';
+import FormAddCancelButtons from '../FormAddCancelButtons';
+import FileUpload from '../Inputs/FileUpload';
+import { isDateRangeValid, isValidABN } from '../../utilities/helpers';
 
 interface IndustryExperienceFormProps {
   onCancel?: () => void;

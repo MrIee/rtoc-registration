@@ -4,7 +4,7 @@ import { authUser } from '../utilities/data';
 import { useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router';
 
-import TextInput from '../components/TextInput';
+import TextInput from '../components/Inputs/TextInput';
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');

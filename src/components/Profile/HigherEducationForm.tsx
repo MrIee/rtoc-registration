@@ -1,13 +1,13 @@
-import { getTEProvidersAsOptions, getTECoursesAsOptions } from '../utilities/data';
-import { loadReactSelectOptionsAsync } from '../utilities/helpers';
-import { AQF_LEVEL_OPTIONS } from '../utilities/constants';
-import Dropdown from './Dropdown';
-import type { ReactSelectOption, TEQualification } from '../utilities/interfaces';
+import { getTEProvidersAsOptions, getTECoursesAsOptions } from '../../utilities/data';
+import { loadReactSelectOptionsAsync } from '../../utilities/helpers';
+import { AQF_LEVEL_OPTIONS } from '../../utilities/constants';
+import Dropdown from '../Inputs/Dropdown';
+import type { ReactSelectOption, TEQualification } from '../../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
-import DatePicker from './DatePicker';
-import FormAddCancelButtons from './FormAddCancelButtons';
-import FileUpload from './FileUpload';
-import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
+import DatePicker from '../Inputs/DatePicker';
+import FormAddCancelButtons from '../FormAddCancelButtons';
+import FileUpload from '../Inputs/FileUpload';
+import useLoadReactSelectOptions from '../../hooks/useLoadReactSelectOptions';
 
 interface HigherEducationFormProps {
   onCancel?: () => void;

@@ -109,10 +109,10 @@ export interface TeachingExperienceData {
 };
 
 export interface TeachingExperience {
-  orgID: string;
+  orgID?: string;
   orgName: string;
-  started: string;
-  completed: string;
+  started?: string;
+  completed?: string;
   units?: Array<Unit>;
   courses?: Array<TeachingExperienceCourse>;
 };
@@ -124,9 +124,9 @@ export interface TeachingExperienceCourse {
 };
 
 export interface TeachingExperienceUnit {
-  f_completed: string;
-  f_started: string;
-  rowID: number;
+  f_completed?: string;
+  f_started?: string;
+  rowID?: number;
   unit: string;
   unitTitle: string;
 };
@@ -174,4 +174,20 @@ export interface Profile {
   qualifications: Array<TEQualification>,
   vetQuals: Array<VETQualificationDetails>,
   vetTeach: Array<TeachingExperience>,
+};
+
+export interface MatrixExperience extends Omit<TeachingExperience, 'courses'> {
+  courses: Array<MatrixExperienceCourse>;
+};
+
+export interface MatrixExperienceCourse extends Omit<TeachingExperienceCourse, 'units'> {
+  units: Array<MatrixExperienceUnit>;
+};
+
+export interface MatrixExperienceUnit extends TeachingExperienceUnit {
+  eq_unit1: string;
+  eq_unit2: string;
+  eq_unit3: string;
+  experience: string;
+  hold_unit: number;
 };

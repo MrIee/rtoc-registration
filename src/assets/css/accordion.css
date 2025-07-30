@@ -1,0 +1,15 @@
+/* ============================================================================
+Matrix
+============================================================================= */
+
+.accordion {
+  @apply tw:first:rounded-t-lg tw:last:rounded-b-lg tw:bg-gray-200;
+}
+
+.accordion:last-child .accordion__body {
+  @apply tw:rounded-b-lg;
+}
+
+.accordion__body {
+  @apply tw:bg-white tw:transition-all tw:duration-200 tw:ease-out tw:overflow-hidden
+}

@@ -1,6 +1,7 @@
 @import "tailwindcss" prefix(tw);
 @import "./assets/css/forms.css";
 @import "./assets/css/list.css";
+@import "./assets//css/accordion.css";
 @import "./assets/css/matrix.css";
 
 @theme {

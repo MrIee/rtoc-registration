@@ -1,9 +1,9 @@
 import { useState, type FC, type JSX } from 'react';
-import AddDetailsButton from './AddDetailsButton';
-import Modal from './Modal';
+import AddDetailsButton from '../Inputs/AddDetailsButton';
+import Modal from '../Modal';
 import VETQualificationsForm from './VETQualificationsForm';
-import ListCard from './ListCard';
-import type { ListItem, VETQualificationDetails } from '../utilities/interfaces';
+import ListCard from '../ListCard';
+import type { ListItem, VETQualificationDetails } from '../../utilities/interfaces';
 
 interface VETQualificationsProps {
   qualifications: Array<VETQualificationDetails>;

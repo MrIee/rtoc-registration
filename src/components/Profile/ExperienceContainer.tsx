@@ -1,12 +1,12 @@
 // import iconDelete from '../assets/images/icon-delete.svg';
 import { useState, type FC, type JSX, type ReactNode } from 'react';
-import AddDetailsButton from './AddDetailsButton';
-import Modal from './Modal';
+import AddDetailsButton from '../Inputs/AddDetailsButton';
+import Modal from '../Modal';
 import TeachingExperienceForm from './TeachingExperienceForm';
 import IndustryExperienceForm from './IndustryExperienceForm';
 import UnitsICanTeachForm from './UnitsICanTeachForm';
-import ListCard from './ListCard';
-import List from './List';
+import ListCard from '../ListCard';
+import List from '../List';
 import type {
   ListItem,
   TeachingExperienceData,
@@ -19,8 +19,8 @@ import type {
   Point,
   TeachingExperienceCourse,
   TeachingExperienceUnit,
-} from '../utilities/interfaces';
-import { printDateRange } from '../utilities/helpers';
+} from '../../utilities/interfaces';
+import { printDateRange } from '../../utilities/helpers';
 import classNames from 'classnames';
 
 interface ExperienceProps {
@@ -59,15 +59,10 @@ const ExperienceContainer: FC<ExperienceProps> = ({
   const getPoints = (units: Array<Unit>): Array<Point> => units ? units.map((unit: Unit) =>
     ({ id: unit.rowID || 0, label: `${unit.code} ${unit.title}` })) : [];
 
-  // const teListItems: Array<ListItem> = teachingExperience.map((te: TeachingExperience): ListItem => ({
-  //   title: te.orgName,
-  //   list: [printDateRange(te.started, te.completed)],
-  //   points: getPoints(te.courses as Array<Unit>),
-  // }));
 
   const getCourseList = (te: TeachingExperience): Array<ListItem> => {
-    const getTEUnits = (units: Array<TeachingExperienceUnit>): Array<Point> => units.map((unit: TeachingExperienceUnit) =>
-      ({ id: unit.rowID, label: `${unit.unit} ${unit.unitTitle} (${unit.f_started} - ${unit.f_completed || 'current'})` }));
+    const getTEUnits = (units: Array<TeachingExperienceUnit>): Array<Point> => units.map((unit: TeachingExperienceUnit): Point =>
+      ({ id: unit.rowID || 0, label: `${unit.unit} ${unit.unitTitle} (${unit.f_started} - ${unit.f_completed || 'current'})` }));
 
     if (te.courses) {
       return te.courses.map((course: TeachingExperienceCourse) => ({

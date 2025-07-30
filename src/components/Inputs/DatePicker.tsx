@@ -1,4 +1,4 @@
-import type { ReactSelectOption } from '../utilities/interfaces';
+import type { ReactSelectOption } from '../../utilities/interfaces';
 import Dropdown from './Dropdown';
 import { useState } from 'react';
 

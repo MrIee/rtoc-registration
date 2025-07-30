@@ -1,10 +1,10 @@
-import { getOrganisationsAsOptions, getUnitsFromOrgAsOptions } from '../utilities/data';
-import { loadReactSelectOptionsAsync } from '../utilities/helpers';
-import Dropdown from './Dropdown';
-import { type ReactSelectOption, type UnitsICanTeachData } from '../utilities/interfaces';
+import { getOrganisationsAsOptions, getUnitsFromOrgAsOptions } from '../../utilities/data';
+import { loadReactSelectOptionsAsync } from '../../utilities/helpers';
+import Dropdown from '../Inputs/Dropdown';
+import { type ReactSelectOption, type UnitsICanTeachData } from '../../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
-import FormAddCancelButtons from './FormAddCancelButtons';
-import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
+import FormAddCancelButtons from '../FormAddCancelButtons';
+import useLoadReactSelectOptions from '../../hooks/useLoadReactSelectOptions';
 
 interface UnitsICanTeachFormProps {
   onCancel?: () => void;

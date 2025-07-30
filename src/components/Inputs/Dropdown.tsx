@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import crossIcon from '../assets/images/icon-cross.svg';
+import crossIcon from '../../assets/images/icon-cross.svg';
 import { useId, useState, type ReactNode } from 'react';
 import Select, {
   type OptionsOrGroups,
@@ -13,7 +13,7 @@ import Select, {
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect  from 'react-select/async-creatable';
 import CreatableSelect  from 'react-select/creatable';
-import type { ReactSelectOption } from '../utilities/interfaces';
+import type { ReactSelectOption } from '../../utilities/interfaces';
 
 interface DropdownProps {
   className?: string;

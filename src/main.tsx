@@ -17,10 +17,14 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="login" element={<Login />} />
+
         <Route element={<Layout />}>
           <Route path="create-profile" element={<CreateProfile />} />
           <Route path="user-profile" element={<ProfileSummary />} />
           <Route path="profile" element={<Profile />} />
+        </Route>
+
+        <Route element={<Layout fullWidth />}>
           <Route path="matrix" element={<Matrix />} />
         </Route>
       </Routes>

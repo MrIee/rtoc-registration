@@ -4,9 +4,9 @@ import useIndustryExperience from '../hooks/useIndustryExperience';
 import useTeachingExperience from '../hooks/useTeachingExperience';
 import useUnitsICanTeach from '../hooks/useUnitsICanTeach';
 import useVETQualifications from '../hooks/useVETQualifications';
-import VETQualificationsContainer from '../components/VETQualificationsContainer';
-import HigherEducationContainer from '../components/HigherEducationContainer';
-import ExperienceContainer from '../components/ExperienceContainer';
+import VETQualificationsContainer from '../components/Profile/VETQualificationsContainer';
+import HigherEducationContainer from '../components/Profile/HigherEducationContainer';
+import ExperienceContainer from '../components/Profile/ExperienceContainer';
 
 const Profile: FC = (): JSX.Element => {
   // VET Qualifications

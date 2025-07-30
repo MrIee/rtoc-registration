@@ -1,9 +1,9 @@
 import { useState, type FormEvent, type FC, type JSX, type ReactNode, type ChangeEvent, useRef, useEffect } from 'react';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
-import type { UserDetails } from '../utilities/interfaces';
-import TextInput from './TextInput';
-import FormButtons from './FormButtons';
-import { generatePassword } from '../utilities/helpers';
+import type { UserDetails } from '../../utilities/interfaces';
+import TextInput from '../Inputs/TextInput';
+import FormButtons from '../Inputs/FormButtons';
+import { generatePassword } from '../../utilities/helpers';
 
 interface RadioButton {
   value: number;

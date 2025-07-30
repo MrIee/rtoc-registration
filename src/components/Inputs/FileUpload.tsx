@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import iconPaperClip from '../assets/images/icon-paperclip.svg';
-import iconDelete from '../assets/images/icon-delete.svg';
+import iconPaperClip from '../../assets/images/icon-paperclip.svg';
+import iconDelete from '../../assets/images/icon-delete.svg';
 import { useEffect, useRef, useState, type ChangeEvent, type FC, type JSX } from 'react';
-import type { InputPropsNoEvents } from '../utilities/interfaces';
+import type { InputPropsNoEvents } from '../../utilities/interfaces';
 
 interface FileUploadProps extends InputPropsNoEvents {
   onChange?: (file: File) => void;

@@ -12,6 +12,7 @@ import type {
   UserDetails,
   VETQualificationDetails
 } from '../utilities/interfaces';
+import Loader from '../components/Loader';
 import ListCard from '../components/ListCard';
 
 const ProfileSummary: FC = (): JSX.Element => {
@@ -63,8 +64,8 @@ const ProfileSummary: FC = (): JSX.Element => {
 
   return (
     <>
-      {isLoading ? (
-        <div className="tw:text-2xl tw:mx-auto tw:fixed tw:transform tw:-translate-y-1/2 tw:top-1/2">Loading Profile...</div>
+      { isLoading ? (
+        <Loader typeToBeLoaded="Profile" />
       ) : (
         <div>
           <div className="tw:flex tw:flex-col tw:mb-6">

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import plusIcon from '../assets/images/icon-plus.svg';
+import plusIcon from '../../assets/images/icon-plus.svg';
 import type { FC } from 'react';
 
 interface AddDetailsButtonProps {

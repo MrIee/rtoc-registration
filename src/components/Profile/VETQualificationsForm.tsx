@@ -1,11 +1,11 @@
-import { getOrganisationsAsOptions, getTAECoursesAsOptions } from '../utilities/data';
-import { loadReactSelectOptionsAsync } from '../utilities/helpers';
-import Dropdown from './Dropdown';
-import { type ReactSelectOption, type VETQualificationDetails } from '../utilities/interfaces';
+import { getOrganisationsAsOptions, getTAECoursesAsOptions } from '../../utilities/data';
+import { loadReactSelectOptionsAsync } from '../../utilities/helpers';
+import Dropdown from '../Inputs/Dropdown';
+import { type ReactSelectOption, type VETQualificationDetails } from '../../utilities/interfaces';
 import { useRef, useState, type FC, type FormEvent, type JSX } from 'react';
-import DatePicker from './DatePicker';
-import FormAddCancelButtons from './FormAddCancelButtons';
-import useLoadReactSelectOptions from '../hooks/useLoadReactSelectOptions';
+import DatePicker from '../Inputs/DatePicker';
+import FormAddCancelButtons from '../FormAddCancelButtons';
+import useLoadReactSelectOptions from '../../hooks/useLoadReactSelectOptions';
 
 interface VETQualificationsFormProps {
   onCancel?: () => void;

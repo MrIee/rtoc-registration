@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { FC } from 'react';
-import type { InputProps } from '../utilities/interfaces';
+import type { InputProps } from '../../utilities/interfaces';
 
 interface TextInputProps extends InputProps {
   classes?: string;

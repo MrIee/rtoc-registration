@@ -3,12 +3,10 @@ import classNames from 'classnames';
 import { useRef, useState, type FC, type JSX, type PropsWithChildren } from 'react';
 
 interface AccordionProps extends PropsWithChildren {
-  buttonClasses?: string;
-  panelClasses?: string;
   title: string;
 };
 
-const Accordion: FC<AccordionProps> = ({ buttonClasses, panelClasses, title, children }): JSX.Element => {
+const Accordion: FC<AccordionProps> = ({ title, children }): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -26,18 +24,22 @@ const Accordion: FC<AccordionProps> = ({ buttonClasses, panelClasses, title, chi
   };
 
   return (
-    <>
+    <div className="accordion">
       <button
-        className={classNames('tw:w-full tw:px-4 tw:py-2.5 tw:flex tw:justify-between tw:bg-gray-100 tw:cursor-pointer', buttonClasses)}
+        className="tw:w-full tw:px-4 tw:cursor-pointer"
         onClick={handleClick}
       >
-        <strong>{title}</strong>
-        <img className={classNames('tw:transition tw:duration-300', {'tw:rotate-180': isExpanded})} src={triangleIcon} alt="triangle icon" />
+        <span
+          className={classNames('tw:w-full tw:px-2 tw:py-2.5 tw:inline-flex tw:justify-between', {'tw:border-b tw:border-gray-300': !isExpanded})}
+        >
+          <strong>{title}</strong>
+          <img className={classNames('tw:transition tw:duration-300', {'tw:rotate-180': isExpanded})} src={triangleIcon} alt="triangle icon" />
+        </span>
       </button>
-      <div ref={panelRef} className={classNames('tw:transition-all tw:duration-200 tw:ease-out tw:overflow-hidden', panelClasses)}>
+      <div ref={panelRef} className="accordion__body">
         {children}
       </div>
-    </>
+    </div>
   );
 };
 

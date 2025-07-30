@@ -5,17 +5,17 @@ import { useNavigate } from 'react-router';
 import type { RootState } from '../store/store';
 import { goToNextStep, goToStep } from '../store/registrationSlice';
 import Steps from '../components/Steps';
-import PersonalDetailsForm from '../components/PersonalDetailsForm';
-import VETQualificationsContainer from '../components/VETQualificationsContainer';
-import HigherEducationContainer from '../components/HigherEducationContainer';
-import ExperienceContainer from '../components/ExperienceContainer';
+import PersonalDetailsForm from '../components/Profile/PersonalDetailsForm';
+import VETQualificationsContainer from '../components/Profile/VETQualificationsContainer';
+import HigherEducationContainer from '../components/Profile/HigherEducationContainer';
+import ExperienceContainer from '../components/Profile/ExperienceContainer';
 import { authUser, userHasAuth, createUser } from '../utilities/data';
 import useVETQualifications from '../hooks/useVETQualifications';
 import useHigherEducation from '../hooks/useHigherEducation';
 import useTeachingExperience from '../hooks/useTeachingExperience';
 import useIndustryExperience from '../hooks/useIndustryExperience';
 import useUnitsICanTeach from '../hooks/useUnitsICanTeach';
-import FormButtons from '../components/FormButtons';
+import FormButtons from '../components/Inputs/FormButtons';
 
 const CreateProfile: FC = (): JSX.Element => {
   const navigate = useNavigate();
