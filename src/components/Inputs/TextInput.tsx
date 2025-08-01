@@ -8,6 +8,7 @@ interface TextInputProps extends InputProps {
   labelBtnText?: string;
   labelBtnOnClick?: () => void;
   isPassword?: boolean;
+  hasBorder?: boolean;
 };
 
 export const TextInput: FC<TextInputProps> = ({
@@ -24,17 +25,24 @@ export const TextInput: FC<TextInputProps> = ({
   required = true,
   readOnly = false,
   onChange,
-  onBlur
+  onBlur,
+  hasBorder = false
 }) => {
   return (
     <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
-      <span>
-        { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
-        { labelBtnText &&
-          <a className="btn btn--small tw:ml-1.5 tw:select-none" href={labelBtnLink} target="_blank" onClick={labelBtnOnClick}>{labelBtnText}</a> }
-      </span>
+      { label || labelBtnText &&
+        <span>
+          { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
+          { labelBtnText &&
+            <a className="btn btn--small tw:ml-1.5 tw:select-none" href={labelBtnLink} target="_blank" onClick={labelBtnOnClick}>{labelBtnText}</a> }
+        </span>
+      }
       <input
-        className={classNames('tw:w-full', { 'tw:border-red-500 tw:border-2 tw:outline-red-500': error })}
+        className={classNames(
+          'tw:w-full',
+          {'tw:border tw:border-solid tw:border-gray-300': hasBorder},
+          { 'tw:border-red-500 tw:border-2 tw:outline-red-500': error}
+        )}
         type={isPassword ? 'password' : 'text'}
         value={value}
         name={name}

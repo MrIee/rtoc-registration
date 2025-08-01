@@ -13,13 +13,11 @@ import Select, {
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect  from 'react-select/async-creatable';
 import CreatableSelect  from 'react-select/creatable';
-import type { ReactSelectOption } from '../../utilities/interfaces';
+import type { InputPropsNoEvents, ReactSelectOption } from '../../utilities/interfaces';
 
-interface DropdownProps {
+interface DropdownProps extends InputPropsNoEvents {
   className?: string;
-  label?: string;
-  placeholder?: string;
-  name?: string;
+  hasBorder?: boolean;
   isSearchable?: boolean;
   isDisabled?: boolean;
   isMulti?: boolean;
@@ -27,7 +25,6 @@ interface DropdownProps {
   onAddMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onRemoveMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onBlur?: () => void;
-  required?: boolean;
   isAsync?: boolean;
   isCreatable?: boolean;
   options?: OptionsOrGroups<unknown, GroupBase<unknown>> | undefined;
@@ -35,7 +32,6 @@ interface DropdownProps {
     inputValue: string,
     callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void
   ) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>;
-  error?: string;
   showErrorText?: boolean;
 };
 
@@ -84,6 +80,7 @@ const Dropdown = ({
   loadOptions,
   error,
   showErrorText = true,
+  hasBorder = false,
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
   const inputId: string = 'react-select-' + useId();
@@ -108,7 +105,8 @@ const Dropdown = ({
         boxShadowColor: 'none',
       },
       padding: 5,
-      borderWidth: 0,
+      borderWidth: hasBorder ? 1 : 0,
+      borderColor: 'oklch(87.2% 0.01 258.338)',
       borderRadius: 8,
       boxShadow: getBoxShadowStyle(state.isFocused),
       backgroundColor: 'rgba(0,0,0,0)',

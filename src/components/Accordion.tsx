@@ -1,6 +1,6 @@
 import triangleIcon from '../assets/images/icon-triangle.svg';
 import classNames from 'classnames';
-import { useRef, useState, type FC, type JSX, type PropsWithChildren } from 'react';
+import { useEffect, useRef, useState, type FC, type JSX, type PropsWithChildren } from 'react';
 
 interface AccordionProps extends PropsWithChildren {
   title: string;
@@ -9,6 +9,12 @@ interface AccordionProps extends PropsWithChildren {
 const Accordion: FC<AccordionProps> = ({ title, children }): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (panelRef.current) {
+      panelRef.current.style.maxHeight = panelRef.current.scrollHeight + 'px';
+    }
+  }, []);
 
   const handleClick = () => {
     const expanded = !isExpanded;
@@ -36,7 +42,7 @@ const Accordion: FC<AccordionProps> = ({ title, children }): JSX.Element => {
           <img className={classNames('tw:transition tw:duration-300', {'tw:rotate-180': isExpanded})} src={triangleIcon} alt="triangle icon" />
         </span>
       </button>
-      <div ref={panelRef} className="accordion__body">
+      <div ref={panelRef} className={classNames('accordion__body', {'tw:overflow-hidden': !isExpanded})}>
         {children}
       </div>
     </div>

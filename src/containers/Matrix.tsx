@@ -4,6 +4,7 @@ import { getMatrixTeachingExperience } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
 import ExperienceForm from '../components/Matrix/ExperienceForm';
+import VETActivitiesForm from '../components/Matrix/VETActivitiesForm';
 
 const Matrix: FC = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,7 +50,7 @@ const Matrix: FC = (): JSX.Element => {
           </Accordion>
           <Accordion title="2. Professional Development Activities">
             <div className="matrix__section">
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti, repellat! Incidunt, quae! Eveniet, eos ex! Tempora aut corporis modi quasi! At quod voluptas ipsam! Atque minus porro repellat. Blanditiis, temporibus?</p>
+              <VETActivitiesForm />
             </div>
           </Accordion>
           <Accordion title="3. Work Experience">

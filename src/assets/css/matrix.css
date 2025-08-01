@@ -4,7 +4,7 @@ Matrix
 
 /* Table */
 .matrix-table {
-  @apply tw:lg:w-full tw:w-[1280px] tw:text-left;
+  @apply tw:xl:w-full tw:w-[1280px] tw:text-left;
 }
 
 .matrix-table td,
@@ -12,15 +12,19 @@ Matrix
   @apply tw:first:pr-4 tw:pl-2 tw:last:pr-2 tw:py-2 tw:align-top;
 }
 
-.matrix-table__competency {
+.matrix-table__col-lg {
   @apply tw:w-96;
+}
+
+.matrix-table__col-md {
+  @apply tw:w-48;
 }
 
 /* Matrix */
 .matrix {
-  @apply tw:lg:w-[1280px] tw:w-full tw:rounded-lg;
+  @apply tw:xl:w-[1280px] tw:w-full tw:rounded-lg;
 }
 
 .matrix__section {
-  @apply tw:px-4 tw:pb-2.5 tw:bg-gray-100;
+  @apply tw:px-4 tw:pb-2.5 tw:bg-gray-100 tw:xl:overflow-x-visible tw:overflow-x-auto;
 }
