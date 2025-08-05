@@ -22,7 +22,7 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = (): JSX.Element => {
 
   const printTableRows = (x: Array<number>): ReactNode =>
     x.map((_, i: number) =>
-      <tr className="tw:border-b tw:border-gray-300" key={i}>
+      <tr key={i}>
         <td>{i + 1}</td>
         <td></td>
         <td>
@@ -38,7 +38,7 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = (): JSX.Element => {
   const printTable: ReactNode = [0].map((_, i: number) =>
     <table className="matrix-table" key={i}>
       <thead>
-        <tr className="tw:border-b tw:border-gray-300">
+        <tr>
           <th>#</th>
           <th className="matrix-table__col-md">Activity Name</th>
           <th>Mode of Delivery</th>

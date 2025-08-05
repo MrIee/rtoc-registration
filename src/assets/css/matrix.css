@@ -12,6 +12,10 @@ Matrix
   @apply tw:first:pr-4 tw:pl-2 tw:last:pr-2 tw:py-2 tw:align-top;
 }
 
+.matrix-table tr {
+  @apply tw:border-b tw:border-gray-300;
+}
+
 .matrix-table__col-lg {
   @apply tw:w-96;
 }

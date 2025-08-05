@@ -499,3 +499,15 @@ export const getMatrixTeachingExperience = async () => {
     return [];
   }
 };
+
+export const getMatrixActivities = async () => {
+  try {
+    const res = await axios.get('/user/matrix/activities', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return [];
+  }
+};

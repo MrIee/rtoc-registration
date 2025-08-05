@@ -10,7 +10,7 @@ interface ExperienceFormProps {
 const ExperienceForm: FC<ExperienceFormProps> = ({ courses }): JSX.Element => {
   const printTableRows = (units: Array<MatrixExperienceUnit>): ReactNode =>
     units.map((unit: MatrixExperienceUnit, i: number) =>
-      <tr className="tw:border-b tw:border-gray-300" key={i}>
+      <tr key={i}>
         <td>{i + 1}</td>
         <td>{unit.unit} {unit.unitTitle}</td>
         <td>
@@ -27,10 +27,10 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses }): JSX.Element => {
   const printTable: ReactNode = courses.map((course: MatrixExperienceCourse, i: number) =>
     <table className="matrix-table" key={i}>
       <thead>
-        <tr className="tw:border-b tw:border-gray-300">
+        <tr>
           <th colSpan={5}>{course.course} {course.courseTitle}</th>
         </tr>
-        <tr className="tw:border-b tw:border-gray-300">
+        <tr>
           <th>#</th>
           <th className="matrix-table__col-lg">Unit of Competency</th>
           <th>Do you hold this unit of competency</th>
