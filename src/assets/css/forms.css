@@ -22,11 +22,15 @@ label .label__text > span,
 Input
 ============================================================================= */
 
-input[type="text"], input[type="password"], input[type="number"] {
-  @apply tw:px-4 tw:py-3 tw:text-base tw:rounded-lg tw:bg-gray-100;
+input[type="text"].textInput, input[type="password"].textInput {
+  @apply tw:h-12 tw:px-4 tw:py-2.5 tw:text-base tw:rounded-lg tw:bg-gray-100;
 }
 
-input[type="text"]:focus, input[type="password"]:focus, input[type="number"] {
+input.textInput.slim {
+  @apply tw:h-8 tw:px-2;
+}
+
+input[type="text"].textInput:focus, input[type="password"].textInput:focus {
   @apply tw:outline-rtoc-purple-500;
 }
 

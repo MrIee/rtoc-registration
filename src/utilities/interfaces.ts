@@ -13,6 +13,7 @@ export interface InputPropsNoEvents {
   error?: string;
   required?: boolean;
   readOnly?: boolean;
+  isSlim?: boolean;
 };
 
 export interface InputProps extends InputPropsNoEvents, InputPropEvents {};
@@ -190,4 +191,30 @@ export interface MatrixExperienceUnit extends TeachingExperienceUnit {
   eq_unit3: string;
   experience: string;
   hold_unit: number;
+};
+
+export interface Activity {
+  activity: string;
+  date: string;
+  duration: string;
+  mode: string,
+  outcomes: string;
+  provider: string;
+  rowID: number,
+  section: string;
+  year_category: string;
+};
+
+export interface GroupedActivity {
+  current: Array<Activity>;
+  previous: Array<Activity>;
+};
+export interface GroupedActivities {
+  industry: GroupedActivity;
+  VET: GroupedActivity;
+};
+
+export const newGroupedActivity: GroupedActivities = {
+  industry: { current: [], previous: [] },
+  VET: { current: [], previous: [] },
 };

@@ -24,6 +24,10 @@ Matrix
   @apply tw:w-48;
 }
 
+.matrix-table__col-sm {
+  @apply tw:w-36;
+}
+
 /* Matrix */
 .matrix {
   @apply tw:xl:w-[1280px] tw:w-full tw:rounded-lg;

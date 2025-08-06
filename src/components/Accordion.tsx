@@ -67,7 +67,7 @@ const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): J
           <img className={classNames('tw:transition tw:duration-300', {'tw:rotate-180': isExpanded})} src={triangleIcon} alt="triangle icon" />
         </span>
       </button>
-      <div ref={panelRef} className="accordion__body tw:overflow-hidden">
+      <div ref={panelRef} className={classNames('accordion__body', { 'tw:overflow-hidden': !isExpanded })}>
         {children}
       </div>
     </div>

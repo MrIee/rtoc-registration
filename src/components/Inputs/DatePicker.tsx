@@ -1,17 +1,41 @@
+import { getDefaultOption } from '../../utilities/helpers';
 import type { InputProps, ReactSelectOption } from '../../utilities/interfaces';
 import Dropdown from './Dropdown';
-import { useState, type FC, type JSX } from 'react';
+import { useEffect, useState, type FC, type JSX } from 'react';
+
 interface DatePickerProps extends Omit<InputProps, 'onChange'> {
   useDay?: boolean;
   hasBorder?: boolean;
   onChange?: (date: string) => void;
-}
+};
 
+const startYear: number = new Date().getFullYear();
 const END_YEAR = 1970;
 
-const DatePicker: FC<DatePickerProps> = ({ useDay = false, label, required = true, hasBorder = false, error, onChange, onBlur }): JSX.Element => {
+const DatePicker: FC<DatePickerProps> = ({
+  useDay = false,
+  label,
+  value,
+  required = true,
+  hasBorder = false,
+  error,
+  onChange,
+  onBlur,
+  isSlim = false
+}): JSX.Element => {
+  const [day, setDay] = useState<string>('01');
   const [month, setMonth] = useState<string>('');
   const [year, setYear] = useState<string>('');
+
+  useEffect(() => {
+    const values: Array<string> | undefined = value?.split('-');
+
+    if (values && values.length > 0) {
+      setDay(values[0]);
+      setMonth(values[1]);
+      setYear(values[2]);
+    }
+  }, [value]);
 
   const days: Array<ReactSelectOption> = [...Array(31).keys()].map((key: number): ReactSelectOption => {
     const formattedDay: string = `${key + 1}`.padStart(2, '0');
@@ -24,34 +48,34 @@ const DatePicker: FC<DatePickerProps> = ({ useDay = false, label, required = tru
     return { id: key.toString(), value: monthValue, label: monthName };
   });
 
-  const years = (): Array<ReactSelectOption> => {
-    const startYear: number = new Date().getFullYear();
-
-    return [...Array(startYear - END_YEAR + 1).keys()].map((key: number): ReactSelectOption => {
+  const years: Array<ReactSelectOption> =
+    [...Array(startYear - END_YEAR + 1).keys()].map((key: number): ReactSelectOption => {
       const year: number = startYear - key;
       return { id: key.toString(), value: year.toString(), label: year.toString() };
     });
+
+  const getDateValue = (y = year, m = month, d = day) => {
+    return `${y}-${m}-${d}`;
   };
 
   const handleOnChangeDay = (dayOption: ReactSelectOption) => {
-    console.log(dayOption);
-    // if (typeof monthOption.value === 'string') {
-    //   setMonth(monthOption.value);
+    if (typeof dayOption.value === 'string') {
+      setDay(dayOption.value);
 
-    //   if (monthOption && year) {
-    //     onChange?.(`${year}-${monthOption.value}-01`);
-    //   } else {
-    //     onChange?.('');
-    //   }
-    // }
+      if (year && month && dayOption) {
+        onChange?.(getDateValue(year, month, dayOption.value));
+      } else {
+        onChange?.('');
+      }
+    }
   };
 
   const handleOnChangeMonth = (monthOption: ReactSelectOption) => {
     if (typeof monthOption.value === 'string') {
       setMonth(monthOption.value);
 
-      if (monthOption && year) {
-        onChange?.(`${year}-${monthOption.value}-01`);
+      if (year && monthOption && day) {
+        onChange?.(getDateValue(year, monthOption.value, day));
       } else {
         onChange?.('');
       }
@@ -62,8 +86,8 @@ const DatePicker: FC<DatePickerProps> = ({ useDay = false, label, required = tru
     if (typeof yearOption.value === 'string') {
       setYear(yearOption.value);
 
-      if (month && yearOption) {
-        onChange?.(`${yearOption.value}-${month}-01`);
+      if (yearOption && month && day) {
+        onChange?.(getDateValue(yearOption.value, month, day));
       } else {
         onChange?.('');
       }
@@ -78,37 +102,41 @@ const DatePicker: FC<DatePickerProps> = ({ useDay = false, label, required = tru
       <div className="tw:flex tw:gap-4">
         { useDay &&
           <Dropdown
-            className="tw:w-full"
             options={days}
             placeholder="Day"
+            defaultValue={getDefaultOption(days, day)}
             required={required}
             onChange={handleOnChangeDay}
             onBlur={onBlur}
             error={error}
             showErrorText={false}
+            isSlim={isSlim}
             hasBorder={hasBorder}
           />
         }
         <Dropdown
-          className="tw:w-full"
+          className="tw:w-32"
           options={months}
           placeholder="Month"
+          defaultValue={getDefaultOption(months, month)}
           required={required}
           onChange={handleOnChangeMonth}
           onBlur={onBlur}
           error={error}
           showErrorText={false}
+          isSlim={isSlim}
           hasBorder={hasBorder}
         />
         <Dropdown
-          className="tw:w-full"
-          options={years()}
+          options={years}
           placeholder="Year"
+          defaultValue={getDefaultOption(years, year)}
           required={required}
           onChange={handleOnChangeYear}
           onBlur={onBlur}
           error={error}
           showErrorText={false}
+          isSlim={isSlim}
           hasBorder={hasBorder}
         />
       </div>

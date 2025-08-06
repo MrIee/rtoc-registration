@@ -26,7 +26,8 @@ export const TextInput: FC<TextInputProps> = ({
   readOnly = false,
   onChange,
   onBlur,
-  hasBorder = false
+  hasBorder = false,
+  isSlim = false
 }) => {
   return (
     <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
@@ -39,9 +40,10 @@ export const TextInput: FC<TextInputProps> = ({
       }
       <input
         className={classNames(
-          'tw:w-full',
+          'textInput tw:w-full',
+          {'slim': isSlim},
           {'tw:border tw:border-solid tw:border-gray-300': hasBorder},
-          { 'tw:border-red-500 tw:border-2 tw:outline-red-500': error}
+          {'tw:border-red-500 tw:border-2 tw:outline-red-500': error}
         )}
         type={isPassword ? 'password' : 'text'}
         value={value}

@@ -97,3 +97,6 @@ export const loadReactSelectOptionsAsync = (fetchDataFn: (id: string) => Promise
 
     return loadOptions;
 };
+
+export const getDefaultOption = (options: Array<ReactSelectOption>, value: string): ReactSelectOption | undefined =>
+    options.find((option: ReactSelectOption) => option.value === value);

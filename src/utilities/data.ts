@@ -1,16 +1,18 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import { nanoid } from 'nanoid';
-import type {
-  ReactSelectOption,
-  UserDetails,
-  VETQualificationDetails,
-  TEProvider,
-  TECourse,
-  Unit,
-  TEQualification,
-  TeachingExperienceData,
-  IndustryExperienceData,
-  UnitsICanTeachData,
+import {
+  type ReactSelectOption,
+  type UserDetails,
+  type VETQualificationDetails,
+  type TEProvider,
+  type TECourse,
+  type Unit,
+  type TEQualification,
+  type TeachingExperienceData,
+  type IndustryExperienceData,
+  type UnitsICanTeachData,
+  type Activity,
+  newGroupedActivity,
 } from './interfaces';
 
 interface Organisation {
@@ -500,7 +502,7 @@ export const getMatrixTeachingExperience = async () => {
   }
 };
 
-export const getMatrixActivities = async () => {
+const getMatrixActivities = async () => {
   try {
     const res = await axios.get('/user/matrix/activities', {
       headers: { 'x-session': getSessionKey() },
@@ -509,5 +511,38 @@ export const getMatrixActivities = async () => {
     return res.data;
   } catch {
     return [];
+  }
+};
+
+export const getMatrixActivitiesGrouped = async () => {
+  try {
+    const activities: Array<Activity> = await getMatrixActivities();
+    const activitiesGrouped = newGroupedActivity;
+
+    activities.forEach((activity: Activity) => {
+      if (activity.section === 'Industry') {
+        if (activity.year_category === 'current') {
+          activitiesGrouped.industry.current.push(activity);
+        }
+
+        if (activity.year_category === 'previous') {
+          activitiesGrouped.industry.previous.push(activity);
+        }
+      }
+
+      if (activity.section === 'VET') {
+        if (activity.year_category === 'current') {
+          activitiesGrouped.VET.current.push(activity);
+        }
+
+        if (activity.year_category === 'previous') {
+          activitiesGrouped.VET.previous.push(activity);
+        }
+      }
+    });
+
+    return activitiesGrouped;
+  } catch {
+    return newGroupedActivity;
   }
 };

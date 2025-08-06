@@ -21,6 +21,7 @@ interface DropdownProps extends InputPropsNoEvents {
   isSearchable?: boolean;
   isDisabled?: boolean;
   isMulti?: boolean;
+  defaultValue?: ReactSelectOption | null,
   onChange?: (option: ReactSelectOption, name: string) => void;
   onAddMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onRemoveMulti?: (options: Array<ReactSelectOption>, name: string) => void;
@@ -66,6 +67,7 @@ const Dropdown = ({
   label,
   placeholder,
   name,
+  defaultValue,
   isSearchable = false,
   isDisabled = false,
   isMulti = false,
@@ -81,6 +83,7 @@ const Dropdown = ({
   error,
   showErrorText = true,
   hasBorder = false,
+  isSlim = false
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
   const inputId: string = 'react-select-' + useId();
@@ -99,12 +102,13 @@ const Dropdown = ({
   };
 
   const selectStyles: StylesConfig = {
-    control: (base, state) => ({
+    control: (base: CSSObjectWithLabel, state) => ({
       ...base,
       '&:hover': {
         boxShadowColor: 'none',
       },
-      padding: 5,
+      minHeight: isSlim ? 32 : 38,
+      padding: isSlim ? 0 : 5,
       borderWidth: hasBorder ? 1 : 0,
       borderColor: 'oklch(87.2% 0.01 258.338)',
       borderRadius: 8,
@@ -115,6 +119,7 @@ const Dropdown = ({
     option: (base: CSSObjectWithLabel) => ({
       ...base,
       cursor: 'pointer',
+      paddingBlock: isSlim ? 5 : 8,
     }),
     menu: (base: CSSObjectWithLabel) => ({
       ...base,
@@ -125,6 +130,11 @@ const Dropdown = ({
     indicatorsContainer: (base: CSSObjectWithLabel) => ({
       ...base,
       cursor: 'pointer',
+    }),
+    dropdownIndicator: (base: CSSObjectWithLabel) => ({
+      ...base,
+      paddingInline: 2,
+      padding: isSlim ? 5 : 8,
     }),
   };
 
@@ -164,7 +174,7 @@ const Dropdown = ({
       IndicatorsContainer: (props: IndicatorsContainerProps) => IndicatorsContainer(props, isDisabled),
       IndicatorSeparator: () => null
     },
-    value,
+    value: defaultValue || value,
     placeholder,
     required,
     isMulti,
@@ -225,8 +235,8 @@ const Dropdown = ({
   ) : null;
 
   return (
-    <div>
-      <label htmlFor={inputId} className={className}>
+    <div className={className}>
+      <label htmlFor={inputId}>
         { label && (
           <span className="label__text">
             {label}

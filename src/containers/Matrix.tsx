@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
-import type { IndustryExperience, MatrixExperience, MatrixExperienceCourse } from '../utilities/interfaces';
-import { getIndustryExperience, getMatrixTeachingExperience } from '../utilities/data';
+import type { GroupedActivities, IndustryExperience, MatrixExperience, MatrixExperienceCourse } from '../utilities/interfaces';
+import { getIndustryExperience, getMatrixTeachingExperience, getMatrixActivitiesGrouped } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
 import ExperienceForm from '../components/Matrix/ExperienceForm';
@@ -8,13 +8,20 @@ import VETActivitiesForm from '../components/Matrix/VETActivitiesForm';
 import WorkExperienceForm from '../components/Matrix/WorkExperienceForm';
 
 const Matrix: FC = (): JSX.Element => {
+  const newGroupedActivities: GroupedActivities = {
+    industry: { current: [], previous: [] },
+    VET: { current: [], previous: [] },
+  };
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [experience, setExperience] = useState<Array<MatrixExperience>>([]);
+  const [activities, setActivities] = useState<GroupedActivities>(newGroupedActivities);
   const [workExperience, setWorkExperience] = useState<Array<IndustryExperience>>([]);
 
   useEffect(() => {
     const loadData = async () => {
       await loadMatrixTeachingExperience();
+      await loadActivities();
       await loadWorkExperience();
       setIsLoading(false);
     };
@@ -39,6 +46,11 @@ const Matrix: FC = (): JSX.Element => {
     return courseArray;
   };
 
+  const loadActivities = async () => {
+    const res = await getMatrixActivitiesGrouped();
+    setActivities(res);
+  };
+
   const loadWorkExperience = async () => {
     const res = await getIndustryExperience();
     setWorkExperience(res);
@@ -57,24 +69,24 @@ const Matrix: FC = (): JSX.Element => {
             </div>
           </Accordion>
           <Accordion title="2. Professional Development Activities" isNested>
-            <Accordion title="2A Record of Vet Activities for Previous Year">
+            <Accordion title="2A Record of VET Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm />
+                <VETActivitiesForm activities={activities.VET.previous} />
               </div>
             </Accordion>
             <Accordion title="2B Record of Industry Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm />
+                <VETActivitiesForm activities={activities.industry.previous} />
               </div>
             </Accordion>
-            <Accordion title="2C Record of Vet Activities for Current Year">
+            <Accordion title="2C Record of VET Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm />
+                <VETActivitiesForm activities={activities.VET.current} />
               </div>
             </Accordion>
             <Accordion title="2D Record of Industry Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm />
+                <VETActivitiesForm activities={activities.industry.current} />
               </div>
             </Accordion>
           </Accordion>
