@@ -9,11 +9,13 @@ interface AccordionProps extends PropsWithChildren {
 
 const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isOverflowHidden, setIsOverflowHidden] = useState<boolean>(true);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (panelRef.current) {
       panelRef.current.style.maxHeight = panelRef.current.scrollHeight + 'px';
+      panelRef.current.style.overflow = 'visible';
     }
   }, [isNested]);
 
@@ -52,6 +54,22 @@ const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): J
         }
       }
     }
+
+    if (panelRef.current) {
+      if (expanded) {
+        // using a setTimeout to delay setting overflow to visible so that collapsing Accordion layout does not break due
+        // to CSS adjustments for Dropdowns to overlap the .accordion__body
+        // NOTE: the timing has to be the same as the transition duration specified as part of .accordion__body's CSS
+
+        setTimeout(() => {
+          if (panelRef.current) {
+            panelRef.current.style.overflow = 'visible';
+          }
+        }, 200);
+      } else {
+        panelRef.current.style.overflow = 'hidden';
+      }
+    }
   };
 
   return (
@@ -67,7 +85,7 @@ const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): J
           <img className={classNames('tw:transition tw:duration-300', {'tw:rotate-180': isExpanded})} src={triangleIcon} alt="triangle icon" />
         </span>
       </button>
-      <div ref={panelRef} className={classNames('accordion__body', { 'tw:overflow-hidden': !isExpanded })}>
+      <div ref={panelRef} className={classNames('accordion__body', { 'tw:overflow-hidden': false })}>
         {children}
       </div>
     </div>

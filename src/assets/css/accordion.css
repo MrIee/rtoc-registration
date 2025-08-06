@@ -19,5 +19,5 @@ Matrix
 }
 
 .accordion__body {
-  @apply tw:bg-white tw:transition-all tw:duration-1000 tw:ease-out;
+  @apply tw:bg-white tw:transition-all tw:duration-200 tw:ease-out;
 }
