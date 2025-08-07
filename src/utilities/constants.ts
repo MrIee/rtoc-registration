@@ -12,3 +12,8 @@ export const AQF_LEVEL_OPTIONS: Array<ReactSelectOption> = [
   { id: '9', value: '9', label: 'AQF Level 9 - Masters Degree', },
   { id: '0', value: '10', label: 'AQF Level 10 - Doctoral Degree', },
 ];
+
+export const EXPERIENCE_TYPES = {
+  VET: 'VET',
+  INDUSTRY:'Industry',
+};

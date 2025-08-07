@@ -1,28 +1,37 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
-import type { GroupedActivities, IndustryExperience, MatrixExperience, MatrixExperienceCourse } from '../utilities/interfaces';
-import { getIndustryExperience, getMatrixTeachingExperience, getMatrixActivitiesGrouped } from '../utilities/data';
+import {
+  newGroupedActivity,
+  type GroupedActivities,
+  type IndustryExperience,
+  type MatrixExperience,
+  type MatrixExperienceCourse,
+  newGroupedSubscription,
+  type GroupedSubscription,
+} from '../utilities/interfaces';
+import { getIndustryExperience, getMatrixTeachingExperience, getMatrixActivitiesGrouped, getSubscriptionsGrouped } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
 import ExperienceForm from '../components/Matrix/ExperienceForm';
 import VETActivitiesForm from '../components/Matrix/VETActivitiesForm';
 import WorkExperienceForm from '../components/Matrix/WorkExperienceForm';
+import SubscriptionForm from '../components/Matrix/SubscriptionForm';
 
 const Matrix: FC = (): JSX.Element => {
-  const newGroupedActivities: GroupedActivities = {
-    industry: { current: [], previous: [] },
-    VET: { current: [], previous: [] },
-  };
+  const newGroupedActivities = newGroupedActivity;
+  const newGroupedSubscriptions = newGroupedSubscription;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [experience, setExperience] = useState<Array<MatrixExperience>>([]);
   const [activities, setActivities] = useState<GroupedActivities>(newGroupedActivities);
   const [workExperience, setWorkExperience] = useState<Array<IndustryExperience>>([]);
+  const [subscriptions, setSubscriptions] = useState<GroupedSubscription>(newGroupedSubscriptions);
 
   useEffect(() => {
     const loadData = async () => {
       await loadMatrixTeachingExperience();
       await loadActivities();
       await loadWorkExperience();
+      await loadSubscriptions();
       setIsLoading(false);
     };
 
@@ -54,6 +63,11 @@ const Matrix: FC = (): JSX.Element => {
   const loadWorkExperience = async () => {
     const res = await getIndustryExperience();
     setWorkExperience(res);
+  };
+
+  const loadSubscriptions = async () => {
+    const res = await getSubscriptionsGrouped();
+    setSubscriptions(res);
   };
 
   return (
@@ -95,10 +109,17 @@ const Matrix: FC = (): JSX.Element => {
               <WorkExperienceForm experience={workExperience} />
             </div>
           </Accordion>
-          <Accordion title="4. Professional Subscriptions and Memberships">
-            <div className="matrix__section tw:rounded-b-lg">
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti, repellat! Incidunt, quae! Eveniet, eos ex! Tempora aut corporis modi quasi! At quod voluptas ipsam! Atque minus porro repellat. Blanditiis, temporibus?</p>
-            </div>
+          <Accordion title="4. Professional Subscriptions and Memberships" isNested>
+            <Accordion title="4A VET Subscriptions and Memberships">
+              <div className="matrix__section">
+                <SubscriptionForm subscriptions={subscriptions.VET} />
+              </div>
+            </Accordion>
+            <Accordion title="4V Industry Subscriptions and Memberships">
+              <div className="matrix__section">
+                <SubscriptionForm subscriptions={subscriptions.industry} />
+              </div>
+            </Accordion>
           </Accordion>
         </div>
       )}

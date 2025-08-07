@@ -9,7 +9,6 @@ interface AccordionProps extends PropsWithChildren {
 
 const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const [isOverflowHidden, setIsOverflowHidden] = useState<boolean>(true);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

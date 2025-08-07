@@ -10,7 +10,7 @@ interface DatePickerProps extends Omit<InputProps, 'onChange'> {
 };
 
 const startYear: number = new Date().getFullYear();
-const END_YEAR = 1970;
+const endYear = 1970;
 
 const DatePicker: FC<DatePickerProps> = ({
   useDay = false,
@@ -49,7 +49,7 @@ const DatePicker: FC<DatePickerProps> = ({
   });
 
   const years: Array<ReactSelectOption> =
-    [...Array(startYear - END_YEAR + 1).keys()].map((key: number): ReactSelectOption => {
+    [...Array(startYear - endYear + 1).keys()].map((key: number): ReactSelectOption => {
       const year: number = startYear - key;
       return { id: key.toString(), value: year.toString(), label: year.toString() };
     });

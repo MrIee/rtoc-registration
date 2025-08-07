@@ -12,9 +12,11 @@ import {
   type IndustryExperienceData,
   type UnitsICanTeachData,
   type Activity,
+  type Subscription,
   newGroupedActivity,
+  newGroupedSubscription,
 } from './interfaces';
-
+import { EXPERIENCE_TYPES } from '../utilities/constants';
 interface Organisation {
   id: number;
   name: string;
@@ -520,7 +522,7 @@ export const getMatrixActivitiesGrouped = async () => {
     const activitiesGrouped = newGroupedActivity;
 
     activities.forEach((activity: Activity) => {
-      if (activity.section === 'Industry') {
+      if (activity.section === EXPERIENCE_TYPES.INDUSTRY) {
         if (activity.year_category === 'current') {
           activitiesGrouped.industry.current.push(activity);
         }
@@ -530,7 +532,7 @@ export const getMatrixActivitiesGrouped = async () => {
         }
       }
 
-      if (activity.section === 'VET') {
+      if (activity.section === EXPERIENCE_TYPES.VET) {
         if (activity.year_category === 'current') {
           activitiesGrouped.VET.current.push(activity);
         }
@@ -544,5 +546,38 @@ export const getMatrixActivitiesGrouped = async () => {
     return activitiesGrouped;
   } catch {
     return newGroupedActivity;
+  }
+};
+
+const getSubscriptions = async () => {
+  try {
+    const res = await axios.get('/user/matrix/subscriptions', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return [];
+  }
+};
+
+export const getSubscriptionsGrouped = async () => {
+  try {
+    const subscriptions: Array<Subscription> = await getSubscriptions();
+    const subscriptionsGrouped = newGroupedSubscription;
+
+    subscriptions.forEach((subscription: Subscription) => {
+      if (subscription.section === EXPERIENCE_TYPES.INDUSTRY) {
+        subscriptionsGrouped.industry.push(subscription);
+      }
+
+      if (subscription.section === EXPERIENCE_TYPES.VET) {
+        subscriptionsGrouped.VET.push(subscription);
+      }
+    });
+
+    return subscriptionsGrouped;
+  } catch {
+    return newGroupedSubscription;
   }
 };

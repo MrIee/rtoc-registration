@@ -14,6 +14,7 @@ export interface InputPropsNoEvents {
   required?: boolean;
   readOnly?: boolean;
   isSlim?: boolean;
+  checked?: boolean;
 };
 
 export interface InputProps extends InputPropsNoEvents, InputPropEvents {};
@@ -217,4 +218,25 @@ export interface GroupedActivities {
 export const newGroupedActivity: GroupedActivities = {
   industry: { current: [], previous: [] },
   VET: { current: [], previous: [] },
+};
+
+export interface Subscription {
+  anniversary: string;
+  commenced: string;
+  current?: string;
+  member: string;
+  provider: string;
+  renewal: string;
+  rowID?: number;
+  section: string;
+};
+
+export interface GroupedSubscription {
+  industry: Array<Subscription>,
+  VET: Array<Subscription>,
+};
+
+export const newGroupedSubscription: GroupedSubscription = {
+  industry: [],
+  VET: [],
 };
