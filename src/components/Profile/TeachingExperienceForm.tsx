@@ -1,4 +1,4 @@
-import { getOrganisationsAsOptions, getCoursesAsOptions, getUnitsFromCourseAsOptions } from '../../utilities/data';
+import { getOrganisationsAsOptions, getOrganisationByIdAsOption, getCoursesAsOptions, getUnitsFromCourseAsOptions } from '../../utilities/data';
 import { loadReactSelectOptionsAsync, isDateRangeValid } from '../../utilities/helpers';
 import Dropdown from '../Inputs/Dropdown';
 import type { ReactSelectOption, TeachingExperienceData } from '../../utilities/interfaces';
@@ -29,7 +29,22 @@ const TeachingExperienceForm: FC<TeachingExperienceFormProps> = ({ onCancel, onS
   const unitsName: string = 'unit';
   const isFormValid = useRef<boolean>(false);
 
-  const loadOrganisations = loadReactSelectOptionsAsync(getOrganisationsAsOptions);
+  const getOrganisations = async (search: string): Promise<Array<ReactSelectOption>> => {
+    const regEx = new RegExp('^\\d+$');
+    const isId: boolean = regEx.test(search);
+    let res: Array<ReactSelectOption> = [];
+
+    if (isId) {
+      const org = await getOrganisationByIdAsOption(search);
+      res = org ? [org] : [];
+    } else {
+      res = await getOrganisationsAsOptions(search);
+    }
+
+    return res;
+  };
+
+  const loadOrganisations = loadReactSelectOptionsAsync(getOrganisations);
   const {
     loadOptions: loadCourses,
     options: courseOptions,

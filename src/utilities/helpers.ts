@@ -88,11 +88,7 @@ export const loadReactSelectOptionsAsync = (fetchDataFn: (id: string) => Promise
       inputValue: string,
       callback: (options: Array<ReactSelectOption>) => void,
     ) => {
-      fetchDataFn(inputValue).then((res: Array<ReactSelectOption>) => {
-        if (res.length > 0) {
-          return callback(res);
-        }
-    });
+      fetchDataFn(inputValue).then((res: Array<ReactSelectOption>) => callback(res));
     }, 500);
 
     return loadOptions;

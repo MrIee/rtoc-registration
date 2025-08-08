@@ -95,6 +95,110 @@ export const getUserProfile = async (url: string) => {
 };
 
 // =============================================================================
+// Organisation, Course and Unit Endpoints
+// =============================================================================
+
+const getOrganisations = async (name: string) => {
+  try {
+    const res = await axios.get('/tga_organisations/search/' + name);
+    return res.data;
+  } catch {
+    return [];
+  }
+};
+
+
+export const getOrganisationsAsOptions = async (searchTerm: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const organisations: Array<Organisation> = await getOrganisations(searchTerm);
+    return organisations.map((org: Organisation) => ({ id: nanoid(), value: org.id.toString(), label: org.name }));
+  } catch {
+    return [];
+  }
+};
+
+export const getOrganisationByIdAsOption = async (id: string): Promise<ReactSelectOption | null> => {
+  try {
+    const res = await axios.get('/tga_organisation/' + id);
+    return { id: '1', value: res.data.id.toString(), label: res.data.name };
+  } catch {
+    return null;
+  }
+};
+
+const getTAECourses = async (id: string) => {
+  try {
+    const res = await axios.get('/tga_organisation/tae_courses/' + id);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getTAECoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const courses: Array<Course> = await getTAECourses(id);
+    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
+  } catch {
+    return [];
+  }
+};
+
+const getCourses = async (id: string) => {
+  try {
+    const res = await axios.get('tga_organisation/courses/' + id);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getCoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const courses: Array<Course> = await getCourses(id);
+    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
+  } catch {
+    return [];
+  }
+};
+
+export const getUnitsFromCourse= async (id: string) => {
+  try {
+    const res = await axios.get('course_units/' + id);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getUnitsFromCourseAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const units: Array<Unit> = await getUnitsFromCourse(id);
+    return units.map((unit: Unit) => ({ id: nanoid(), value: unit.code, label: `${unit.code} - ${unit.title}`}));
+  } catch {
+    return [];
+  }
+};
+
+export const getUnitsFromOrg = async (id: string) => {
+  try {
+    const res = await axios.get('tga_organisation/units/' + id);
+    return res.data;
+  } catch(err) {
+    return err;
+  }
+};
+
+export const getUnitsFromOrgAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
+  try {
+    const units: Array<Unit> = await getUnitsFromOrg(id);
+    return units.map((unit: Unit) => ({ id: nanoid(), value: unit.pkgcode, label: `${unit.pkgcode} - ${unit.title}`}));
+  } catch {
+    return [];
+  }
+};
+
+// =============================================================================
 // VET Qualifications Endpoints
 // =============================================================================
 
@@ -132,43 +236,6 @@ export const getVETQualifications = async () => {
     return [];
   }
 };
-
-const getOrganisations = async (name: string) => {
-  try {
-    const res = await axios.get('/tga_organisations/search/' + name);
-    return res.data;
-  } catch {
-    return [];
-  }
-};
-
-export const getOrganisationsAsOptions = async (searchTerm: string): Promise<Array<ReactSelectOption>> => {
-  try {
-    const organisations: Array<Organisation> = await getOrganisations(searchTerm);
-    return organisations.map((org: Organisation) => ({ id: nanoid(), value: org.id.toString(), label: org.name }));
-  } catch {
-    return [];
-  }
-};
-
-const getTAECourses = async (id: string) => {
-  try {
-    const res = await axios.get('/tga_organisation/tae_courses/' + id);
-    return res.data;
-  } catch(err) {
-    return err;
-  }
-};
-
-export const getTAECoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
-  try {
-    const courses: Array<Course> = await getTAECourses(id);
-    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
-  } catch {
-    return [];
-  }
-};
-
 
 // =============================================================================
 // Higher Education Endpoints
@@ -275,60 +342,6 @@ export const deleteTEQualification = async (id: number) => {
 // =============================================================================
 // Teaching Experience Endpoints
 // =============================================================================
-
-const getCourses = async (id: string) => {
-  try {
-    const res = await axios.get('tga_organisation/courses/' + id);
-    return res.data;
-  } catch(err) {
-    return err;
-  }
-};
-
-export const getCoursesAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
-  try {
-    const courses: Array<Course> = await getCourses(id);
-    return courses.map((course: Course) => ({ id: nanoid(), value: course.pkgcode, label: `${course.pkgcode} - ${course.title}`}));
-  } catch {
-    return [];
-  }
-};
-
-export const getUnitsFromCourse= async (id: string) => {
-  try {
-    const res = await axios.get('course_units/' + id);
-    return res.data;
-  } catch(err) {
-    return err;
-  }
-};
-
-export const getUnitsFromCourseAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
-  try {
-    const units: Array<Unit> = await getUnitsFromCourse(id);
-    return units.map((unit: Unit) => ({ id: nanoid(), value: unit.code, label: `${unit.code} - ${unit.title}`}));
-  } catch {
-    return [];
-  }
-};
-
-export const getUnitsFromOrg = async (id: string) => {
-  try {
-    const res = await axios.get('tga_organisation/units/' + id);
-    return res.data;
-  } catch(err) {
-    return err;
-  }
-};
-
-export const getUnitsFromOrgAsOptions = async (id: string): Promise<Array<ReactSelectOption>> => {
-  try {
-    const units: Array<Unit> = await getUnitsFromOrg(id);
-    return units.map((unit: Unit) => ({ id: nanoid(), value: unit.pkgcode, label: `${unit.pkgcode} - ${unit.title}`}));
-  } catch {
-    return [];
-  }
-};
 
 export const createTeachingExperience = async (data: TeachingExperienceData) => {
   try {
