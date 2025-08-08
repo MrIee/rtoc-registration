@@ -15,12 +15,12 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses }): JSX.Element => {
         <td>{unit.unit} {unit.unitTitle}</td>
         <td>
           <div className="radio-group">
-            <RadioButton name={`holdUnit_${unit.unit}`} label="Yes" />
-            <RadioButton name={`holdUnit_${unit.unit}`} label="No" />
+            <RadioButton name={`holdUnit_${unit.unit}_${unit.rowID}`} label="Yes" checked={!!unit.hold_unit} />
+            <RadioButton name={`holdUnit_${unit.unit}_${unit.rowID}`} label="No" checked={!unit.hold_unit} />
           </div>
         </td>
         <td></td>
-        <td><TextArea /></td>
+        <td><TextArea value={unit.experience} /></td>
       </tr>
     );
 

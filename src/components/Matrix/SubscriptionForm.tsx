@@ -41,10 +41,10 @@ const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions }): JSX.Ele
             cell = <DatePicker value={subscription.commenced} useDay isSlim hasBorder />;
             break;
           case rows[3].key:
-              <div className="radio-group">
-                <RadioButton name={`currentSubscription_${subscription.rowID}`} label="Yes" checked={value === 'yes'} />
-                <RadioButton name={`currentSubscription_${subscription.rowID}`} label="No"  checked={value === 'no'} />
-              </div>;
+            cell = <div className="radio-group">
+              <RadioButton name={`currentSubscription_${subscription.rowID}`} label="Yes" checked={value === 'yes'} />
+              <RadioButton name={`currentSubscription_${subscription.rowID}`} label="No"  checked={value === 'no'} />
+            </div>;
             break;
         }
 

@@ -1,5 +1,6 @@
 import { type FC, type JSX, type ReactNode } from 'react';
 import type { IndustryExperience } from '../../utilities/interfaces';
+import TextArea from '../Inputs/TextArea';
 
 interface WorkExperienceFormProps {
   experience: Array<IndustryExperience>;
@@ -12,8 +13,8 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({ experience }): JSX.El
         <td>{i + 1}</td>
         <td>{exp.positionTitle}</td>
         <td>{exp.Company}</td>
-        <td>{`${exp.started} - ${exp.completed || 'current'}`}</td>
-        <td></td>
+        <td className="matrix-table__col-sm">{`${exp.started} - ${exp.completed || 'current'}`}</td>
+        <td><TextArea /></td>
       </tr>
     );
 
