@@ -15,6 +15,8 @@ import {
   type Subscription,
   newGroupedActivity,
   newGroupedSubscription,
+  type UnitsICanTeach,
+  type MatrixExperienceUnit,
 } from './interfaces';
 import { EXPERIENCE_TYPES } from '../utilities/constants';
 interface Organisation {
@@ -34,7 +36,7 @@ export const getSessionKey = (): string => {
   return localStorage.getItem(SESSION_KEY_ITEM) || '';
 };
 
-axios.defaults.baseURL = 'https://vps1.w617.com:5000';
+axios.defaults.baseURL = 'https://api.rtoc.w617.com:5000';
 
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
@@ -489,6 +491,21 @@ export const getUnitsICanTeach = async () => {
   }
 };
 
+export const getUnitsICanTeachAsOptions = async () => {
+  try {
+    const unitsICanTeach: Array<UnitsICanTeach> = await getUnitsICanTeach();
+    const units: Array<ReactSelectOption> = [];
+    unitsICanTeach.forEach((unitICanTeach: UnitsICanTeach) =>
+      unitICanTeach.units.forEach((unit: Unit) => {
+        units.push({ id: nanoid(), value: unit.code, label: unit.title });
+    }));
+
+    return units;
+  } catch {
+    return [];
+  }
+};
+
 export const deleteUnitsICanTeach = async (id: number) => {
   try {
     const res = await axios.delete('/user/experience/canteach', {
@@ -505,7 +522,7 @@ export const deleteUnitsICanTeach = async (id: number) => {
 // Trainers Matrix Endpoints
 // =============================================================================
 
-export const getMatrixTeachingExperience = async () => {
+export const getMatrixExperience = async () => {
   try {
     const res = await axios.get('/user/matrix/teach', {
       headers: { 'x-session': getSessionKey() },
@@ -517,7 +534,19 @@ export const getMatrixTeachingExperience = async () => {
   }
 };
 
-const getMatrixActivities = async () => {
+export const updateMatrixExperience = async (id: number, data: MatrixExperienceUnit) => {
+  try {
+    const res = await axios.put('/user/matrix/teach/' + id, data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
+  }
+};
+
+const getActivities = async () => {
   try {
     const res = await axios.get('/user/matrix/activities', {
       headers: { 'x-session': getSessionKey() },
@@ -531,7 +560,7 @@ const getMatrixActivities = async () => {
 
 export const getMatrixActivitiesGrouped = async () => {
   try {
-    const activities: Array<Activity> = await getMatrixActivities();
+    const activities: Array<Activity> = await getActivities();
     const activitiesGrouped = newGroupedActivity;
 
     activities.forEach((activity: Activity) => {
@@ -559,6 +588,18 @@ export const getMatrixActivitiesGrouped = async () => {
     return activitiesGrouped;
   } catch {
     return newGroupedActivity;
+  }
+};
+
+export const updateActivity = async (id: number, data: Activity) => {
+  try {
+    const res = await axios.put('/user/matrix/activities/' + id, data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
   }
 };
 
@@ -592,5 +633,17 @@ export const getSubscriptionsGrouped = async () => {
     return subscriptionsGrouped;
   } catch {
     return newGroupedSubscription;
+  }
+};
+
+export const updateSubscription = async (id: number, data: Subscription) => {
+  try {
+    const res = await axios.put('/user/matrix/subscriptions/' + id, data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
   }
 };

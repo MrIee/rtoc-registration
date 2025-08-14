@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { FC } from 'react';
+import { useState, type FC, type FocusEvent } from 'react';
 import type { InputProps } from '../../utilities/interfaces';
 
 interface TextInputProps extends InputProps {
@@ -9,6 +9,7 @@ interface TextInputProps extends InputProps {
   labelBtnOnClick?: () => void;
   isPassword?: boolean;
   hasBorder?: boolean;
+  validate?: string;
 };
 
 export const TextInput: FC<TextInputProps> = ({
@@ -20,15 +21,30 @@ export const TextInput: FC<TextInputProps> = ({
   placeholder,
   name,
   value,
-  error,
+  error = '',
   isPassword,
   required = true,
   readOnly = false,
   onChange,
   onBlur,
   hasBorder = false,
-  isSlim = false
+  isSlim = false,
+  validate = false
 }) => {
+  const [errorMsg, setErrorMsg] = useState<string>(error);
+
+  const handleOnChange = (event: FocusEvent<HTMLInputElement>) => {
+    if (validate && !event.target.value) {
+      setErrorMsg('Please enter a ' + validate);
+    }
+
+    if (event.target.value) {
+      setErrorMsg('');
+    }
+
+    onChange?.(event);
+  };
+
   return (
     <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
       { label || labelBtnText &&
@@ -43,7 +59,7 @@ export const TextInput: FC<TextInputProps> = ({
           'textInput tw:w-full',
           {'slim': isSlim},
           {'tw:border tw:border-solid tw:border-gray-300': hasBorder},
-          {'tw:border-red-500 tw:border-2 tw:outline-red-500': error}
+          {'tw:border-red-500 tw:border-2 tw:outline-red-500': errorMsg}
         )}
         type={isPassword ? 'password' : 'text'}
         value={value}
@@ -51,10 +67,10 @@ export const TextInput: FC<TextInputProps> = ({
         placeholder={placeholder}
         required={required}
         readOnly={readOnly}
-        onChange={onChange}
+        onChange={handleOnChange}
         onBlur={onBlur}
       />
-      { error && <span className="tw:text-sm tw:text-red-500">{error}</span> }
+      { errorMsg && <span className="tw:text-sm tw:text-red-500">{errorMsg}</span> }
     </label>
   );
 };

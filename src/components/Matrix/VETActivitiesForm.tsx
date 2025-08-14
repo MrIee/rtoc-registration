@@ -5,12 +5,16 @@ import TextArea from '../Inputs/TextArea';
 import DatePicker from '../Inputs/DatePicker';
 import type { Activity, ReactSelectOption } from '../../utilities/interfaces';
 import { getDefaultOption } from '../../utilities/helpers';
+import useItems from '../../hooks/useItems';
 
 interface VETActivitiesFormProps {
   activities: Array<Activity>;
+  onChange?: (activity: Activity) => void;
 };
 
-const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities }): JSX.Element => {
+const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange }): JSX.Element => {
+  const { items, handleOnChange } = useItems<Activity>(activities, onChange);
+
   const deliveryOptions: Array<ReactSelectOption> = [
     { id: '0', value: 'webinar', label: 'Webinar' },
     { id: '1', value: 'in-person', label: 'Face to Face' },
@@ -21,17 +25,53 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities }): JSX.Elem
   }));
 
   const printTableRows = (): ReactNode =>
-    activities.map((activity: Activity, i: number) =>
+    items.map((activity: Activity, i: number) =>
       <tr key={i}>
         <td>{i + 1}</td>
         <td>{activity.activity}</td>
         <td>
-          <Dropdown options={deliveryOptions} defaultValue={getDefaultOption(deliveryOptions, activity.mode)} isSlim hasBorder />
+          <Dropdown
+            options={deliveryOptions}
+            defaultValue={getDefaultOption(deliveryOptions, activity.mode)}
+            onChange={(option: ReactSelectOption) => handleOnChange(option.value, 'mode', activity.rowID || 0)}
+            isSlim
+            hasBorder
+          />
         </td>
-        <td><TextArea value={activity.outcomes} /></td>
-        <td><TextInput classes="tw:!flex" value={activity.provider} isSlim hasBorder /></td>
-        <td><DatePicker value={activity.date} useDay isSlim hasBorder /></td>
-        <td><Dropdown options={durationOptions} defaultValue={getDefaultOption(durationOptions, activity.duration)} isSlim hasBorder /></td>
+        <td>
+          <TextArea
+            value={activity.outcomes}
+            onChange={(e) => handleOnChange(e.target.value, 'outcomes', activity.rowID || 0)}
+          />
+        </td>
+        <td>
+          <TextInput
+            classes="tw:!flex"
+            value={activity.provider}
+            validate="provider"
+            onChange={(e) => handleOnChange(e.target.value, 'provider', activity.rowID || 0)}
+            isSlim
+            hasBorder
+          />
+        </td>
+        <td>
+          <DatePicker
+            value={activity.date}
+            onChange={(value) => handleOnChange(value, 'date', activity.rowID || 0)}
+            useDay
+            isSlim
+            hasBorder
+          />
+        </td>
+        <td>
+          <Dropdown
+            options={durationOptions}
+            defaultValue={getDefaultOption(durationOptions, activity.duration)}
+            onChange={(option: ReactSelectOption) => handleOnChange(option.value, 'duration', activity.rowID || 0)}
+            isSlim
+            hasBorder
+          />
+        </td>
       </tr>
     );
 

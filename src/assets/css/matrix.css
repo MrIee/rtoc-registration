@@ -16,8 +16,12 @@ Matrix
   @apply tw:border-b tw:border-gray-300;
 }
 
-.matrix-table__col-lg {
+.matrix-table__col-xl {
   @apply tw:w-96;
+}
+
+.matrix-table__col-lg {
+  @apply tw:w-64;
 }
 
 .matrix-table__col-md {

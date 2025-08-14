@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import crossIcon from '../../assets/images/icon-cross.svg';
-import { useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 import Select, {
   type OptionsOrGroups,
   type GroupBase,
@@ -15,18 +15,18 @@ import AsyncCreatableSelect  from 'react-select/async-creatable';
 import CreatableSelect  from 'react-select/creatable';
 import type { InputPropsNoEvents, ReactSelectOption } from '../../utilities/interfaces';
 
-interface DropdownProps extends InputPropsNoEvents {
+interface DropdownProps extends Omit<InputPropsNoEvents, 'defaultValue'> {
   className?: string;
   hasBorder?: boolean;
   isSearchable?: boolean;
   isDisabled?: boolean;
-  isMulti?: boolean;
-  defaultValue?: ReactSelectOption | null,
+  defaultValue?: ReactSelectOption | Array<ReactSelectOption> | null;
   onChange?: (option: ReactSelectOption, name: string) => void;
   onAddMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onRemoveMulti?: (options: Array<ReactSelectOption>, name: string) => void;
   onBlur?: () => void;
   isAsync?: boolean;
+  isMulti?: boolean;
   isCreatable?: boolean;
   options?: OptionsOrGroups<unknown, GroupBase<unknown>> | undefined;
   loadOptions?: (
@@ -34,6 +34,8 @@ interface DropdownProps extends InputPropsNoEvents {
     callback: (options: OptionsOrGroups<unknown, GroupBase<unknown>>) => void
   ) => void | Promise<OptionsOrGroups<unknown, GroupBase<unknown>>>;
   showErrorText?: boolean;
+  multiLimit?: number;
+  overrideNewOption?: boolean;
 };
 
 const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: boolean ) => {
@@ -83,10 +85,17 @@ const Dropdown = ({
   error,
   showErrorText = true,
   hasBorder = false,
-  isSlim = false
+  isSlim = false,
+  multiLimit,
+  overrideNewOption = false,
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
+  const [errorMsg, setErrorMsg] = useState<string>(error || '');
   const inputId: string = 'react-select-' + useId();
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const getBoxShadowStyle = (isFocused: boolean): string => {
     if (error) {
@@ -147,13 +156,36 @@ const Dropdown = ({
   });
 
   const handleOnChange = (option: ReactSelectOption | Array<ReactSelectOption> | unknown) => {
-    setValue(option);
-
     if (typeof option === 'object' && Object.hasOwn(option || {}, 'length')) {
-      onAddMulti?.(option as Array<ReactSelectOption>, name || '');
+      const options = option as Array<ReactSelectOption>;
+
+      if (overrideNewOption) {
+        let index = -1;
+        let numNew = 0;
+        options.forEach((option: ReactSelectOption, i: number) => {
+          numNew = option.__isNew__ ? numNew + 1 : numNew;
+
+          if (numNew === 1) {
+            index = i;
+          }
+        });
+
+        if (numNew > 1 && index > -1) {
+          options.splice(index, 1);
+        }
+      }
+
+      if (multiLimit && options.length > multiLimit) {
+        options.pop();
+        setErrorMsg(`You may only have up to ${multiLimit} items selected`);
+      }
+
+      onAddMulti?.(options, name || '');
     } else {
       onChange?.(option as ReactSelectOption, name || '');
     }
+
+    setValue(option);
   };
 
   const handleRemoveOption = (optionToRemove: ReactSelectOption) => {
@@ -162,6 +194,7 @@ const Dropdown = ({
 
     setValue(newOptions);
     onRemoveMulti?.(newOptions, name || '');
+    setErrorMsg('');
   };
 
   const selectProps = {
@@ -174,14 +207,15 @@ const Dropdown = ({
       IndicatorsContainer: (props: IndicatorsContainerProps) => IndicatorsContainer(props, isDisabled),
       IndicatorSeparator: () => null
     },
-    value: defaultValue || value,
+    value,
+    defaultValue,
     placeholder,
     required,
     isMulti,
     isClearable: false,
     hideSelectedOptions: isMulti,
     controlShouldRenderValue: !isMulti,
-    isSearchable: isSearchable,
+    isSearchable,
     noOptionsMessage: () => 'Start typing to search',
     onChange: handleOnChange,
     onBlur,
@@ -224,8 +258,8 @@ const Dropdown = ({
   const optionList: ReactNode = isMulti && value ? (
     <div className="tw:flex tw:flex-col">
       {
-        (value as Array<ReactSelectOption>).map((option: ReactSelectOption) => (
-          <div key={option.id} className="tw:flex tw:justify-between tw:mb-2.5">
+        (value as Array<ReactSelectOption>).map((option: ReactSelectOption, i: number) => (
+          <div key={option.id || i} className="tw:flex tw:justify-between tw:mb-2.5">
             <span>{option.label}</span>
             <img className="tw:cursor-pointer" src={crossIcon} alt="Delete option" onClick={() => handleRemoveOption(option)} />
           </div>
@@ -244,11 +278,11 @@ const Dropdown = ({
           </span>
         )}
       </label>
-      <div className={classNames({'tw:p-4 tw:rounded-lg tw:bg-gray-100': isMulti})}>
+      <div className={classNames({'tw:p-4 tw:rounded-lg tw:bg-gray-100': isMulti && !isSlim})}>
         { optionList }
         { <SelectComponent /> }
       </div>
-      { error && showErrorText && <span className="tw:text-sm tw:text-red-500">{error}</span> }
+      { errorMsg && showErrorText && <span className="tw:text-sm tw:text-red-500">{errorMsg}</span> }
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
+import debounce from 'lodash.debounce';
 import {
   newGroupedActivity,
   type GroupedActivities,
@@ -7,8 +8,19 @@ import {
   type MatrixExperienceCourse,
   newGroupedSubscription,
   type GroupedSubscription,
+  type Activity,
+  type MatrixExperienceUnit,
+  type Subscription,
 } from '../utilities/interfaces';
-import { getIndustryExperience, getMatrixTeachingExperience, getMatrixActivitiesGrouped, getSubscriptionsGrouped } from '../utilities/data';
+import {
+  getMatrixExperience,
+  updateMatrixExperience,
+  getMatrixActivitiesGrouped,
+  updateActivity,
+  getIndustryExperience,
+  getSubscriptionsGrouped,
+  updateSubscription,
+} from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
 import ExperienceForm from '../components/Matrix/ExperienceForm';
@@ -28,7 +40,7 @@ const Matrix: FC = (): JSX.Element => {
 
   useEffect(() => {
     const loadData = async () => {
-      await loadMatrixTeachingExperience();
+      await loadMatrixExperience();
       await loadActivities();
       await loadWorkExperience();
       await loadSubscriptions();
@@ -38,12 +50,12 @@ const Matrix: FC = (): JSX.Element => {
     loadData();
   }, []);
 
-  const loadMatrixTeachingExperience = async () => {
-    const res = await getMatrixTeachingExperience();
+  const loadMatrixExperience = async () => {
+    const res = await getMatrixExperience();
     setExperience(res);
   };
 
-  const getTECourses = (experience: Array<MatrixExperience>): Array<MatrixExperienceCourse> => {
+  const getMatrixExperienceCourses = (experience: Array<MatrixExperience>): Array<MatrixExperienceCourse> => {
     const courseArray: Array<MatrixExperienceCourse> = [];
 
     experience.forEach((teachingExperience: MatrixExperience) => {
@@ -70,6 +82,24 @@ const Matrix: FC = (): JSX.Element => {
     setSubscriptions(res);
   };
 
+  const handleOnChangeActivities = debounce(async (activity: Activity) => {
+    if (activity.rowID) {
+      updateActivity(activity.rowID, activity);
+    }
+  }, 500);
+
+  const handleOnChangExperience = debounce(async (unit: MatrixExperienceUnit) => {
+    if (unit.rowID) {
+      updateMatrixExperience(unit.rowID, unit);
+    }
+  }, 500);
+
+  const handleOnChangeSubscription = debounce(async (subscription: Subscription) => {
+    if (subscription.rowID) {
+      updateSubscription(subscription.rowID, subscription);
+    }
+  }, 500);
+
   return (
     <>
     {
@@ -79,28 +109,28 @@ const Matrix: FC = (): JSX.Element => {
         <div className="matrix">
           <Accordion title="1. Mapping of Qualifications and Vocational Experience">
             <div className="matrix__section">
-              <ExperienceForm courses={getTECourses(experience)} />
+              <ExperienceForm courses={getMatrixExperienceCourses(experience)} onChange={handleOnChangExperience} />
             </div>
           </Accordion>
           <Accordion title="2. Professional Development Activities" isNested>
             <Accordion title="2A Record of VET Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.VET.previous} />
+                <VETActivitiesForm activities={activities.VET.previous} onChange={handleOnChangeActivities} />
               </div>
             </Accordion>
             <Accordion title="2B Record of Industry Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.industry.previous} />
+                <VETActivitiesForm activities={activities.industry.previous} onChange={handleOnChangeActivities} />
               </div>
             </Accordion>
             <Accordion title="2C Record of VET Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.VET.current} />
+                <VETActivitiesForm activities={activities.VET.current} onChange={handleOnChangeActivities} />
               </div>
             </Accordion>
             <Accordion title="2D Record of Industry Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.industry.current} />
+                <VETActivitiesForm activities={activities.industry.current} onChange={handleOnChangeActivities} />
               </div>
             </Accordion>
           </Accordion>
@@ -112,12 +142,12 @@ const Matrix: FC = (): JSX.Element => {
           <Accordion title="4. Professional Subscriptions and Memberships" isNested>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={subscriptions.VET} />
+                <SubscriptionForm subscriptions={subscriptions.VET} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
             <Accordion title="4V Industry Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={subscriptions.industry} />
+                <SubscriptionForm subscriptions={subscriptions.industry} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
           </Accordion>

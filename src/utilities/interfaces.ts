@@ -10,11 +10,13 @@ export interface InputPropsNoEvents {
   placeholder?: string;
   name?: string;
   value?: string;
+  defaultValue?: string;
   error?: string;
   required?: boolean;
   readOnly?: boolean;
   isSlim?: boolean;
   checked?: boolean;
+  defaultChecked?: boolean;
 };
 
 export interface InputProps extends InputPropsNoEvents, InputPropEvents {};
@@ -46,6 +48,10 @@ export interface ListItem {
   fileName?: string;
 };
 
+export interface Row {
+  rowID?: number;
+}
+
 export interface UserDetails {
   URL?: string;
   firstname: string;
@@ -56,7 +62,7 @@ export interface UserDetails {
   password: string;
 };
 
-export interface VETQualificationDetails {
+export interface VETQualificationDetails extends Row {
   userid?: string;
   orgID?: string;
   orgName?: string;
@@ -65,7 +71,6 @@ export interface VETQualificationDetails {
   title?: string;
   completed: string;
   qualification?: string;
-  rowID?: number;
 };
 
 export interface TEProvider {
@@ -79,7 +84,7 @@ export interface TECourse {
   id: number,
 };
 
-export interface TEQualification {
+export interface TEQualification extends Row {
   providerID: string;
   providerName: string;
   courseID: string;
@@ -89,11 +94,9 @@ export interface TEQualification {
   f_completed?: string;
   file: File | null;
   fileName: string;
-  rowID?: number;
 };
 
-export interface Unit {
-  rowID?: number;
+export interface Unit extends Row {
   code?: string;
   pkgcode?: string;
   status?: string;
@@ -125,10 +128,9 @@ export interface TeachingExperienceCourse {
   units: Array<TeachingExperienceUnit>;
 };
 
-export interface TeachingExperienceUnit {
+export interface TeachingExperienceUnit extends Row {
   f_completed?: string;
   f_started?: string;
-  rowID?: number;
   unit: string;
   unitTitle: string;
 };
@@ -145,7 +147,7 @@ export interface IndustryExperienceData {
   unitsMsg?: string;
 };
 
-export interface IndustryExperience {
+export interface IndustryExperience extends Row {
   rowID: number;
   companyName: string;
   Company?: string;
@@ -192,16 +194,16 @@ export interface MatrixExperienceUnit extends TeachingExperienceUnit {
   eq_unit3: string;
   experience: string;
   hold_unit: number;
+  hold_unit_text: string;
 };
 
-export interface Activity {
+export interface Activity extends Row {
   activity: string;
   date: string;
   duration: string;
   mode: string,
   outcomes: string;
   provider: string;
-  rowID: number,
   section: string;
   year_category: string;
 };
@@ -220,14 +222,13 @@ export const newGroupedActivity: GroupedActivities = {
   VET: { current: [], previous: [] },
 };
 
-export interface Subscription {
+export interface Subscription extends Row {
   anniversary: string;
   commenced: string;
   current?: string;
   member: string;
   provider: string;
   renewal: string;
-  rowID?: number;
   section: string;
 };
 

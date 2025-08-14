@@ -55,7 +55,11 @@ const DatePicker: FC<DatePickerProps> = ({
     });
 
   const getDateValue = (y = year, m = month, d = day) => {
-    return `${y}-${m}-${d}`;
+    if (useDay) {
+      return `${d}-${m}-${y}`;
+    } else {
+      return `${y}-${m}-${d}`;
+    }
   };
 
   const handleOnChangeDay = (dayOption: ReactSelectOption) => {
