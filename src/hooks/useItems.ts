@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type Row } from '../utilities/interfaces';
 
 const useItems = <T extends Row>(itemArray: Array<T>, onChange?: (type: T) => void) => {
   const [items, setItems] = useState<Array<T>>(itemArray);
+
+  useEffect(() => {
+    setItems(itemArray);
+  }, [itemArray]);
 
   const handleOnChange = (value: unknown, key: string, rowID: number) => {
     let updatedItem: T | null = null;
@@ -22,7 +26,7 @@ const useItems = <T extends Row>(itemArray: Array<T>, onChange?: (type: T) => vo
     }
   };
 
-  return { items, handleOnChange };
+  return { items, setItems, handleOnChange };
 };
 
 export default useItems;

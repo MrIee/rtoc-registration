@@ -37,7 +37,7 @@ const AddDetailsModal = ({ title, showModal = false, onClose, children }: AddDet
       {isVisible ? (
         <>
           <div
-            className="tw:h-full tw:w-full tw:bg-black/40 tw:fixed tw:top-0 tw:right-0 tw:bottom-0 tw:left-0"
+            className="tw:h-full tw:w-full tw:bg-black/40 tw:fixed tw:top-0 tw:right-0 tw:bottom-0 tw:left-0 tw:z-50"
             onClick={closeModal}
           >
             <div

@@ -3,7 +3,7 @@ import Dropdown from '../Inputs/Dropdown';
 import TextInput from '../Inputs/TextInput';
 import TextArea from '../Inputs/TextArea';
 import DatePicker from '../Inputs/DatePicker';
-import type { Activity, ReactSelectOption } from '../../utilities/interfaces';
+import { newActivity, type Activity, type ReactSelectOption } from '../../utilities/interfaces';
 import { getDefaultOption } from '../../utilities/helpers';
 import useItems from '../../hooks/useItems';
 
@@ -13,7 +13,7 @@ interface VETActivitiesFormProps {
 };
 
 const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange }): JSX.Element => {
-  const { items, handleOnChange } = useItems<Activity>(activities, onChange);
+  const { items, setItems, handleOnChange } = useItems<Activity>(activities, onChange);
 
   const deliveryOptions: Array<ReactSelectOption> = [
     { id: '0', value: 'webinar', label: 'Webinar' },
@@ -24,11 +24,20 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
     id: i.toString(), value: `${hour}hour`, label: `${hour} Hour${parseInt(hour, 10) > 1 ? 's' : ''}`
   }));
 
+  const addActivity = () => {
+    setItems([...items, newActivity]);
+  };
+
   const printTableRows = (): ReactNode =>
     items.map((activity: Activity, i: number) =>
-      <tr key={i}>
+      <tr key={activity.rowID}>
         <td>{i + 1}</td>
-        <td>{activity.activity}</td>
+        <td>
+          {activity.activity ?
+            activity.activity
+            : <TextArea />
+          }
+        </td>
         <td>
           <Dropdown
             options={deliveryOptions}
@@ -76,22 +85,25 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
     );
 
   const printTable: ReactNode = [0].map((_, i: number) =>
-    <table className="matrix-table" key={i}>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th className="matrix-table__col-md">Activity Name</th>
-          <th className="matrix-table__col-sm">Mode of Delivery</th>
-          <th>Learning Outcomes</th>
-          <th className="matrix-table__col-md">Provider</th>
-          <th>Date</th>
-          <th>Duration</th>
-        </tr>
-      </thead>
-      <tbody>
-        {printTableRows()}
-      </tbody>
-    </table>
+    <div key={i}>
+      <table className="matrix-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th className="matrix-table__col-md">Activity Name</th>
+            <th className="matrix-table__col-sm">Mode of Delivery</th>
+            <th>Learning Outcomes</th>
+            <th className="matrix-table__col-md">Provider</th>
+            <th>Date</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          {printTableRows()}
+        </tbody>
+      </table>
+      <button className="btn btn--small tw:my-4" onClick={addActivity}>Add Activity</button>
+    </div>
   );
 
   return (

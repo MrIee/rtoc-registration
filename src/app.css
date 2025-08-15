@@ -47,6 +47,26 @@ h5 {
   @apply tw:text-gray-800;
 }
 
+.box-shadow {
+  box-shadow: 0px 4px 24px 0px #90909040;
+}
+
+.sticky {
+  @apply tw:w-full tw:h-[58px] tw:bg-white tw:top-0 tw:z-50;
+}
+
+.sticky img {
+  @apply tw:mt-2;
+}
+
+.user-menu {
+  @apply tw:px-16 tw:py-4 tw:mt-2 tw:absolute tw:right-0;
+}
+
+.user-menu li {
+  @apply tw:p-1;
+}
+
 .container {
   @apply tw:min-h-[450px] tw:w-full tw:flex tw:flex-col;
 }

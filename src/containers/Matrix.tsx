@@ -1,13 +1,11 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
 import debounce from 'lodash.debounce';
 import {
-  newGroupedActivity,
+  newGroupedActivities,
   type GroupedActivities,
   type IndustryExperience,
   type MatrixExperience,
   type MatrixExperienceCourse,
-  newGroupedSubscription,
-  type GroupedSubscription,
   type Activity,
   type MatrixExperienceUnit,
   type Subscription,
@@ -29,14 +27,12 @@ import WorkExperienceForm from '../components/Matrix/WorkExperienceForm';
 import SubscriptionForm from '../components/Matrix/SubscriptionForm';
 
 const Matrix: FC = (): JSX.Element => {
-  const newGroupedActivities = newGroupedActivity;
-  const newGroupedSubscriptions = newGroupedSubscription;
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [experience, setExperience] = useState<Array<MatrixExperience>>([]);
   const [activities, setActivities] = useState<GroupedActivities>(newGroupedActivities);
   const [workExperience, setWorkExperience] = useState<Array<IndustryExperience>>([]);
-  const [subscriptions, setSubscriptions] = useState<GroupedSubscription>(newGroupedSubscriptions);
+  const [vetSubscriptions, setVETSubscriptions] = useState<Array<Subscription>>([]);
+  const [industrySubscriptions, setIndustrySubscriptions] = useState<Array<Subscription>>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -79,7 +75,8 @@ const Matrix: FC = (): JSX.Element => {
 
   const loadSubscriptions = async () => {
     const res = await getSubscriptionsGrouped();
-    setSubscriptions(res);
+    setVETSubscriptions(res.VET);
+    setIndustrySubscriptions(res.industry);
   };
 
   const handleOnChangeActivities = debounce(async (activity: Activity) => {
@@ -142,12 +139,12 @@ const Matrix: FC = (): JSX.Element => {
           <Accordion title="4. Professional Subscriptions and Memberships" isNested>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={subscriptions.VET} onChange={handleOnChangeSubscription} />
+                <SubscriptionForm subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
-            <Accordion title="4V Industry Subscriptions and Memberships">
+            <Accordion title="4B Industry Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={subscriptions.industry} onChange={handleOnChangeSubscription} />
+                <SubscriptionForm subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
           </Accordion>

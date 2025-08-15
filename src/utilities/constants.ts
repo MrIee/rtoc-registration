@@ -1,5 +1,7 @@
 import type { ReactSelectOption } from './interfaces';
 
+export const CONTENT_URL = 'https://content.rtoc.w617.com/';
+
 export const AQF_LEVEL_OPTIONS: Array<ReactSelectOption> = [
   { id: '1', value: '1', label: 'AQF Level 1 - Certificate I', },
   { id: '2', value: '2', label: 'AQF Level 2 - Certificate II', },

@@ -94,19 +94,21 @@ const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions, onChange }
     );
 
   return (
-    <table className="matrix-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Subscription/Membership 1</th>
-          <th>Subscription/Membership 2</th>
-          <th>Subscription/Membership 3</th>
-        </tr>
-      </thead>
-      <tbody>
-        {printTableRows()}
-      </tbody>
-    </table>
+    <>
+      <table className="matrix-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Subscription/Membership 1</th>
+            <th>Subscription/Membership 2</th>
+            <th>Subscription/Membership 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          {printTableRows()}
+        </tbody>
+      </table>
+    </>
   );
 };
 

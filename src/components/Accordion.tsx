@@ -27,11 +27,16 @@ const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): J
 
         if (childPanelBody) {
           const maxHeight = childPanelBody.style.maxHeight;
+          const button: HTMLElement | undefined = panelRef.current?.querySelectorAll('button.accordion__button')[i] as HTMLElement;
 
-          if (parseInt(maxHeight, 10) > 0) {
-            panelRef.current?.querySelectorAll('button')[i].click();
-          } else if (isExpanded === false) {
-            panelRef.current?.querySelectorAll('button')[i].click();
+          if (isExpanded) {
+            if (parseInt(maxHeight, 10) > 0) {
+              button?.click();
+            }
+          } else {
+            if (parseInt(maxHeight, 10) === 0) {
+              button?.click();
+            }
           }
         }
       }
@@ -73,10 +78,7 @@ const Accordion: FC<AccordionProps> = ({ title, isNested = false, children }): J
 
   return (
     <div className="accordion">
-      <button
-        className="tw:w-full tw:px-4 tw:cursor-pointer"
-        onClick={handleClick}
-      >
+      <button className="accordion__button" onClick={handleClick}>
         <span
           className={classNames('tw:w-full tw:px-2 tw:py-2.5 tw:inline-flex tw:justify-between', {'tw:border-b tw:border-gray-300': !isExpanded})}
         >

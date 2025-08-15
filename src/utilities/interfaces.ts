@@ -208,6 +208,17 @@ export interface Activity extends Row {
   year_category: string;
 };
 
+export const newActivity = {
+  activity: '',
+  date: '',
+  duration: '',
+  mode: '',
+  outcomes: '',
+  provider: '',
+  section: '',
+  year_category: '',
+};
+
 export interface GroupedActivity {
   current: Array<Activity>;
   previous: Array<Activity>;
@@ -217,7 +228,7 @@ export interface GroupedActivities {
   VET: GroupedActivity;
 };
 
-export const newGroupedActivity: GroupedActivities = {
+export const newGroupedActivities: GroupedActivities = {
   industry: { current: [], previous: [] },
   VET: { current: [], previous: [] },
 };
@@ -237,7 +248,7 @@ export interface GroupedSubscription {
   VET: Array<Subscription>,
 };
 
-export const newGroupedSubscription: GroupedSubscription = {
+export const newGroupedSubscriptions: GroupedSubscription = {
   industry: [],
   VET: [],
 };

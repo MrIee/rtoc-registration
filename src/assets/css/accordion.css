@@ -10,14 +10,18 @@ Matrix
   @apply tw:rounded-b-lg;
 }
 
-.accordion .accordion button {
-  @apply tw:pl-7;
-}
 
 .accordion .accordion {
   @apply tw:first:rounded-t-none tw:last:rounded-b-none;
 }
 
+.accordion__button {
+  @apply tw:w-full tw:px-4 tw:cursor-pointer;
+}
+
+.accordion .accordion .accordion__button {
+  @apply tw:pl-7;
+}
 .accordion__body {
   @apply tw:bg-white tw:transition-all tw:duration-200 tw:ease-out;
 }

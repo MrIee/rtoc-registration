@@ -25,16 +25,14 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses, onChange }): JSX.Ele
   }, []);
 
   const handleOnChange = (courseIndex: number, unitIndex: number, value: unknown, key: string) => {
-    const course = items;
-    let unit: MatrixExperienceUnit = course[courseIndex].units[unitIndex];
+    let unit: MatrixExperienceUnit = items[courseIndex].units[unitIndex];
     unit = { ...unit, [key]: value };
 
     onChange?.(unit);
   };
 
   const updateEQUnits = (courseIndex: number, unitIndex: number, values: Array<ReactSelectOption>) => {
-    const course = items;
-    let unit: MatrixExperienceUnit = course[courseIndex].units[unitIndex];
+    let unit: MatrixExperienceUnit = items[courseIndex].units[unitIndex];
     unit.eq_unit1 = '';
     unit.eq_unit2 = '';
     unit.eq_unit3 = '';
@@ -82,10 +80,9 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses, onChange }): JSX.Ele
     return options;
   };
 
-
   const printTableRows = (units: Array<MatrixExperienceUnit>, courseKey: number): ReactNode =>
     units.map((unit: MatrixExperienceUnit, i: number) =>
-      <tr key={i}>
+      <tr key={unit.rowID}>
         <td>{i + 1}</td>
         <td>{unit.unit} {unit.unitTitle}</td>
         <td>

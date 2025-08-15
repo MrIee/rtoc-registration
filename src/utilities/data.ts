@@ -13,8 +13,8 @@ import {
   type UnitsICanTeachData,
   type Activity,
   type Subscription,
-  newGroupedActivity,
-  newGroupedSubscription,
+  newGroupedActivities,
+  newGroupedSubscriptions,
   type UnitsICanTeach,
   type MatrixExperienceUnit,
 } from './interfaces';
@@ -91,6 +91,17 @@ export const getUserProfile = async (url: string) => {
   try {
     const res = await axios.get('/profile/' + url);
     return res.data[0];
+  } catch {
+    return null;
+  }
+};
+
+export const getUserPicture = async () => {
+  try {
+    const res = await axios.get('/user/picture', {
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
   } catch {
     return null;
   }
@@ -561,7 +572,7 @@ const getActivities = async () => {
 export const getMatrixActivitiesGrouped = async () => {
   try {
     const activities: Array<Activity> = await getActivities();
-    const activitiesGrouped = newGroupedActivity;
+    const activitiesGrouped = newGroupedActivities;
 
     activities.forEach((activity: Activity) => {
       if (activity.section === EXPERIENCE_TYPES.INDUSTRY) {
@@ -587,13 +598,25 @@ export const getMatrixActivitiesGrouped = async () => {
 
     return activitiesGrouped;
   } catch {
-    return newGroupedActivity;
+    return newGroupedActivities;
   }
 };
 
 export const updateActivity = async (id: number, data: Activity) => {
   try {
     const res = await axios.put('/user/matrix/activities/' + id, data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
+  }
+};
+
+export const createActivity = async (data: Activity) => {
+  try {
+    const res = await axios.post('/user/matrix/activities', data, {
       headers: { 'x-session': getSessionKey() },
     });
 
@@ -618,7 +641,7 @@ const getSubscriptions = async () => {
 export const getSubscriptionsGrouped = async () => {
   try {
     const subscriptions: Array<Subscription> = await getSubscriptions();
-    const subscriptionsGrouped = newGroupedSubscription;
+    const subscriptionsGrouped = newGroupedSubscriptions;
 
     subscriptions.forEach((subscription: Subscription) => {
       if (subscription.section === EXPERIENCE_TYPES.INDUSTRY) {
@@ -632,13 +655,25 @@ export const getSubscriptionsGrouped = async () => {
 
     return subscriptionsGrouped;
   } catch {
-    return newGroupedSubscription;
+    return newGroupedSubscriptions;
   }
 };
 
 export const updateSubscription = async (id: number, data: Subscription) => {
   try {
     const res = await axios.put('/user/matrix/subscriptions/' + id, data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
+  }
+};
+
+export const createSubscription = async (data: Subscription) => {
+  try {
+    const res = await axios.put('/user/matrix/subscriptions', data, {
       headers: { 'x-session': getSessionKey() },
     });
 
