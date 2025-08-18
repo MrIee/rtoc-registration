@@ -109,7 +109,7 @@ const Matrix: FC = (): JSX.Element => {
               <ExperienceForm courses={getMatrixExperienceCourses(experience)} onChange={handleOnChangExperience} />
             </div>
           </Accordion>
-          <Accordion title="2. Professional Development Activities" isNested>
+          <Accordion title="2. Professional Development Activities" isParent>
             <Accordion title="2A Record of VET Activities for Previous Year">
               <div className="matrix__section">
                 <VETActivitiesForm activities={activities.VET.previous} onChange={handleOnChangeActivities} />
@@ -136,7 +136,7 @@ const Matrix: FC = (): JSX.Element => {
               <WorkExperienceForm experience={workExperience} />
             </div>
           </Accordion>
-          <Accordion title="4. Professional Subscriptions and Memberships" isNested>
+          <Accordion title="4. Professional Subscriptions and Memberships" isParent>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
                 <SubscriptionForm subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} />

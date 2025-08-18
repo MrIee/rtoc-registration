@@ -10,7 +10,6 @@ Matrix
   @apply tw:rounded-b-lg;
 }
 
-
 .accordion .accordion {
   @apply tw:first:rounded-t-none tw:last:rounded-b-none;
 }
@@ -22,6 +21,7 @@ Matrix
 .accordion .accordion .accordion__button {
   @apply tw:pl-7;
 }
+
 .accordion__body {
-  @apply tw:bg-white tw:transition-all tw:duration-200 tw:ease-out;
+  @apply tw:bg-white;
 }
