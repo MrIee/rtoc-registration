@@ -1,5 +1,6 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
 import debounce from 'lodash.debounce';
+import { EXPERIENCE_TYPES } from '../utilities/constants';
 import {
   type IndustryExperience,
   type MatrixExperience,
@@ -18,6 +19,8 @@ import {
   getSubscriptions,
   updateSubscription,
   createSubscription,
+  deleteActivity,
+  deleteSubscription,
 } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
@@ -25,7 +28,6 @@ import ExperienceTable from '../components/Matrix/ExperienceTable';
 import VETActivitiesTable from '../components/Matrix/VETActivitiesTable';
 import WorkExperienceTable from '../components/Matrix/WorkExperienceTable';
 import SubscriptionTable from '../components/Matrix/SubscriptionTable';
-import { EXPERIENCE_TYPES } from '../utilities/constants';
 
 const Matrix: FC = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -144,7 +146,7 @@ const Matrix: FC = (): JSX.Element => {
     }
   }, 500);
 
-  const submitActivity = async (isFormValid: boolean, activity: Activity) => {
+  const handleOnSubmitActivity = async (isFormValid: boolean, activity: Activity) => {
     if (isFormValid) {
       const res = await createActivity(activity);
 
@@ -154,7 +156,12 @@ const Matrix: FC = (): JSX.Element => {
     }
   };
 
-  const submitSubscription = async (isFormValid: boolean, subscription: Subscription) => {
+  const handleOnDeleteActivity = async (rowID: number) => {
+    await deleteActivity(rowID);
+    loadActivities();
+  };
+
+  const handleOnSubmitSubscription = async (isFormValid: boolean, subscription: Subscription) => {
     if (isFormValid) {
       const res = await createSubscription(subscription);
 
@@ -163,10 +170,15 @@ const Matrix: FC = (): JSX.Element => {
       }
     }
   };
+
+  const handleOnDeleteSubscription = async (rowID: number) => {
+    await deleteSubscription(rowID);
+    loadSubscriptions();
+  };
+
   return (
     <>
-    {
-      isLoading ? (
+    { isLoading ? (
         <Loader typeToBeLoaded="Matrix" />
       ) : (
         <div className="matrix">
@@ -178,22 +190,42 @@ const Matrix: FC = (): JSX.Element => {
           <Accordion title="2. Professional Development Activities" isParent>
             <Accordion title="2A Record of VET Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesTable activities={previousVETActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
+                <VETActivitiesTable
+                  activities={previousVETActivities}
+                  onChange={handleOnChangeActivities}
+                  onSubmit={handleOnSubmitActivity}
+                  onDelete={handleOnDeleteActivity}
+                />
               </div>
             </Accordion>
             <Accordion title="2B Record of Industry Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesTable activities={previousIndustryActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
+                <VETActivitiesTable
+                  activities={previousIndustryActivities}
+                  onChange={handleOnChangeActivities}
+                  onSubmit={handleOnSubmitActivity}
+                  onDelete={handleOnDeleteActivity}
+                />
               </div>
             </Accordion>
             <Accordion title="2C Record of VET Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesTable activities={currentVETActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
+                <VETActivitiesTable
+                activities={currentVETActivities}
+                onChange={handleOnChangeActivities}
+                onSubmit={handleOnSubmitActivity}
+                onDelete={handleOnDeleteActivity}
+              />
               </div>
             </Accordion>
             <Accordion title="2D Record of Industry Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesTable activities={currentIndustryActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
+                <VETActivitiesTable
+                  activities={currentIndustryActivities}
+                  onChange={handleOnChangeActivities}
+                  onSubmit={handleOnSubmitActivity}
+                  onDelete={handleOnDeleteActivity}
+                />
               </div>
             </Accordion>
           </Accordion>
@@ -205,12 +237,22 @@ const Matrix: FC = (): JSX.Element => {
           <Accordion title="4. Professional Subscriptions and Memberships" isParent>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionTable subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} onSubmit={submitSubscription} />
+                <SubscriptionTable
+                  subscriptions={vetSubscriptions}
+                  onChange={handleOnChangeSubscription}
+                  onSubmit={handleOnSubmitSubscription}
+                  onDelete={handleOnDeleteSubscription}
+                />
               </div>
             </Accordion>
             <Accordion title="4B Industry Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionTable subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} onSubmit={submitSubscription} />
+                <SubscriptionTable
+                  subscriptions={industrySubscriptions}
+                  onChange={handleOnChangeSubscription}
+                  onSubmit={handleOnSubmitSubscription}
+                  onDelete={handleOnDeleteSubscription}
+                />
               </div>
             </Accordion>
           </Accordion>

@@ -226,10 +226,10 @@ export const createVETQualifications = async (qualificationDetails: VETQualifica
   }
 };
 
-export const deleteVETQualification = async (id: number) => {
+export const deleteVETQualification = async (rowID: number) => {
   try {
     const res = await axios.delete('/user/qualifications/vet', {
-      data: { rowID: id },
+      data: { rowID },
       headers: { 'x-session': getSessionKey() },
     });
     return res.data;
@@ -340,10 +340,10 @@ export const getTEQualifications = async () => {
   }
 };
 
-export const deleteTEQualification = async (id: number) => {
+export const deleteTEQualification = async (rowID: number) => {
   try {
     const res = await axios.delete('/user/qualifications/te', {
-      data: { rowID: id },
+      data: { rowID },
       headers: { 'x-session': getSessionKey() },
     });
     return res.data;
@@ -380,10 +380,10 @@ export const getTeachingExperience = async () => {
   }
 };
 
-export const deleteTeachingExperience = async (id: number) => {
+export const deleteTeachingExperience = async (rowID: number) => {
   try {
     const res = await axios.delete('/user/experience/vet_teach/', {
-      data: { rowID: id },
+      data: { rowID },
       headers: { 'x-session': getSessionKey() },
     });
     return res.data;
@@ -517,10 +517,10 @@ export const getUnitsICanTeachAsOptions = async () => {
   }
 };
 
-export const deleteUnitsICanTeach = async (id: number) => {
+export const deleteUnitsICanTeach = async (rowID: number) => {
   try {
     const res = await axios.delete('/user/experience/canteach', {
-      data: { rowID: id },
+      data: { rowID},
       headers: { 'x-session': getSessionKey() },
     });
     return res.data;
@@ -593,6 +593,18 @@ export const createActivity = async (data: Activity) => {
   }
 };
 
+export const deleteActivity = async (rowID: number) => {
+  try {
+    const res = await axios.delete('/user/matrix/activities/' + rowID , {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
+  }
+};
+
 export const getSubscriptions = async () => {
   try {
     const res = await axios.get('/user/matrix/subscriptions', {
@@ -620,6 +632,18 @@ export const updateSubscription = async (id: number, data: Subscription) => {
 export const createSubscription = async (data: Subscription) => {
   try {
     const res = await axios.post('/user/matrix/subscriptions', data, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res;
+  } catch {
+    return null;
+  }
+};
+
+export const deleteSubscription = async (rowID: number) => {
+  try {
+    const res = await axios.delete('/user/matrix/subscriptions/' + rowID , {
       headers: { 'x-session': getSessionKey() },
     });
 

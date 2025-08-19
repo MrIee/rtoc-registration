@@ -1,5 +1,6 @@
 import { useState, type FC, type JSX, type ReactNode } from 'react';
 import { ACTIVITY_DELIVERY_OPTIONS, ACTIVITY_DURATION_OPTIONS } from '../../utilities/constants';
+import iconDelete from '../../assets/images/icon-delete.svg';
 import Dropdown from '../Inputs/Dropdown';
 import TextInput from '../Inputs/TextInput';
 import TextArea from '../Inputs/TextArea';
@@ -14,9 +15,10 @@ interface VETActivitiesTableProps {
   activities: Array<Activity>;
   onChange?: (activity: Activity) => void;
   onSubmit: (isValid: boolean, activity: Activity) => void;
+  onDelete: (rowID: number) => void;
 };
 
-const VETActivitiesTable: FC<VETActivitiesTableProps> = ({ activities, onChange,onSubmit }): JSX.Element => {
+const VETActivitiesTable: FC<VETActivitiesTableProps> = ({ activities, onChange, onSubmit, onDelete }): JSX.Element => {
   const { items, handleOnChange } = useItems<Activity>(activities, onChange);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -78,11 +80,19 @@ const VETActivitiesTable: FC<VETActivitiesTableProps> = ({ activities, onChange,
             hasBorder
           />
         </td>
+        <td>
+          <img
+            className="tw:cursor-pointer"
+            src={iconDelete}
+            alt="delete activity icon"
+            onClick={() => onDelete(activity.rowID || -1)}
+          />
+          </td>
       </tr>
     );
 
-  const printTable: ReactNode = [0].map((_, i: number) =>
-    <div key={i}>
+  const printTable: ReactNode =
+    <>
       <table className="matrix-table">
         <thead>
           <tr>
@@ -103,8 +113,7 @@ const VETActivitiesTable: FC<VETActivitiesTableProps> = ({ activities, onChange,
       <Modal title="Add Activity" showModal={isModalVisible} onClose={() => setIsModalVisible(false)}>
         <ActivityForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
       </Modal>
-    </div>
-  );
+    </>;
 
   return (
     <>{printTable}</>

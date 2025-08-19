@@ -1,4 +1,5 @@
 import { useState, type FC, type JSX, type ReactNode } from 'react';
+import iconDelete from '../../assets/images/icon-delete.svg';
 import type { Subscription } from '../../utilities/interfaces';
 import TextInput from '../Inputs/TextInput';
 import DatePicker from '../Inputs/DatePicker';
@@ -11,11 +12,12 @@ interface SubscriptionTableProps {
   subscriptions: Array<Subscription>;
   onChange?: (subscription: Subscription) => void;
   onSubmit: (isValid: boolean, subscription: Subscription) => void;
+  onDelete: (rowID: number) => void;
 };
 
 const subscriptionLimit = 3;
 
-const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange, onSubmit }): JSX.Element => {
+const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange, onSubmit, onDelete }): JSX.Element => {
   interface SubscriptionRow {
     header: string;
     key: string;
@@ -98,12 +100,25 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
       }
     });
 
-  const printTableRows = (): ReactNode =>
+  const tableRows: ReactNode =
     rows.map((row: SubscriptionRow, i: number) =>
       <tr key={i}>
         <th>{row.header}</th>
         {printTableCells(row.key)}
       </tr>
+    );
+
+  const deleteRows: ReactNode =
+    subscriptions.map((subscription: Subscription, i: number) =>
+      i < subscriptionLimit &&
+      <td>
+        <img
+          className="tw:cursor-pointer tw:mx-auto"
+          src={iconDelete}
+          alt="delete activity icon"
+          onClick={() => onDelete(subscription.rowID || -1)}
+        />
+      </td>
     );
 
   return (
@@ -118,7 +133,11 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
           </tr>
         </thead>
         <tbody>
-          {printTableRows()}
+          {tableRows}
+          <tr>
+            <td></td>
+            {deleteRows}
+          </tr>
         </tbody>
       </table>
       <button className="btn btn--small tw:my-4" onClick={() => setIsModalVisible(true)}>Add Subscription</button>
