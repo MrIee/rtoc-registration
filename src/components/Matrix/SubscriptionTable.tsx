@@ -1,24 +1,35 @@
-import { type FC, type JSX, type ReactNode } from 'react';
+import { useState, type FC, type JSX, type ReactNode } from 'react';
 import type { Subscription } from '../../utilities/interfaces';
 import TextInput from '../Inputs/TextInput';
 import DatePicker from '../Inputs/DatePicker';
 import RadioButton from '../Inputs/RadioButton';
 import useItems from '../../hooks/useItems';
+import Modal from '../Modal';
+import SubscriptionForm from './SubscriptionForm';
 
 interface SubscriptionTableProps {
   subscriptions: Array<Subscription>;
   onChange?: (subscription: Subscription) => void;
+  onSubmit: (isValid: boolean, subscription: Subscription) => void;
 };
 
 const subscriptionLimit = 3;
 
-const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange }): JSX.Element => {
+const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange, onSubmit }): JSX.Element => {
   interface SubscriptionRow {
     header: string;
     key: string;
   };
 
   const { items, handleOnChange } = useItems<Subscription>(subscriptions, onChange);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const handleSubmit = (isValid: boolean, subscription: Subscription) => {
+    if (isValid) {
+      setIsModalVisible(false);
+      onSubmit(isValid, subscription);
+    }
+  };
 
   const rows: Array<SubscriptionRow> = [
     { header: 'Name', key: 'provider' },
@@ -100,16 +111,20 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
       <table className="matrix-table">
         <thead>
           <tr>
-            <th></th>
-            <th>Subscription/Membership 1</th>
-            <th>Subscription/Membership 2</th>
-            <th>Subscription/Membership 3</th>
+            <th className="tw:w-1/6"></th>
+            <th className="tw:w-1/4">Subscription/Membership 1</th>
+            <th className="tw:w-1/4">Subscription/Membership 2</th>
+            <th className="tw:w-1/4">Subscription/Membership 3</th>
           </tr>
         </thead>
         <tbody>
           {printTableRows()}
         </tbody>
       </table>
+      <button className="btn btn--small tw:my-4" onClick={() => setIsModalVisible(true)}>Add Subscription</button>
+      <Modal title="Add Subscription" showModal={isModalVisible} onClose={() => setIsModalVisible(false)}>
+        <SubscriptionForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
+      </Modal>
     </>
   );
 };

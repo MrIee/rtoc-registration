@@ -29,7 +29,7 @@ const ActivityForm: FC<ActivityFormProps> = ({ onSubmit, onCancel }): JSX.Elemen
   ];
 
   const validateActivityName = () => {
-    validateField('activity', 'Please enter an Activity Name');
+    validateField('activity', 'Please enter an activity name');
   };
 
   const validateMode = () => {
@@ -106,7 +106,7 @@ const ActivityForm: FC<ActivityFormProps> = ({ onSubmit, onCancel }): JSX.Elemen
           onBlur={() => errors.date && validateDate()}
           useDay
           error={errors.date}
-          />
+        />
         <Dropdown
           label="Duration"
           options={ACTIVITY_DURATION_OPTIONS}

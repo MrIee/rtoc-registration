@@ -169,6 +169,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
         }
         <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
+            classes="tw:w-full"
             label="First Name"
             name="firstname"
             value={userDetails?.firstname}
@@ -178,6 +179,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.firstname && validateName('firstname')}
           />
           <TextInput
+            classes="tw:w-full"
             label="Preferred Name"
             name="preferredname"
             value={userDetails?.preferredname}
@@ -189,6 +191,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
         </div>
         <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
+            classes="tw:w-full"
             label="Family Name"
             name="familyname"
             value={userDetails?.familyname}
@@ -198,6 +201,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.familyname && validateName('familyname')}
           />
           <TextInput
+            classes="tw:w-full"
             label="Phone"
             name="phone"
             value={userDetails?.phone}
@@ -209,6 +213,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
         </div>
         <div className="tw:flex tw:lg:flex-row tw:flex-col tw:gap-4 tw:mb-4">
           <TextInput
+            classes="tw:w-full"
             label="Email"
             name="email"
             value={userDetails?.email}
@@ -218,6 +223,7 @@ const PersonalDetailsForm: FC<PersonalDetailsFormProps> = ({ onSubmit, customErr
             onBlur={() => errors.email && validateEmail()}
           />
           <TextInput
+            classes="tw:w-full"
             labelBtnText="Generate Password"
             labelBtnOnClick={handleGeneratePassword}
             label="Password"

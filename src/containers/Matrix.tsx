@@ -11,12 +11,13 @@ import {
 import {
   getMatrixExperience,
   updateMatrixExperience,
-  getMatrixActivitiesGrouped,
+  getActivities,
   updateActivity,
   createActivity,
   getIndustryExperience,
-  getSubscriptionsGrouped,
+  getSubscriptions,
   updateSubscription,
+  createSubscription,
 } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
@@ -67,7 +68,7 @@ const Matrix: FC = (): JSX.Element => {
   };
 
   const loadActivities = async () => {
-    const res = await getMatrixActivitiesGrouped();
+    const res = await getActivities();
     const currentIndustry: Array<Activity> = [];
     const previousIndustry: Array<Activity> = [];
     const currentVET: Array<Activity> = [];
@@ -107,9 +108,22 @@ const Matrix: FC = (): JSX.Element => {
   };
 
   const loadSubscriptions = async () => {
-    const res = await getSubscriptionsGrouped();
-    setVETSubscriptions(res.VET);
-    setIndustrySubscriptions(res.industry);
+    const res = await getSubscriptions();
+    const vetSubscriptions: Array<Subscription> = [];
+    const industrySubscriptions: Array<Subscription> = [];
+
+    res.forEach((subscription: Subscription) => {
+      if (subscription.section === EXPERIENCE_TYPES.VET) {
+        vetSubscriptions.push(subscription);
+      }
+
+      if (subscription.section === EXPERIENCE_TYPES.INDUSTRY) {
+        industrySubscriptions.push(subscription);
+      }
+    });
+
+    setVETSubscriptions(vetSubscriptions);
+    setIndustrySubscriptions(industrySubscriptions);
   };
 
   const handleOnChangeActivities = debounce(async (activity: Activity) => {
@@ -140,6 +154,15 @@ const Matrix: FC = (): JSX.Element => {
     }
   };
 
+  const submitSubscription = async (isFormValid: boolean, subscription: Subscription) => {
+    if (isFormValid) {
+      const res = await createSubscription(subscription);
+
+      if (res) {
+        await loadSubscriptions();
+      }
+    }
+  };
   return (
     <>
     {
@@ -182,12 +205,12 @@ const Matrix: FC = (): JSX.Element => {
           <Accordion title="4. Professional Subscriptions and Memberships" isParent>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionTable subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} />
+                <SubscriptionTable subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} onSubmit={submitSubscription} />
               </div>
             </Accordion>
             <Accordion title="4B Industry Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionTable subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} />
+                <SubscriptionTable subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} onSubmit={submitSubscription} />
               </div>
             </Accordion>
           </Accordion>

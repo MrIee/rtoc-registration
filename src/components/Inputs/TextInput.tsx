@@ -49,7 +49,7 @@ export const TextInput: FC<TextInputProps> = ({
   };
 
   return (
-    <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
+    <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start', classes)}>
       { (label || labelBtnText) &&
         <span>
           { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }

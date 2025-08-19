@@ -10,7 +10,7 @@ interface TextAreaProps extends Omit<InputProps, 'onChange'> {
 
 const TextArea: FC<TextAreaProps> = ({ classes, columns, rows, value, defaultValue, label, required, onChange, onBlur, error }): JSX.Element => {
   return (
-    <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
+    <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start', classes)}>
       { label &&
         <span>
           { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }

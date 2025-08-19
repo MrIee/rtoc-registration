@@ -244,6 +244,16 @@ export interface Subscription extends Row {
   section: string;
 };
 
+export const newSubscription: Subscription = {
+  anniversary: '',
+  commenced: '',
+  current: '',
+  member: '',
+  provider: '',
+  renewal: '',
+  section: '',
+};
+
 export interface GroupedSubscription {
   industry: Array<Subscription>,
   VET: Array<Subscription>,
