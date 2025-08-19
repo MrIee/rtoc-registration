@@ -97,6 +97,10 @@ const Dropdown = ({
     setValue(defaultValue);
   }, [defaultValue]);
 
+  useEffect(() => {
+  setErrorMsg(error || '');
+  }, [error]);
+
   const getBoxShadowStyle = (isFocused: boolean): string => {
     if (error) {
       return '0 0 0 2px red';

@@ -1,8 +1,6 @@
 import { useEffect, useState, type FC, type JSX } from 'react';
 import debounce from 'lodash.debounce';
 import {
-  newGroupedActivities,
-  type GroupedActivities,
   type IndustryExperience,
   type MatrixExperience,
   type MatrixExperienceCourse,
@@ -15,21 +13,26 @@ import {
   updateMatrixExperience,
   getMatrixActivitiesGrouped,
   updateActivity,
+  createActivity,
   getIndustryExperience,
   getSubscriptionsGrouped,
   updateSubscription,
 } from '../utilities/data';
 import Loader from '../components/Loader';
 import Accordion from '../components/Accordion';
-import ExperienceForm from '../components/Matrix/ExperienceForm';
-import VETActivitiesForm from '../components/Matrix/VETActivitiesForm';
-import WorkExperienceForm from '../components/Matrix/WorkExperienceForm';
-import SubscriptionForm from '../components/Matrix/SubscriptionForm';
+import ExperienceTable from '../components/Matrix/ExperienceTable';
+import VETActivitiesTable from '../components/Matrix/VETActivitiesTable';
+import WorkExperienceTable from '../components/Matrix/WorkExperienceTable';
+import SubscriptionTable from '../components/Matrix/SubscriptionTable';
+import { EXPERIENCE_TYPES } from '../utilities/constants';
 
 const Matrix: FC = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [experience, setExperience] = useState<Array<MatrixExperience>>([]);
-  const [activities, setActivities] = useState<GroupedActivities>(newGroupedActivities);
+  const [currentIndustryActivities, setCurrentIndustryActivities] = useState<Array<Activity>>([]);
+  const [previousIndustryActivities, setPreviousIndustryActivities] = useState<Array<Activity>>([]);
+  const [currentVETActivities, setCurrentVETActivities] = useState<Array<Activity>>([]);
+  const [previousVETActivities, setPreviousVETActivities] = useState<Array<Activity>>([]);
   const [workExperience, setWorkExperience] = useState<Array<IndustryExperience>>([]);
   const [vetSubscriptions, setVETSubscriptions] = useState<Array<Subscription>>([]);
   const [industrySubscriptions, setIndustrySubscriptions] = useState<Array<Subscription>>([]);
@@ -65,7 +68,37 @@ const Matrix: FC = (): JSX.Element => {
 
   const loadActivities = async () => {
     const res = await getMatrixActivitiesGrouped();
-    setActivities(res);
+    const currentIndustry: Array<Activity> = [];
+    const previousIndustry: Array<Activity> = [];
+    const currentVET: Array<Activity> = [];
+    const previousVET: Array<Activity> = [];
+
+    res.forEach((activity: Activity) => {
+      if (activity.section === EXPERIENCE_TYPES.INDUSTRY) {
+        if (activity.year_category === 'current') {
+          currentIndustry.push(activity);
+        }
+
+        if (activity.year_category === 'previous') {
+          previousIndustry.push(activity);
+        }
+      }
+
+      if (activity.section === EXPERIENCE_TYPES.VET) {
+        if (activity.year_category === 'current') {
+          currentVET.push(activity);
+        }
+
+        if (activity.year_category === 'previous') {
+          previousVET.push(activity);
+        }
+      }
+    });
+
+    setCurrentIndustryActivities(currentIndustry);
+    setPreviousIndustryActivities(previousIndustry);
+    setCurrentVETActivities(currentVET);
+    setPreviousVETActivities(previousVET);
   };
 
   const loadWorkExperience = async () => {
@@ -97,6 +130,16 @@ const Matrix: FC = (): JSX.Element => {
     }
   }, 500);
 
+  const submitActivity = async (isFormValid: boolean, activity: Activity) => {
+    if (isFormValid) {
+      const res = await createActivity(activity);
+
+      if (res) {
+        await loadActivities();
+      }
+    }
+  };
+
   return (
     <>
     {
@@ -106,45 +149,45 @@ const Matrix: FC = (): JSX.Element => {
         <div className="matrix">
           <Accordion title="1. Mapping of Qualifications and Vocational Experience">
             <div className="matrix__section">
-              <ExperienceForm courses={getMatrixExperienceCourses(experience)} onChange={handleOnChangExperience} />
+              <ExperienceTable courses={getMatrixExperienceCourses(experience)} onChange={handleOnChangExperience} />
             </div>
           </Accordion>
           <Accordion title="2. Professional Development Activities" isParent>
             <Accordion title="2A Record of VET Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.VET.previous} onChange={handleOnChangeActivities} />
+                <VETActivitiesTable activities={previousVETActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
               </div>
             </Accordion>
             <Accordion title="2B Record of Industry Activities for Previous Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.industry.previous} onChange={handleOnChangeActivities} />
+                <VETActivitiesTable activities={previousIndustryActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
               </div>
             </Accordion>
             <Accordion title="2C Record of VET Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.VET.current} onChange={handleOnChangeActivities} />
+                <VETActivitiesTable activities={currentVETActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
               </div>
             </Accordion>
             <Accordion title="2D Record of Industry Activities for Current Year">
               <div className="matrix__section">
-                <VETActivitiesForm activities={activities.industry.current} onChange={handleOnChangeActivities} />
+                <VETActivitiesTable activities={currentIndustryActivities} onChange={handleOnChangeActivities} onSubmit={submitActivity} />
               </div>
             </Accordion>
           </Accordion>
           <Accordion title="3. Work Experience">
             <div className="matrix__section">
-              <WorkExperienceForm experience={workExperience} />
+              <WorkExperienceTable experience={workExperience} />
             </div>
           </Accordion>
           <Accordion title="4. Professional Subscriptions and Memberships" isParent>
             <Accordion title="4A VET Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} />
+                <SubscriptionTable subscriptions={vetSubscriptions} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
             <Accordion title="4B Industry Subscriptions and Memberships">
               <div className="matrix__section">
-                <SubscriptionForm subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} />
+                <SubscriptionTable subscriptions={industrySubscriptions} onChange={handleOnChangeSubscription} />
               </div>
             </Accordion>
           </Accordion>

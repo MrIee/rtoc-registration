@@ -6,12 +6,12 @@ import TextArea from '../Inputs/TextArea';
 import Dropdown from '../Inputs/Dropdown';
 import { nanoid } from 'nanoid';
 
-interface ExperienceFormProps {
+interface ExperienceTableProps {
   courses: Array<MatrixExperienceCourse>;
   onChange?: (unit: MatrixExperienceUnit) => void;
 };
 
-const ExperienceForm: FC<ExperienceFormProps> = ({ courses, onChange }): JSX.Element => {
+const ExperienceTable: FC<ExperienceTableProps> = ({ courses, onChange }): JSX.Element => {
   const [items] = useState<Array<MatrixExperienceCourse>>(courses);
   const [unitsOfCompetency, setUnitsOfCompetency] = useState<Array<ReactSelectOption>>([]);
 
@@ -118,6 +118,7 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses, onChange }): JSX.Ele
         </td>
         <td>
           <TextArea
+            classes="tw:w-full"
             defaultValue={unit.experience}
             onChange={(e) => handleOnChange(courseKey, i, e.target.value, 'experience')}
           />
@@ -150,4 +151,4 @@ const ExperienceForm: FC<ExperienceFormProps> = ({ courses, onChange }): JSX.Ele
   );
 };
 
-export default ExperienceForm;
+export default ExperienceTable;

@@ -2,11 +2,11 @@ import { type FC, type JSX, type ReactNode } from 'react';
 import type { IndustryExperience } from '../../utilities/interfaces';
 import TextArea from '../Inputs/TextArea';
 
-interface WorkExperienceFormProps {
+interface WorkExperienceTableProps {
   experience: Array<IndustryExperience>;
 };
 
-const WorkExperienceForm: FC<WorkExperienceFormProps> = ({ experience }): JSX.Element => {
+const WorkExperienceTable: FC<WorkExperienceTableProps> = ({ experience }): JSX.Element => {
   const printTableRows = (): ReactNode =>
     experience.map((exp: IndustryExperience, i: number) =>
       <tr key={i}>
@@ -14,7 +14,7 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({ experience }): JSX.El
         <td>{exp.positionTitle}</td>
         <td>{exp.Company}</td>
         <td className="matrix-table__col-sm">{`${exp.started} - ${exp.completed || 'current'}`}</td>
-        <td><TextArea /></td>
+        <td><TextArea classes="tw:w-full" /></td>
       </tr>
     );
 
@@ -36,4 +36,4 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({ experience }): JSX.El
   );
 };
 
-export default WorkExperienceForm;
+export default WorkExperienceTable;

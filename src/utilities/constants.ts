@@ -19,3 +19,15 @@ export const EXPERIENCE_TYPES = {
   VET: 'VET',
   INDUSTRY:'Industry',
 };
+
+export const ACTIVITY_DELIVERY_OPTIONS: Array<ReactSelectOption> = [
+  { id: '0', value: 'webinar', label: 'Webinar' },
+  { id: '1', value: 'in-person', label: 'Face to Face' },
+];
+
+export const ACTIVITY_DURATION_OPTIONS: Array<ReactSelectOption> = [
+  { id: '0', value: '1hour', label: '1 Hour' },
+  { id: '1', value: '2hour', label: '2 Hours' },
+  { id: '2', value: '4hour', label: '4 Hours' },
+  { id: '3', value: '8hour', label: '8 Hours' },
+];

@@ -5,14 +5,14 @@ import DatePicker from '../Inputs/DatePicker';
 import RadioButton from '../Inputs/RadioButton';
 import useItems from '../../hooks/useItems';
 
-interface SubscriptionFormProps {
+interface SubscriptionTableProps {
   subscriptions: Array<Subscription>;
   onChange?: (subscription: Subscription) => void;
 };
 
 const subscriptionLimit = 3;
 
-const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions, onChange }): JSX.Element => {
+const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange }): JSX.Element => {
   interface SubscriptionRow {
     header: string;
     key: string;
@@ -38,6 +38,7 @@ const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions, onChange }
         switch (key) {
           case rows[0].key:
             cell = <TextInput
+              classes="tw:w-full"
               value={value}
               isSlim
               hasBorder
@@ -46,6 +47,7 @@ const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions, onChange }
             break;
           case rows[1].key:
             cell = <TextInput
+              classes="tw:w-full"
               value={value}
               isSlim
               hasBorder
@@ -112,4 +114,4 @@ const SubscriptionForm: FC<SubscriptionFormProps> = ({ subscriptions, onChange }
   );
 };
 
-export default SubscriptionForm;
+export default SubscriptionTable;

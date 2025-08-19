@@ -1,31 +1,30 @@
-import { type FC, type JSX, type ReactNode } from 'react';
+import { useState, type FC, type JSX, type ReactNode } from 'react';
+import { ACTIVITY_DELIVERY_OPTIONS, ACTIVITY_DURATION_OPTIONS } from '../../utilities/constants';
 import Dropdown from '../Inputs/Dropdown';
 import TextInput from '../Inputs/TextInput';
 import TextArea from '../Inputs/TextArea';
 import DatePicker from '../Inputs/DatePicker';
-import { newActivity, type Activity, type ReactSelectOption } from '../../utilities/interfaces';
+import { type Activity, type ReactSelectOption } from '../../utilities/interfaces';
 import { getDefaultOption } from '../../utilities/helpers';
 import useItems from '../../hooks/useItems';
+import Modal from '../Modal';
+import ActivityForm from './ActivityForm';
 
-interface VETActivitiesFormProps {
+interface VETActivitiesTableProps {
   activities: Array<Activity>;
   onChange?: (activity: Activity) => void;
+  onSubmit: (isValid: boolean, activity: Activity) => void;
 };
 
-const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange }): JSX.Element => {
-  const { items, setItems, handleOnChange } = useItems<Activity>(activities, onChange);
+const VETActivitiesTable: FC<VETActivitiesTableProps> = ({ activities, onChange,onSubmit }): JSX.Element => {
+  const { items, handleOnChange } = useItems<Activity>(activities, onChange);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const deliveryOptions: Array<ReactSelectOption> = [
-    { id: '0', value: 'webinar', label: 'Webinar' },
-    { id: '1', value: 'in-person', label: 'Face to Face' },
-  ];
-
-  const durationOptions: Array<ReactSelectOption> = ['1', '2', '4', '8'].map((hour: string, i: number) => ({
-    id: i.toString(), value: `${hour}hour`, label: `${hour} Hour${parseInt(hour, 10) > 1 ? 's' : ''}`
-  }));
-
-  const addActivity = () => {
-    setItems([...items, newActivity]);
+  const handleSubmit = (isValid: boolean, activity: Activity) => {
+    if (isValid) {
+      setIsModalVisible(false);
+      onSubmit(isValid, activity);
+    }
   };
 
   const printTableRows = (): ReactNode =>
@@ -33,15 +32,12 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
       <tr key={activity.rowID}>
         <td>{i + 1}</td>
         <td>
-          {activity.activity ?
-            activity.activity
-            : <TextArea />
-          }
+          {activity.activity}
         </td>
         <td>
           <Dropdown
-            options={deliveryOptions}
-            defaultValue={getDefaultOption(deliveryOptions, activity.mode)}
+            options={ACTIVITY_DELIVERY_OPTIONS}
+            defaultValue={getDefaultOption(ACTIVITY_DELIVERY_OPTIONS, activity.mode)}
             onChange={(option: ReactSelectOption) => handleOnChange(option.value, 'mode', activity.rowID || 0)}
             isSlim
             hasBorder
@@ -49,15 +45,16 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
         </td>
         <td>
           <TextArea
+            classes="tw:w-full"
             value={activity.outcomes}
+            rows={4}
             onChange={(e) => handleOnChange(e.target.value, 'outcomes', activity.rowID || 0)}
           />
         </td>
         <td>
           <TextInput
-            classes="tw:!flex"
+            classes="tw:w-full"
             value={activity.provider}
-            validate="provider"
             onChange={(e) => handleOnChange(e.target.value, 'provider', activity.rowID || 0)}
             isSlim
             hasBorder
@@ -74,8 +71,8 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
         </td>
         <td>
           <Dropdown
-            options={durationOptions}
-            defaultValue={getDefaultOption(durationOptions, activity.duration)}
+            options={ACTIVITY_DURATION_OPTIONS}
+            defaultValue={getDefaultOption(ACTIVITY_DURATION_OPTIONS, activity.duration)}
             onChange={(option: ReactSelectOption) => handleOnChange(option.value, 'duration', activity.rowID || 0)}
             isSlim
             hasBorder
@@ -92,7 +89,7 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
             <th>#</th>
             <th className="matrix-table__col-md">Activity Name</th>
             <th className="matrix-table__col-sm">Mode of Delivery</th>
-            <th>Learning Outcomes</th>
+            <th className="matrix-table__col-md">Learning Outcomes</th>
             <th className="matrix-table__col-md">Provider</th>
             <th>Date</th>
             <th>Duration</th>
@@ -102,7 +99,10 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
           {printTableRows()}
         </tbody>
       </table>
-      <button className="btn btn--small tw:my-4" onClick={addActivity}>Add Activity</button>
+      <button className="btn btn--small tw:my-4" onClick={() => setIsModalVisible(true)}>Add Activity</button>
+      <Modal title="Add Activity" showModal={isModalVisible} onClose={() => setIsModalVisible(false)}>
+        <ActivityForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
+      </Modal>
     </div>
   );
 
@@ -111,4 +111,4 @@ const VETActivitiesForm: FC<VETActivitiesFormProps> = ({ activities, onChange })
   );
 };
 
-export default VETActivitiesForm;
+export default VETActivitiesTable;

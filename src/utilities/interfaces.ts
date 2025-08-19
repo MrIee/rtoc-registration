@@ -6,6 +6,7 @@ export interface InputPropEvents {
 };
 
 export interface InputPropsNoEvents {
+  classes?: string;
   label?: string;
   placeholder?: string;
   name?: string;

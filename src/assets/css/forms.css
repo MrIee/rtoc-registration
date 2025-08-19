@@ -22,8 +22,12 @@ label .label__text > span,
 Input
 ============================================================================= */
 
+input[type="text"].textInput, input[type="password"].textInput, textarea {
+  @apply tw:text-base tw:rounded-lg tw:bg-gray-100;
+}
+
 input[type="text"].textInput, input[type="password"].textInput {
-  @apply tw:h-12 tw:px-4 tw:py-2.5 tw:text-base tw:rounded-lg tw:bg-gray-100;
+  @apply tw:h-12 tw:px-4 tw:py-2;
 }
 
 input.textInput.slim {

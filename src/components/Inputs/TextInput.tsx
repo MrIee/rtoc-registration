@@ -1,9 +1,8 @@
 import classNames from 'classnames';
-import { useState, type FC, type FocusEvent } from 'react';
+import { useEffect, useState, type FC, type FocusEvent } from 'react';
 import type { InputProps } from '../../utilities/interfaces';
 
 interface TextInputProps extends InputProps {
-  classes?: string;
   labelBtnLink?: string;
   labelBtnText?: string;
   labelBtnOnClick?: () => void;
@@ -33,6 +32,10 @@ export const TextInput: FC<TextInputProps> = ({
 }) => {
   const [errorMsg, setErrorMsg] = useState<string>(error);
 
+  useEffect(() => {
+    setErrorMsg(error);
+  }, [error]);
+
   const handleOnChange = (event: FocusEvent<HTMLInputElement>) => {
     if (validate && !event.target.value) {
       setErrorMsg('Please enter a ' + validate);
@@ -47,7 +50,7 @@ export const TextInput: FC<TextInputProps> = ({
 
   return (
     <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start tw:grow', classes)}>
-      { label || labelBtnText &&
+      { (label || labelBtnText) &&
         <span>
           { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
           { labelBtnText &&

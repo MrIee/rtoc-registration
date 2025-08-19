@@ -571,34 +571,37 @@ const getActivities = async () => {
 
 export const getMatrixActivitiesGrouped = async () => {
   try {
-    const activities: Array<Activity> = await getActivities();
-    const activitiesGrouped = newGroupedActivities;
+    const res: Array<Activity> = await getActivities();
+    // const activities: Array<Activity> = await getActivities();
+    // const activitiesGrouped = newGroupedActivities;
 
-    activities.forEach((activity: Activity) => {
-      if (activity.section === EXPERIENCE_TYPES.INDUSTRY) {
-        if (activity.year_category === 'current') {
-          activitiesGrouped.industry.current.push(activity);
-        }
+    // activities.forEach((activity: Activity) => {
+    //   if (activity.section === EXPERIENCE_TYPES.INDUSTRY) {
+    //     if (activity.year_category === 'current') {
+    //       activitiesGrouped.industry.current.push(activity);
+    //     }
 
-        if (activity.year_category === 'previous') {
-          activitiesGrouped.industry.previous.push(activity);
-        }
-      }
+    //     if (activity.year_category === 'previous') {
+    //       activitiesGrouped.industry.previous.push(activity);
+    //     }
+    //   }
 
-      if (activity.section === EXPERIENCE_TYPES.VET) {
-        if (activity.year_category === 'current') {
-          activitiesGrouped.VET.current.push(activity);
-        }
+    //   if (activity.section === EXPERIENCE_TYPES.VET) {
+    //     if (activity.year_category === 'current') {
+    //       activitiesGrouped.VET.current.push(activity);
+    //     }
 
-        if (activity.year_category === 'previous') {
-          activitiesGrouped.VET.previous.push(activity);
-        }
-      }
-    });
+    //     if (activity.year_category === 'previous') {
+    //       activitiesGrouped.VET.previous.push(activity);
+    //     }
+    //   }
+    // });
 
-    return activitiesGrouped;
+    // return activities;
+    return res;
   } catch {
-    return newGroupedActivities;
+    // return newGroupedActivities;
+    return [];
   }
 };
 
