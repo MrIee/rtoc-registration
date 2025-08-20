@@ -9,6 +9,7 @@ import CreateProfile from './containers/CreateProfile';
 import ProfileSummary from './containers/ProfileSummary';
 import Profile from './containers/Profile';
 import Matrix from './containers/Matrix';
+import UserDetails from './containers/UserDetails';
 import './app.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -20,8 +21,9 @@ createRoot(document.getElementById('root')!).render(
 
         <Route element={<Layout />}>
           <Route path="create-profile" element={<CreateProfile />} />
-          <Route path="user-profile" element={<ProfileSummary />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="profile/:profileId" element={<ProfileSummary />} />
+          <Route path="user-details" element={<UserDetails />} />
         </Route>
 
         <Route element={<Layout fullWidth />}>

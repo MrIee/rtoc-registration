@@ -57,6 +57,7 @@ export interface ListItem {
   list?: Array<string>;
   points?: Array<Point>;
   fileName?: string;
+  fileURL?: string;
 };
 
 export interface Row {
@@ -130,6 +131,7 @@ export interface TeachingExperience {
   orgName: string;
   started?: string;
   completed?: string;
+  title?: string;
   units?: Array<Unit>;
   courses?: Array<TeachingExperienceCourse>;
 };
@@ -165,6 +167,7 @@ export interface IndustryExperience extends Row {
   Company?: string;
   ABN: string;
   positionTitle: string;
+  positionDescription?: string;
   started: string;
   completed: string | null;
   units: Array<Unit>;

@@ -14,24 +14,26 @@ import type {
 } from '../utilities/interfaces';
 import Loader from '../components/Loader';
 import ListCard from '../components/ListCard';
+import { useParams } from 'react-router';
 
 const ProfileSummary: FC = (): JSX.Element => {
   const [userInfo, setUserInfo] = useState<UserDetails | null>(null);
   const [userProfile, setUserProfile] = useState<Profile| null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { profileId } = useParams();
 
   useEffect(() => {
     const setUserData = async () => {
       setIsLoading(true);
       const user = await getUser();
       setUserInfo(user);
-      const profile = await getUserProfile(user?.URL || '');
+      const profile = await getUserProfile(profileId || '');
       setUserProfile(profile);
       setIsLoading(false);
     };
 
     setUserData();
-  }, []);
+  }, [profileId]);
 
   const getPoints = (units: Array<Unit>): Array<Point> => units.map((unit: Unit, i: number) =>
       ({ id: unit.rowID || i, label: `${unit.code} ${unit.title}` }));
@@ -51,7 +53,7 @@ const ProfileSummary: FC = (): JSX.Element => {
   const teachingExperienceItems =  userProfile?.vetTeach.map((data: TeachingExperience, i: number): ListItem => ({
     id: i,
     title: data.orgName,
-    list: [`${data.started} - ${data.completed}`],
+    list: [`${data.started} - ${data.completed}`, data.title || ''],
     points: getPoints(data.units as Array<Unit>),
   })) || [];
 
@@ -59,7 +61,7 @@ const ProfileSummary: FC = (): JSX.Element => {
     id: i,
     title: data.Company,
     list: [data.positionTitle, `${data.started} - ${data.completed}`],
-    points: getPoints(data.units as Array<Unit>),
+    // points: getPoints(data.units as Array<Unit>),
   })) || [];
 
   return (
