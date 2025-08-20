@@ -47,16 +47,19 @@ const Profile: FC = (): JSX.Element => {
   return (
     <div className="tw:mt-8">
       <VETQualificationsContainer
+        readOnly
         onSubmit={handleSubmitVETQualification}
         onDelete={handleDeleteVetQualification}
         qualifications={vetQualifications}
       />
       <HigherEducationContainer
+        readOnly
         onSubmit={handleSubmitTEQualification}
         onDelete={handleDeleteTEQualification}
         qualifications={teQualifications}
       />
       <ExperienceContainer
+        readOnly
         onSubmitTE={handleOnSubmitTeachingExperience}
         onDeleteTE={handleDeleteTeachingExperience}
         teachingExperience={teachingExperience}

@@ -31,3 +31,8 @@ export const ACTIVITY_DURATION_OPTIONS: Array<ReactSelectOption> = [
   { id: '2', value: '4hour', label: '4 Hours' },
   { id: '3', value: '8hour', label: '8 Hours' },
 ];
+
+export const RENEWAL_OPTIONS: Array<ReactSelectOption> = [
+  { id: '0', value: 'monthly', label: 'monthly' },
+  { id: '1', value: 'annual', label: 'annual' },
+];

@@ -130,7 +130,8 @@ const Matrix: FC = (): JSX.Element => {
 
   const handleOnChangeActivities = debounce(async (activity: Activity) => {
     if (activity.rowID) {
-      updateActivity(activity.rowID, activity);
+      await updateActivity(activity.rowID, activity);
+      loadActivities();
     }
   }, 500);
 
@@ -142,7 +143,8 @@ const Matrix: FC = (): JSX.Element => {
 
   const handleOnChangeSubscription = debounce(async (subscription: Subscription) => {
     if (subscription.rowID) {
-      updateSubscription(subscription.rowID, subscription);
+      await updateSubscription(subscription.rowID, subscription);
+      loadSubscriptions();
     }
   }, 500);
 

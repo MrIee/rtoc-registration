@@ -7,12 +7,13 @@ import { type ListItem, type TEQualification } from '../../utilities/interfaces'
 import { getAQFString } from '../../utilities/helpers';
 
 interface HigherEducationProps {
+  readOnly?: boolean;
   qualifications: Array<TEQualification>;
   onSubmit: (isValid: boolean, teQualification: TEQualification) => void;
   onDelete: (id: number) => void,
 };
 
-const HigherEducationContainer: FC<HigherEducationProps> = ({ qualifications = [], onSubmit, onDelete }): JSX.Element => {
+const HigherEducationContainer: FC<HigherEducationProps> = ({ readOnly = false, qualifications = [], onSubmit, onDelete }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const listItems: Array<ListItem> = qualifications.map((qualification: TEQualification): ListItem => ({
@@ -20,6 +21,7 @@ const HigherEducationContainer: FC<HigherEducationProps> = ({ qualifications = [
       title: qualification.courseName || '',
       list: [qualification.providerName, getAQFString(qualification.aqf.toString()), qualification.completed],
       fileName: qualification.fileName,
+      fileURL: qualification.osFileName,
     }));
 
   const handleSubmit = (isValid: boolean, teQualification: TEQualification) => {
@@ -37,11 +39,15 @@ const HigherEducationContainer: FC<HigherEducationProps> = ({ qualifications = [
 
   return (
     <div className="tw:flex tw:flex-col tw:gap-4 tw:mb-4">
-      <ListCard title="Higher Education" items={listItems} onDelete={handleDelete}>
-        <AddDetailsButton classes="tw:ml-auto" label="Higher Education" onClick={() => setIsModalVisible(true)} />
-        <Modal title="Add Higher Education" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
-          <HigherEducationForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
-        </Modal>
+      <ListCard title="Higher Education" items={listItems} onDelete={!readOnly ? handleDelete : undefined}>
+        { !readOnly &&
+          <>
+            <AddDetailsButton classes="tw:ml-auto" label="Higher Education" onClick={() => setIsModalVisible(true)} />
+            <Modal title="Add Higher Education" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
+              <HigherEducationForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
+            </Modal>
+          </>
+        }
       </ListCard>
     </div>
   );

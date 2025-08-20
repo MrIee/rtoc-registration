@@ -1,5 +1,4 @@
 import iconDelete from '../assets/images/icon-delete.svg';
-import iconDownload from '../assets/images/icon-download.svg';
 import { nanoid } from 'nanoid';
 import { type FC, type JSX, type ReactNode } from 'react';
 import type { ListItem, Point } from '../utilities/interfaces';
@@ -47,10 +46,6 @@ const List: FC<ListProps> = ({ items, onDelete, onDeletePoint }): JSX.Element =>
         </div>
         }
       </div>
-      {item.fileName && <div className="tw:flex tw:justify-between tw:py-3 tw:px-4 tw:mt-3 tw:text-sm tw:rounded-lg tw:bg-gray-100">
-          {item.fileName}
-          <img className="tw:cursor-pointer" src={iconDownload} alt="download" />
-        </div>}
     </div>
   );
 

@@ -1,4 +1,5 @@
 import { type FC, type FormEvent, type JSX } from 'react';
+import { RENEWAL_OPTIONS } from '../../utilities/constants';
 import { newSubscription, type ReactSelectOption, type Subscription } from '../../utilities/interfaces';
 import TextInput from '../Inputs/TextInput';
 import DatePicker from '../Inputs/DatePicker';
@@ -20,11 +21,6 @@ const ActivityForm: FC<SubscriptionFormProps> = ({ onSubmit, onCancel }): JSX.El
     validateField,
     handleOnChangeDropdown,
   } = useGenericFormProps<Subscription>(newSubscription);
-
-  const renewalOptions: Array<ReactSelectOption> = [
-    { id: '0', value: 'monthly', label: 'monthly' },
-    { id: '1', value: 'annual', label: 'annual' },
-  ];
 
   const sectionOptions: Array<ReactSelectOption> = [
     { id: '0', value: 'Industry', label: 'Industry' },
@@ -92,7 +88,7 @@ const ActivityForm: FC<SubscriptionFormProps> = ({ onSubmit, onCancel }): JSX.El
         />
         <Dropdown
           label="Renewal Period"
-          options={renewalOptions}
+          options={RENEWAL_OPTIONS}
           name="renewal"
           onChange={handleOnChangeDropdown}
           onBlur={() => errors.renewal && validateRenewal()}
@@ -108,6 +104,7 @@ const ActivityForm: FC<SubscriptionFormProps> = ({ onSubmit, onCancel }): JSX.El
         <DatePicker
           label="Subscription Anniversary"
           useDay
+          yearLimit={2026}
           onChange={(anniversary) => setFormData({ ...formData, anniversary })}
           onBlur={() => errors.anniversary && validateAnniversary()}
           error={errors.anniversary}

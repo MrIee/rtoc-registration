@@ -6,12 +6,13 @@ import ListCard from '../ListCard';
 import type { ListItem, VETQualificationDetails } from '../../utilities/interfaces';
 
 interface VETQualificationsProps {
+  readOnly?: boolean;
   qualifications: Array<VETQualificationDetails>;
   onSubmit: (isValid: boolean, qualificationDetails: VETQualificationDetails) => void;
   onDelete: (id: number) => void,
 };
 
-const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], onSubmit, onDelete }): JSX.Element => {
+const VETQualifications: FC<VETQualificationsProps> = ({ readOnly, qualifications = [], onSubmit, onDelete }): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const listItems: Array<ListItem> = qualifications.map((qualification: VETQualificationDetails): ListItem => ({
@@ -36,11 +37,15 @@ const VETQualifications: FC<VETQualificationsProps> = ({ qualifications = [], on
 
   return (
     <div className="tw:flex tw:flex-col tw:gap-4 tw:mb-4">
-      <ListCard title="VET Qualifications" items={listItems} onDelete={handleDelete}>
-        <AddDetailsButton classes="tw:ml-auto" label="Add VET Qualifications" onClick={() => setIsModalVisible(true)} />
-        <Modal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
-          <VETQualificationsForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
-        </Modal>
+      <ListCard title="VET Qualifications" items={listItems} onDelete={!readOnly ? handleDelete : undefined}>
+        { !readOnly &&
+          <>
+            <AddDetailsButton classes="tw:ml-auto" label="Add VET Qualifications" onClick={() => setIsModalVisible(true)} />
+            <Modal title="Add Qualifications" showModal={isModalVisible} onClose={(isVisible) => setIsModalVisible(isVisible)}>
+              <VETQualificationsForm onSubmit={handleSubmit} onCancel={() => setIsModalVisible(false)} />
+            </Modal>
+          </>
+        }
       </ListCard>
     </div>
   );

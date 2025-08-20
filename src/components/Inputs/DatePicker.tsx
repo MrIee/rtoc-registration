@@ -1,19 +1,21 @@
 import { getDefaultOption } from '../../utilities/helpers';
-import type { InputProps, ReactSelectOption } from '../../utilities/interfaces';
+import type { DropdownStyle, InputProps, ReactSelectOption } from '../../utilities/interfaces';
 import Dropdown from './Dropdown';
 import { useEffect, useState, type FC, type JSX } from 'react';
 
 interface DatePickerProps extends Omit<InputProps, 'onChange'> {
   useDay?: boolean;
+  yearLimit?: number;
   hasBorder?: boolean;
   onChange?: (date: string) => void;
+  style?: DropdownStyle;
 };
 
-const startYear: number = new Date().getFullYear();
 const endYear = 1970;
 
 const DatePicker: FC<DatePickerProps> = ({
   useDay = false,
+  yearLimit,
   label,
   value,
   required = true,
@@ -21,11 +23,13 @@ const DatePicker: FC<DatePickerProps> = ({
   error,
   onChange,
   onBlur,
-  isSlim = false
+  isSlim = false,
+  style,
 }): JSX.Element => {
   const [day, setDay] = useState<string>('01');
   const [month, setMonth] = useState<string>('');
   const [year, setYear] = useState<string>('');
+  const startYear: number = yearLimit || new Date().getFullYear();
 
   useEffect(() => {
     const values: Array<string> | undefined = value?.split('-');
@@ -102,6 +106,7 @@ const DatePicker: FC<DatePickerProps> = ({
       <div className="tw:flex tw:gap-4">
         { useDay &&
           <Dropdown
+            style={style}
             options={days}
             placeholder="Day"
             defaultValue={getDefaultOption(days, day)}
@@ -115,6 +120,7 @@ const DatePicker: FC<DatePickerProps> = ({
           />
         }
         <Dropdown
+          style={style}
           className="tw:w-32"
           options={months}
           placeholder="Month"
@@ -128,6 +134,7 @@ const DatePicker: FC<DatePickerProps> = ({
           hasBorder={hasBorder}
         />
         <Dropdown
+          style={style}
           options={years}
           placeholder="Year"
           defaultValue={getDefaultOption(years, year)}

@@ -1,12 +1,14 @@
 import { useState, type FC, type JSX, type ReactNode } from 'react';
+import { RENEWAL_OPTIONS } from '../../utilities/constants';
 import iconDelete from '../../assets/images/icon-delete.svg';
-import type { Subscription } from '../../utilities/interfaces';
+import type { ReactSelectOption, Subscription } from '../../utilities/interfaces';
 import TextInput from '../Inputs/TextInput';
 import DatePicker from '../Inputs/DatePicker';
-import RadioButton from '../Inputs/RadioButton';
 import useItems from '../../hooks/useItems';
 import Modal from '../Modal';
 import SubscriptionForm from './SubscriptionForm';
+import { getDefaultOption } from '../../utilities/helpers';
+import Dropdown from '../Inputs/Dropdown';
 
 interface SubscriptionTableProps {
   subscriptions: Array<Subscription>;
@@ -36,8 +38,9 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
   const rows: Array<SubscriptionRow> = [
     { header: 'Name', key: 'provider' },
     { header: 'Member Number', key: 'member' },
+    { header: 'Renewal Period', key: 'renewal' },
     { header: 'Date Commenced', key: 'commenced' },
-    { header: 'Current', key: 'current' },
+    { header: 'Anniversary', key: 'anniversary' },
   ];
 
   const printTableCells = (key: string): ReactNode =>
@@ -68,6 +71,15 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
             />;
             break;
           case rows[2].key:
+            cell = <Dropdown
+              options={RENEWAL_OPTIONS}
+              defaultValue={getDefaultOption(RENEWAL_OPTIONS, value || '')}
+              onChange={(option: ReactSelectOption) => handleOnChange(option.value, key, subscription.rowID || 0)}
+              isSlim
+              hasBorder
+            />;
+            break;
+          case rows[3].key:
             cell = <DatePicker
               value={subscription.commenced}
               useDay
@@ -76,21 +88,17 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
               onChange={(value) => handleOnChange(value, key, rowID) }
             />;
             break;
-          case rows[3].key:
-            cell = <div className="radio-group">
-              <RadioButton
-                name={`currentSubscription_${subscription.rowID}`}
-                label="Yes"
-                checked={value === 'yes'}
-                onChange={() => handleOnChange('yes', key, rowID) }
-              />
-              <RadioButton
-                name={`currentSubscription_${subscription.rowID}`}
-                label="No"
-                checked={value === 'no'}
-                onChange={() => handleOnChange('no', key, rowID) }
-              />
-            </div>;
+          case rows[4].key:
+            cell = <DatePicker
+              style={{singleValue: { color: subscription.current === 'no' ? 'red' : ''}}}
+              classes="tw:text-red-500"
+              value={subscription.anniversary}
+              yearLimit={2026}
+              useDay
+              isSlim
+              hasBorder
+              onChange={(value) => handleOnChange(value, key, rowID) }
+            />;
             break;
         }
 

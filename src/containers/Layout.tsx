@@ -3,7 +3,7 @@ import throttle from 'lodash.throttle';
 import { NavLink, Outlet, useLocation } from 'react-router';
 import { useEffect, useRef, useState, type FC, type JSX } from 'react';
 import classNames from 'classnames';
-import { getUserPicture, userHasAuth } from '../utilities/data';
+import { getUser, getUserPicture, userHasAuth } from '../utilities/data';
 import defaultProfileImg from '../assets/images/default-profile.jpg';
 import { CONTENT_URL } from '../utilities/constants';
 
@@ -14,25 +14,36 @@ interface LayoutProps {
 const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
   const [userProfileImg, setUserProfileImg] = useState<string>(defaultProfileImg);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>('');
   const stickyRef = useRef<HTMLDivElement>(null);
   const userProfileImgRef = useRef<HTMLImageElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  let title = '';
 
-  switch (location.pathname) {
-    case '/create-profile':
-      title = 'Create a Profile';
-      break;
-    case '/profile':
-      title = 'Your Profile';
-      break;
-    case '/matrix':
-      title = 'Trainers Matrix';
-      break;
-  }
+  const setUserNameAsTitle = async () => {
+    const user = await getUser();
+
+    if (user) {
+      setTitle(`${user.firstname} ${user.familyname}`);
+    }
+  };
 
   useEffect(() => {
+    switch (location.pathname) {
+      case '/create-profile/':
+      case '/create-profile':
+        setTitle('Create a Profile');
+        break;
+      case '/profile/':
+      case '/profile':
+        setUserNameAsTitle();
+        break;
+      case '/matrix/':
+      case '/matrix':
+        setTitle('Trainers Matrix');
+        break;
+    }
+
     const setProfileImg = async () => {
       const userImage = await getUserPicture();
       setUserProfileImg(CONTENT_URL + userImage.thumb);
@@ -56,7 +67,7 @@ const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
     document.addEventListener('mousedown', handleClickOutside);
 
     const stickOnScroll = throttle(() => {
-      const sticky = stickyRef.current?.offsetHeight;
+      const sticky = 36 + (stickyRef.current?.offsetHeight || 0);
 
       if (sticky && window.pageYOffset > sticky) {
         stickyRef.current?.classList.add('sticky');
@@ -72,7 +83,6 @@ const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
 
   return (
     <div

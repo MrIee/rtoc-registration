@@ -13,7 +13,7 @@ import Select, {
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect  from 'react-select/async-creatable';
 import CreatableSelect  from 'react-select/creatable';
-import type { InputPropsNoEvents, ReactSelectOption } from '../../utilities/interfaces';
+import type { DropdownStyle, InputPropsNoEvents, ReactSelectOption } from '../../utilities/interfaces';
 
 interface DropdownProps extends Omit<InputPropsNoEvents, 'defaultValue'> {
   className?: string;
@@ -36,6 +36,7 @@ interface DropdownProps extends Omit<InputPropsNoEvents, 'defaultValue'> {
   showErrorText?: boolean;
   multiLimit?: number;
   overrideNewOption?: boolean;
+  style?: DropdownStyle;
 };
 
 const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: boolean ) => {
@@ -88,6 +89,7 @@ const Dropdown = ({
   isSlim = false,
   multiLimit,
   overrideNewOption = false,
+  style,
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
   const [errorMsg, setErrorMsg] = useState<string>(error || '');
@@ -117,6 +119,7 @@ const Dropdown = ({
   const selectStyles: StylesConfig = {
     control: (base: CSSObjectWithLabel, state) => ({
       ...base,
+      ...style?.control,
       '&:hover': {
         boxShadowColor: 'none',
       },
@@ -131,23 +134,31 @@ const Dropdown = ({
     }),
     option: (base: CSSObjectWithLabel) => ({
       ...base,
+      ...style?.option,
       cursor: 'pointer',
       paddingBlock: isSlim ? 5 : 8,
     }),
     menu: (base: CSSObjectWithLabel) => ({
       ...base,
+      ...style?.menu,
       zIndex: 99,
       borderRadius: 6,
       backgroundColor: 'oklch(96.7% 0.003 264.542)',
     }),
     indicatorsContainer: (base: CSSObjectWithLabel) => ({
       ...base,
+      ...style?.indicatorsContainer,
       cursor: 'pointer',
     }),
     dropdownIndicator: (base: CSSObjectWithLabel) => ({
       ...base,
+      ...style?.dropdownIndicator,
       paddingInline: 2,
       padding: isSlim ? 5 : 8,
+    }),
+    singleValue: (base: CSSObjectWithLabel) => ({
+      ...base,
+      ...style?.singleValue,
     }),
   };
 

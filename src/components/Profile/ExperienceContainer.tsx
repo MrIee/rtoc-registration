@@ -24,6 +24,7 @@ import { printDateRange } from '../../utilities/helpers';
 import classNames from 'classnames';
 
 interface ExperienceProps {
+  readOnly?: boolean;
   teachingExperience: Array<TeachingExperience>;
   industryExperience: Array<IndustryExperience>;
   unitsICanTeach: Array<UnitsICanTeach>;
@@ -36,6 +37,7 @@ interface ExperienceProps {
 };
 
 const ExperienceContainer: FC<ExperienceProps> = ({
+  readOnly = false,
   teachingExperience,
   industryExperience,
   unitsICanTeach,
@@ -78,7 +80,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
     <div key={i} className="list__item">
       <h4 className="tw:mb-2">{ te.orgName }</h4>
       <div>
-        <List items={getCourseList(te)} onDeletePoint={handleDeleteTE} />
+        <List items={getCourseList(te)} onDeletePoint={!readOnly ? handleDeleteTE : undefined} />
       </div>
     </div>
   );
@@ -89,6 +91,7 @@ const ExperienceContainer: FC<ExperienceProps> = ({
     list: [industry.positionTitle, printDateRange(industry.started, industry.completed)],
     points: getPoints(industry.units as Array<Unit>),
     fileName: industry.positionDescription,
+    fileURL: industry.pathName,
   }));
 
   const unitsListItems: Array<ListItem> = unitsICanTeach.map((unit: UnitsICanTeach): ListItem => ({
@@ -134,26 +137,36 @@ const ExperienceContainer: FC<ExperienceProps> = ({
       <div className={classNames({ 'list': teachingExperience.length > 0 })}>
         <div className="tw:flex tw:items-center tw:justify-between">
           {teachingExperience.length > 0 && <h3>Teaching Experience</h3>}
-          <div className={classNames({'tw:w-full': teachingExperience.length === 0})}>
-            <AddDetailsButton classes="tw:ml-auto" label="Add Teaching Experience" onClick={() => setIsTEModalVisible(true)} />
-            <Modal title="Add Teaching Experience" showModal={isTEModalVisible} onClose={(isVisible) => setIsTEModalVisible(isVisible)}>
-              <TeachingExperienceForm onSubmit={handleSubmitTeachingExperience} onCancel={() => setIsTEModalVisible(false)} />
-            </Modal>
-          </div>
+            { !readOnly &&
+              <div className={classNames({'tw:w-full': teachingExperience.length === 0})}>
+                <AddDetailsButton classes="tw:ml-auto" label="Add Teaching Experience" onClick={() => setIsTEModalVisible(true)} />
+                <Modal title="Add Teaching Experience" showModal={isTEModalVisible} onClose={(isVisible) => setIsTEModalVisible(isVisible)}>
+                  <TeachingExperienceForm onSubmit={handleSubmitTeachingExperience} onCancel={() => setIsTEModalVisible(false)} />
+                </Modal>
+              </div>
+            }
         </div>
         <div className="tw:w-full">{ teachingExperienceItems }</div>
       </div>
-      <ListCard title="Industry Experience" items={industryListItems} onDelete={handleDeleteIndustry}>
-        <AddDetailsButton classes="tw:ml-auto" label="Add Industry Experience" onClick={() => setIsIndustryModalVisible(true)} />
-        <Modal title="Add Industry Experience" showModal={isIndustryModalVisible} onClose={(isVisible) => setIsIndustryModalVisible(isVisible)}>
-          <IndustryExperienceForm onSubmit={handleSubmitIndustryExperience} onCancel={() => setIsIndustryModalVisible(false)} />
-        </Modal>
+      <ListCard title="Industry Experience" items={industryListItems} onDelete={!readOnly ? handleDeleteIndustry : undefined}>
+        { !readOnly &&
+          <>
+            <AddDetailsButton classes="tw:ml-auto" label="Add Industry Experience" onClick={() => setIsIndustryModalVisible(true)} />
+            <Modal title="Add Industry Experience" showModal={isIndustryModalVisible} onClose={(isVisible) => setIsIndustryModalVisible(isVisible)}>
+              <IndustryExperienceForm onSubmit={handleSubmitIndustryExperience} onCancel={() => setIsIndustryModalVisible(false)} />
+            </Modal>
+          </>
+        }
       </ListCard>
-      <ListCard title="Units I can Teach" items={unitsListItems} onDeletePoint={handleDeleteUnits}>
-        <AddDetailsButton classes="tw:ml-auto" label="Units I can Teach" onClick={() => setIsUnitsModalVisible(true)} />
-        <Modal title="Units I can Teach" showModal={isUnitsModalVisible} onClose={(isVisible) => setIsUnitsModalVisible(isVisible)}>
-          <UnitsICanTeachForm onSubmit={handleSubmitUnits} onCancel={() => setIsUnitsModalVisible(false)} />
-        </Modal>
+      <ListCard title="Units I can Teach" items={unitsListItems} onDeletePoint={!readOnly ? handleDeleteUnits : undefined}>
+        { !readOnly &&
+          <>
+            <AddDetailsButton classes="tw:ml-auto" label="Units I can Teach" onClick={() => setIsUnitsModalVisible(true)} />
+            <Modal title="Units I can Teach" showModal={isUnitsModalVisible} onClose={(isVisible) => setIsUnitsModalVisible(isVisible)}>
+              <UnitsICanTeachForm onSubmit={handleSubmitUnits} onCancel={() => setIsUnitsModalVisible(false)} />
+            </Modal>
+          </>
+        }
       </ListCard>
     </div>
   );

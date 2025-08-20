@@ -13,12 +13,10 @@ import {
   type UnitsICanTeachData,
   type Activity,
   type Subscription,
-  newGroupedActivities,
-  newGroupedSubscriptions,
   type UnitsICanTeach,
   type MatrixExperienceUnit,
 } from './interfaces';
-import { EXPERIENCE_TYPES } from '../utilities/constants';
+
 interface Organisation {
   id: number;
   name: string;
@@ -31,6 +29,7 @@ interface Course {
 };
 
 const SESSION_KEY_ITEM = 'rtoc-user-session-key';
+export const CONTENT_SERVER_URL = 'https://content.rtoc.w617.com/';
 
 export const getSessionKey = (): string => {
   return localStorage.getItem(SESSION_KEY_ITEM) || '';
@@ -323,18 +322,7 @@ export const getTEQualifications = async () => {
       headers: { 'x-session': getSessionKey() },
     });
 
-     const qualifications: Array<TEQualification> = res.data.map((qualification: TEQualification) => ({
-      providerID: qualification.providerID,
-      providerName: qualification.providerName,
-      courseID: qualification.courseID,
-      courseName: qualification.courseName,
-      aqf: qualification.aqf,
-      completed: qualification.f_completed,
-      fileName: qualification.fileName,
-      rowID: qualification.rowID,
-    }));
-
-    return qualifications;
+    return res.data;
   } catch {
     return [];
   }

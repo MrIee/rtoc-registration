@@ -1,4 +1,5 @@
 import type { ChangeEvent } from 'react';
+import type { CSSObjectWithLabel } from 'react-select';
 
 export interface InputPropEvents {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -26,6 +27,15 @@ export interface Step {
   label: string;
   active: boolean;
   clickable: boolean;
+};
+
+export interface DropdownStyle {
+  control?: CSSObjectWithLabel;
+  option?: CSSObjectWithLabel;
+  menu?: CSSObjectWithLabel;
+  indicatorsContainer?: CSSObjectWithLabel;
+  dropdownIndicator?: CSSObjectWithLabel;
+  singleValue?: CSSObjectWithLabel;
 };
 
 export interface ReactSelectOption {
@@ -95,6 +105,7 @@ export interface TEQualification extends Row {
   f_completed?: string;
   file: File | null;
   fileName: string;
+  osFileName?: string;
 };
 
 export interface Unit extends Row {
@@ -153,11 +164,11 @@ export interface IndustryExperience extends Row {
   companyName: string;
   Company?: string;
   ABN: string;
-  positionDescription: string;
   positionTitle: string;
   started: string;
   completed: string | null;
   units: Array<Unit>;
+  pathName: string;
 };
 
 export interface UnitsICanTeachData {
