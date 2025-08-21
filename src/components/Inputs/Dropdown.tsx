@@ -37,6 +37,7 @@ interface DropdownProps extends Omit<InputPropsNoEvents, 'defaultValue'> {
   multiLimit?: number;
   overrideNewOption?: boolean;
   style?: DropdownStyle;
+  dropdownValue?: Array<ReactSelectOption> | ReactSelectOption | unknown;
 };
 
 const IndicatorsContainer = ( props: IndicatorsContainerProps, isDisabled?: boolean ) => {
@@ -90,17 +91,22 @@ const Dropdown = ({
   multiLimit,
   overrideNewOption = false,
   style,
+  dropdownValue,
 }: DropdownProps) => {
   const [value, setValue] = useState<Array<ReactSelectOption> | ReactSelectOption | unknown>();
   const [errorMsg, setErrorMsg] = useState<string>(error || '');
   const inputId: string = 'react-select-' + useId();
 
   useEffect(() => {
+    setValue(dropdownValue);
+  }, [dropdownValue]);
+
+  useEffect(() => {
     setValue(defaultValue);
   }, [defaultValue]);
 
   useEffect(() => {
-  setErrorMsg(error || '');
+    setErrorMsg(error || '');
   }, [error]);
 
   const getBoxShadowStyle = (isFocused: boolean): string => {
@@ -124,7 +130,7 @@ const Dropdown = ({
         boxShadowColor: 'none',
       },
       minHeight: isSlim ? 32 : 38,
-      padding: isSlim ? 0 : 5,
+      padding: isSlim ? 0 : 6,
       borderWidth: hasBorder ? 1 : 0,
       borderColor: 'oklch(87.2% 0.01 258.338)',
       borderRadius: 8,
@@ -284,8 +290,8 @@ const Dropdown = ({
   ) : null;
 
   return (
-    <div className={className}>
-      <label htmlFor={inputId}>
+    <div className={classNames('tw:flex tw:flex-col', className)}>
+      <label className="tw:inline-flex" htmlFor={inputId}>
         { label && (
           <span className="label__text">
             {label}

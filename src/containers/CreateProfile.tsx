@@ -46,12 +46,12 @@ const CreateProfile: FC = (): JSX.Element => {
   ]);
 
   const userDetails: UserDetails = {
-      firstname: '',
-      familyname: '',
-      preferredname: '',
-      phone: '',
-      email: '',
-      password: '',
+    firstname: '',
+    familyname: '',
+    preferredname: '',
+    phone: '',
+    email: '',
+    password: '',
   };
 
   const [errors, setErrors] = useState<Record<string, UserDetails>>({

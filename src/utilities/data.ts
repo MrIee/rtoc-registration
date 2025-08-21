@@ -15,6 +15,8 @@ import {
   type Subscription,
   type UnitsICanTeach,
   type MatrixExperienceUnit,
+  type Address,
+  type Postcode,
 } from './interfaces';
 
 interface Organisation {
@@ -103,6 +105,55 @@ export const getUserPicture = async () => {
     return res.data;
   } catch {
     return null;
+  }
+};
+
+export const createUserPicture = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const res = await axios.post('/user/picture', formData, {
+      headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
+    });
+
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+// =============================================================================
+// Address Endpoints
+// =============================================================================
+
+export const createAddress = async (address: Address) => {
+  try {
+    const res = await axios.post('/user/adress', address, {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data;
+  } catch {
+    return null;
+  }
+};
+
+const lookupPostcode = async (postcode: string) => {
+  try {
+    const res = await axios.get('/postcode/' + postcode);
+    return res.data;
+  } catch {
+    return [];
+  }
+};
+
+export const getPostcodesAsOptions = async (postcode: string) => {
+  try {
+    const postcodes = await lookupPostcode(postcode);
+    return postcodes.map((p: Postcode) => ({ id: nanoid(), value: { ...p, postcode }, label: `${p.locality} ${p.state}` }));
+  } catch {
+    return [];
   }
 };
 
@@ -310,7 +361,7 @@ export const createTEQualifications = async (data: TEQualification) => {
       headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
     });
 
-   return res.data;
+    return res.data;
   } catch {
     return null;
   }
@@ -417,7 +468,7 @@ export const createIndustryExperience = async (data: IndustryExperienceData) => 
       headers: { 'x-session': getSessionKey(), 'Content-Type': 'multipart/form-data' },
     });
 
-   return res.data;
+    return res.data;
   } catch {
     return null;
   }

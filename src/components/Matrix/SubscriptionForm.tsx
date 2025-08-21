@@ -19,6 +19,7 @@ const ActivityForm: FC<SubscriptionFormProps> = ({ onSubmit, onCancel }): JSX.El
     errors,
     isFormValid,
     validateField,
+    handleOnChange,
     handleOnChangeDropdown,
   } = useGenericFormProps<Subscription>(newSubscription);
 
@@ -76,13 +77,15 @@ const ActivityForm: FC<SubscriptionFormProps> = ({ onSubmit, onCancel }): JSX.El
         />
         <TextInput
           label="Provider"
-          onChange={(e) => setFormData({...formData, provider: e.target.value})}
+          name="provider"
+          onChange={handleOnChange}
           onBlur={() => errors.provider && validateProvider()}
           error={errors.provider}
         />
         <TextInput
           label="Member Number"
-          onChange={(e) => setFormData({...formData, member: e.target.value})}
+          name="member"
+          onChange={handleOnChange}
           onBlur={() => errors.member && validateMemberNumber()}
           error={errors.member}
         />

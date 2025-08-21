@@ -74,6 +74,54 @@ export interface UserDetails {
   password: string;
 };
 
+export const newUserDetails: UserDetails = {
+  firstname: '',
+  preferredname: '',
+  familyname: '',
+  phone: '',
+  email: '',
+  password: '',
+};
+
+export interface Address {
+  address1: string;
+  address2: string;
+  suburb: string;
+  postcode: string;
+  state: string;
+};
+
+export const newAddress: Address = {
+  address1: '',
+  address2: '',
+  suburb: '',
+  postcode: '',
+  state: '',
+};
+
+export interface Postcode {
+  locality: string;
+  state: string;
+  postcode?: string;
+};
+
+export interface PersonalDetails extends UserDetails, Address {};
+
+export interface UserDetailsFormFields {
+  preferredname: boolean;
+  password: boolean;
+  address: boolean;
+  nextBtn: boolean;
+};
+
+export interface UserPicture {
+  hero: string;
+  name: string;
+  thumb: string;
+  heroImage?: string;
+  thumbImage?: string;
+};
+
 export interface VETQualificationDetails extends Row {
   userid?: string;
   orgID?: string;

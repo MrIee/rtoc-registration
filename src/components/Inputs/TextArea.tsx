@@ -8,7 +8,19 @@ interface TextAreaProps extends Omit<InputProps, 'onChange'> {
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const TextArea: FC<TextAreaProps> = ({ classes, columns, rows, value, defaultValue, label, required, onChange, onBlur, error }): JSX.Element => {
+const TextArea: FC<TextAreaProps> = ({
+  classes,
+  columns,
+  rows,
+  value,
+  defaultValue,
+  label,
+  name,
+  required,
+  onChange,
+  onBlur,
+  error,
+}): JSX.Element => {
   return (
     <label className={classNames('tw:inline-flex tw:flex-col tw:justify-start', classes)}>
       { label &&
@@ -25,7 +37,8 @@ const TextArea: FC<TextAreaProps> = ({ classes, columns, rows, value, defaultVal
         rows={rows}
         value={value}
         defaultValue={defaultValue}
-        onChange={(e) => onChange?.(e)}
+        name={name}
+        onChange={onChange}
         onBlur={onBlur}
       />
       { error && <span className="tw:text-sm tw:text-red-500">{error}</span> }

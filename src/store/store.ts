@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import registrationReducer from './registrationSlice';
+import userPictureSlice from './userPictureSlice';
 
 
 export const store = configureStore({
   reducer: {
     registration: registrationReducer,
+    userPicture: userPictureSlice,
   },
 });
 

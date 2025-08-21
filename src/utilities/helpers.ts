@@ -96,3 +96,15 @@ export const loadReactSelectOptionsAsync = (fetchDataFn: (id: string) => Promise
 
 export const getDefaultOption = (options: Array<ReactSelectOption>, value: string): ReactSelectOption | undefined =>
     options.find((option: ReactSelectOption) => option.value === value);
+
+export const formatListWithOr =(arr: Array<string>) => {
+  if (arr.length === 0) {
+    return '';
+  } else if (arr.length === 1) {
+    return arr[0];
+  } else {
+    const lastElement = arr[arr.length - 1];
+    const remainingElements = arr.slice(0, -1);
+    return remainingElements.join(', ') + ' or ' + lastElement;
+  }
+};

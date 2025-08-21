@@ -60,7 +60,7 @@ h5 {
 }
 
 .user-menu {
-  @apply tw:w-48 tw:px-6 tw:py-4 tw:mt-2 tw:absolute tw:right-0;
+  @apply tw:w-52 tw:px-6 tw:py-4 tw:mt-2 tw:absolute tw:right-0;
 }
 
 .user-menu li {

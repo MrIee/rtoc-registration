@@ -26,6 +26,10 @@ const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
       case '/matrix':
         setTitle('Trainers Matrix');
         break;
+      case '/user-details/':
+      case '/user-details':
+        setTitle('Personal Information');
+        break;
     }
   }, [location.pathname]);
 

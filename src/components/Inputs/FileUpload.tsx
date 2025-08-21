@@ -3,13 +3,33 @@ import iconPaperClip from '../../assets/images/icon-paperclip.svg';
 import iconDelete from '../../assets/images/icon-delete.svg';
 import { useEffect, useRef, useState, type ChangeEvent, type FC, type JSX } from 'react';
 import type { InputPropsNoEvents } from '../../utilities/interfaces';
+import { formatListWithOr } from '../../utilities/helpers';
 
 interface FileUploadProps extends InputPropsNoEvents {
+  showIcon?: boolean;
+  showFile?: boolean;
+  btnLabel?: string;
+  allowedTypes?: Array<string>;
   onChange?: (file: File) => void;
   onBlur?: () => void;
+  onError?: (error: string) => void;
+  showError?: boolean;
 };
 
-const FileUpload: FC<FileUploadProps> = ({ label, name, required = true, error, onChange, onBlur }): JSX.Element => {
+const FileUpload: FC<FileUploadProps> = ({
+  showIcon = true,
+  showFile = true,
+  label,
+  btnLabel,
+  name,
+  allowedTypes,
+  required = true,
+  error,
+  onChange,
+  onBlur,
+  onError,
+  showError = true,
+}): JSX.Element => {
   const [chosenFile, setChosenFile] = useState<File | null>(null);
   const fileUploadRef = useRef<HTMLInputElement | null>(null);
   const [fileError, setFileError] = useState<string>(error || '');
@@ -35,14 +55,22 @@ const FileUpload: FC<FileUploadProps> = ({ label, name, required = true, error, 
 
   const validateFileType = (file: File): boolean => {
     if (file) {
-      const allowedTypes = ['application/pdf']; // Define allowed MIME types
+      const validTypes = allowedTypes || ['application/pdf']; // Define allowed MIME types
       setFileError('');
+      onError?.('');
 
-      if (allowedTypes.includes(file.type)) {
+      if (validTypes.includes(file.type)) {
         return true;
       } else {
-        setFileError('Invalid file type. Please choose a PDF file.');
+        const formattedTypes: Array<string> = validTypes.map((type: string) => {
+          const slashIndex = type.indexOf('/');
+          return type.substring(slashIndex + 1);
+        });
+        const validTypesList = formatListWithOr(formattedTypes);
+        const errorMessage = `Invalid file type. Please choose a ${validTypesList} file.`;
+        setFileError(errorMessage);
         setChosenFile(null);
+        onError?.(errorMessage);
         return false;
       }
     }
@@ -69,9 +97,9 @@ const FileUpload: FC<FileUploadProps> = ({ label, name, required = true, error, 
     <div className="tw:flex tw:flex-col">
       <label className="tw:inline-flex tw:flex-col tw:justify-start tw:items-start tw:self-start">
         { label && <span className="label__text">{label}{ required && (<span>*</span>)}</span> }
-        <button className="btn btn--hollow btn--hollow-sm tw:flex" type="button" onClick={handleOnClickUploadBtn}>
-          <img className="tw:mr-1" src={iconPaperClip} alt="paperclip" />
-          Attach File
+        <button className="btn btn--hollow tw:flex tw:items-center" type="button" onClick={handleOnClickUploadBtn}>
+          { showIcon && <img className="tw:h-5 tw:w-5 tw:mr-1" src={iconPaperClip} alt="paperclip" /> }
+          { btnLabel || 'Attach File' }
         </button>
         <input
           ref={fileUploadRef}
@@ -84,13 +112,13 @@ const FileUpload: FC<FileUploadProps> = ({ label, name, required = true, error, 
           hidden
         />
       </label>
-      { chosenFile &&
+      { showFile && chosenFile &&
         <div className="tw:flex tw:justify-between tw:p-4 tw:rounded-lg tw:bg-gray-100">
           <span>{chosenFile.name} {formatFileSize(chosenFile.size)}</span>
           <img className="tw:cursor-pointer" src={iconDelete} alt="remove file icon" onClick={() => setChosenFile(null)} />
         </div>
       }
-      { fileError && <span className="tw:text-sm tw:text-red-500">{fileError}</span> }
+      { showError && fileError && <span className="tw:text-sm tw:text-red-500">{fileError}</span> }
     </div>
   );
 };

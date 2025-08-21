@@ -19,6 +19,7 @@ const ActivityForm: FC<ActivityFormProps> = ({ onSubmit, onCancel }): JSX.Elemen
     setFormData,
     errors,
     isFormValid,
+    handleOnChange,
     handleOnChangeDropdown,
     validateField,
   } = useGenericFormProps<Activity>(newActivity);
@@ -74,7 +75,8 @@ const ActivityForm: FC<ActivityFormProps> = ({ onSubmit, onCancel }): JSX.Elemen
       <div className="scroll-container">
         <TextInput
           label="Activity Name"
-          onChange={(e) => setFormData({...formData, activity: e.target.value})}
+          name="activity"
+          onChange={handleOnChange}
           onBlur={() => errors.activity && validateActivityName()}
           error={errors.activity}
         />
@@ -88,21 +90,23 @@ const ActivityForm: FC<ActivityFormProps> = ({ onSubmit, onCancel }): JSX.Elemen
         />
         <TextArea
           label="Learning Outcomes"
+          name="outcomes"
           required
-          onChange={(e) => setFormData({...formData, outcomes: e.target.value})}
+          onChange={handleOnChange}
           onBlur={() => errors.outcomes && validateOutcomes()}
           error={errors.outcomes}
         />
         <TextInput
           label="Provider"
+          name="provider"
           validate="provider"
-          onChange={(e) => setFormData({...formData, provider: e.target.value})}
+          onChange={handleOnChange}
           onBlur={() => errors.provider && validateProvider()}
           error={errors.provider}
         />
         <DatePicker
           label="Date"
-          onChange={(date) => setFormData({ ...formData, date })}
+          onChange={(date) => setFormData({...formData, date })}
           onBlur={() => errors.date && validateDate()}
           useDay
           error={errors.date}

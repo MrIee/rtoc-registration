@@ -1,10 +1,15 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import type { ReactSelectOption } from '../utilities/interfaces';
 
 const useGenericForm = <T>(newFormDataObject: T) => {
   const [formData, setFormData] = useState<T>(newFormDataObject);
   const [errors, setErrors] = useState<T>(newFormDataObject);
   const isFormValid = useRef<boolean>(false);
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData({...formData, [name]: value });
+  };
 
   const handleOnChangeDropdown = (option: ReactSelectOption, name: string) => {
     if (typeof option.value === 'string') {
@@ -23,7 +28,7 @@ const useGenericForm = <T>(newFormDataObject: T) => {
     }
   };
 
-  return { formData, setFormData, errors, setErrors, handleOnChangeDropdown, validateField, isFormValid };
+  return { formData, setFormData, errors, setErrors, handleOnChangeDropdown, handleOnChange, validateField, isFormValid };
 };
 
 export default useGenericForm;
