@@ -14,6 +14,8 @@ const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
   const [showMenu, setShowMenu] = useState(true);
 
   useEffect(() => {
+    setShowMenu(true);
+
     switch (location.pathname) {
       case '/create-profile/':
       case '/create-profile':

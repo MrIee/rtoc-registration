@@ -61,7 +61,7 @@ const CreateProfile: FC = (): JSX.Element => {
   useEffect(() => {
     if (step > maxSteps) {
       dispatch(goToStep(0));
-      navigate('/user-profile');
+      navigate('/profile');
     }
   }, [step, maxSteps, navigate, dispatch]);
 

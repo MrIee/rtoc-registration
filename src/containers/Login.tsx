@@ -1,7 +1,7 @@
 import logo from '../assets/images/logo-rtoc.png';
 import { NavLink } from 'react-router';
 import { authUser } from '../utilities/data';
-import { useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 
 import TextInput from '../components/Inputs/TextInput';
@@ -18,7 +18,8 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: FormEvent) => {
+    event.preventDefault();
     const auth = await authUser(email, password);
 
     if (auth) {
@@ -32,23 +33,25 @@ const Login = () => {
       <h2 className="tw:text-center">Login to RTO Complete</h2>
 
       <div className="tw:w-full tw:flex tw:flex-col tw:mt-10">
-        <TextInput classes="tw:mb-4" label="Email Address" placeholder="Enter your email" onChange={handleEmailChange} />
-        <TextInput classes="tw:mb-4" label="Password" placeholder="Enter password" isPassword onChange={handlePaswordChange} />
+        <form className="tw:w-full" onSubmit={handleLogin}>
+          <TextInput classes="tw:w-full tw:mb-4" label="Email Address" placeholder="Enter your email" onChange={handleEmailChange} />
+          <TextInput classes="tw:w-full tw:mb-4" label="Password" placeholder="Enter password" isPassword onChange={handlePaswordChange} />
 
-        {/* Comment out remember me for security reasons and forgot password as no backend functionality exists for it yet */}
-        {/* <div className="tw:flex tw:justify-between tw:mt-2 tw:mb-8">
-          <label className="input__checkbox-container">
-            <input type="checkbox"/>
-            <span className="input__checkmark"></span>
-            <span className="tw:ml-1.5">Remember me</span>
-          </label>
-          <a className="tw:text-rtoc-purple-500" href="">Forgot Password?</a>
-        </div> */}
+          {/* Comment out remember me for security reasons and forgot password as no backend functionality exists for it yet */}
+          {/* <div className="tw:flex tw:justify-between tw:mt-2 tw:mb-8">
+            <label className="input__checkbox-container">
+              <input type="checkbox"/>
+              <span className="input__checkmark"></span>
+              <span className="tw:ml-1.5">Remember me</span>
+            </label>
+            <a className="tw:text-rtoc-purple-500" href="">Forgot Password?</a>
+          </div> */}
 
-        <div className="tw:flex tw:flex-col tw:items-center">
-          <button className="btn tw:w-full tw:mb-10" onClick={handleLogin}>Sign In</button>
-          <span className="">Don't have an account? <NavLink className="tw:text-rtoc-purple-500 tw:underline" to="/create-profile">Sign Up</NavLink></span>
-        </div>
+          <div className="tw:flex tw:flex-col tw:items-center">
+            <button type="submit" className="btn tw:w-full tw:mb-10">Sign In</button>
+            <span className="">Don't have an account? <NavLink className="tw:text-rtoc-purple-500 tw:underline" to="/create-profile">Sign Up</NavLink></span>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -295,11 +295,16 @@ export const deleteVETQualification = async (rowID: number) => {
 
 export const getVETQualifications = async () => {
   try {
-    const res = await axios.get('/user/qualifications/vet', {
-      headers: { 'x-session': getSessionKey() },
-    });
-    return res.data;
+    if (userHasAuth()) {
+      const res = await axios.get('/user/qualifications/vet', {
+        headers: { 'x-session': getSessionKey() },
+      });
+      return res.data;
+    } else {
+      // throw new Error('Auth not found');
+    }
   } catch {
+    console.log('caught an error');
     return [];
   }
 };
