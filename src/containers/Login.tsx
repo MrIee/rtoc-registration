@@ -30,7 +30,6 @@ const Login = () => {
     <div className="tw:lg:w-[400px] tw:w-full tw:flex tw:flex-col tw:items-center tw:lg:p-0 tw:p-3 tw:mx-auto tw:absolute tw:top-1/2 tw:-translate-y-1/2 tw:left-0 tw:right-0">
       <img className="tw:w-20 tw:mb-1" src={logo} alt="logo" />
       <h2 className="tw:text-center">Login to RTO Complete</h2>
-      <p className="tw:text-center">lorem ipsum dolor sit amet</p>
 
       <div className="tw:w-full tw:flex tw:flex-col tw:mt-10">
         <TextInput classes="tw:mb-4" label="Email Address" placeholder="Enter your email" onChange={handleEmailChange} />

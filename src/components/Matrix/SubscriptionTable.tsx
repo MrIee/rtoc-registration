@@ -119,7 +119,7 @@ const SubscriptionTable: FC<SubscriptionTableProps> = ({ subscriptions, onChange
   const deleteRows: ReactNode =
     subscriptions.map((subscription: Subscription, i: number) =>
       i < subscriptionLimit &&
-      <td>
+      <td key={i}>
         <img
           className="tw:cursor-pointer tw:mx-auto"
           src={iconDelete}

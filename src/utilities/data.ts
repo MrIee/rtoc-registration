@@ -37,6 +37,10 @@ export const getSessionKey = (): string => {
   return localStorage.getItem(SESSION_KEY_ITEM) || '';
 };
 
+export const clearSessionKey = () => {
+  localStorage.removeItem(SESSION_KEY_ITEM);
+};
+
 axios.defaults.baseURL = 'https://api.rtoc.w617.com:5000';
 
 axios.interceptors.response.use(

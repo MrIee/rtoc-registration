@@ -1,20 +1,23 @@
 import { useEffect, useRef, useState, type FC, type JSX, type ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { setPicture } from '../store/userPictureSlice';
 import type { RootState } from '../store/store';
 import throttle from 'lodash.throttle';
 import classNames from 'classnames';
 import { NavLink } from 'react-router';
-import { getUser, getUserPicture, userHasAuth } from '../utilities/data';
+import { clearSessionKey, getUser, getUserPicture, userHasAuth } from '../utilities/data';
 import { CONTENT_URL } from '../utilities/constants';
 import type { UserPicture } from '../utilities/interfaces';
 
 interface MenuLink {
-  url: string;
+  url?: string;
   label: string;
+  onClick?: () => void;
 };
 
 const Menu: FC = (): JSX.Element => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const stickyRef = useRef<HTMLDivElement>(null);
   const userProfileImgRef = useRef<HTMLImageElement>(null);
@@ -64,17 +67,28 @@ const Menu: FC = (): JSX.Element => {
       window.removeEventListener('scroll', stickOnScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dispatch]);
+
+  const handleOnClickMenuLink = (callback?: () => void) => {
+    setIsMenuVisible(false);
+    callback?.();
+  };
+
+  const logOut = () => {
+    clearSessionKey();
+    navigate('/login');
+  };
 
   const menuLinks: Array<MenuLink> = [
     { url: '/user-details', label: 'Personal Information' },
     { url: '/profile/' + URL.current, label: 'Public Profile' },
     { url: '/profile', label: 'Edit Profile' },
     { url: '/matrix', label: 'Matrix' },
+    { onClick: logOut, label: 'Logout' },
   ];
 
   const printMenuLinks: ReactNode = menuLinks.map((link: MenuLink, i: number) =>
-    <li key={i}><NavLink to={link.url} onClick={() => setIsMenuVisible(false)}>{link.label}</NavLink></li>
+    <li key={i}><NavLink to={link.url || ''} onClick={() => handleOnClickMenuLink(link.onClick && link.onClick)}>{link.label}</NavLink></li>
   );
 
   return (

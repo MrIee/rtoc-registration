@@ -11,12 +11,14 @@ interface LayoutProps {
 const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
   const location = useLocation();
   const [title, setTitle] = useState('');
+  const [showMenu, setShowMenu] = useState(true);
 
   useEffect(() => {
     switch (location.pathname) {
       case '/create-profile/':
       case '/create-profile':
         setTitle('Create a Profile');
+        setShowMenu(false);
         break;
       case '/profile/':
       case '/profile':
@@ -41,7 +43,7 @@ const Layout: FC<LayoutProps> = ({ fullWidth = false }): JSX.Element => {
           {'tw:lg:w-[800px]': !fullWidth}
       )}
     >
-      <Menu />
+      { showMenu && <Menu /> }
       <div className="tw:w-full tw:flex tw:flex-col tw:items-center">
         <img className="tw:w-20 tw:mb-1" src={logo} alt="logo" />
         { title && <h2 className="tw:text-center tw:mb-8">{ title }</h2> }
