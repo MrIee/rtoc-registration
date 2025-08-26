@@ -17,6 +17,7 @@ import {
   type MatrixExperienceUnit,
   type Address,
   type Postcode,
+  newAddress,
 } from './interfaces';
 
 interface Organisation {
@@ -133,13 +134,25 @@ export const createUserPicture = async (file: File) => {
 
 export const createAddress = async (address: Address) => {
   try {
-    const res = await axios.post('/user/adress', address, {
+    const res = await axios.post('/user/address', address, {
       headers: { 'x-session': getSessionKey() },
     });
 
     return res.data;
   } catch {
     return null;
+  }
+};
+
+export const getAddress = async (): Promise<Address> => {
+  try {
+    const res = await axios.get('/user/address', {
+      headers: { 'x-session': getSessionKey() },
+    });
+
+    return res.data[0];
+  } catch {
+    return newAddress;
   }
 };
 
@@ -295,16 +308,11 @@ export const deleteVETQualification = async (rowID: number) => {
 
 export const getVETQualifications = async () => {
   try {
-    if (userHasAuth()) {
-      const res = await axios.get('/user/qualifications/vet', {
-        headers: { 'x-session': getSessionKey() },
-      });
-      return res.data;
-    } else {
-      // throw new Error('Auth not found');
-    }
+    const res = await axios.get('/user/qualifications/vet', {
+      headers: { 'x-session': getSessionKey() },
+    });
+    return res.data;
   } catch {
-    console.log('caught an error');
     return [];
   }
 };
